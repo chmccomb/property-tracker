@@ -1,0 +1,6 @@
+# Large files Claude Code should not read into context by default
+data/raw/*.csv
+data/processed/*.json
+data/processed/jc_heights_cleaned.csv
+data/processed/jc_heights_scored.csv
+dashboard/jc_heights_dashboard_v1.html

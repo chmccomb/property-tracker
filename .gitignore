@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Credentials & secrets (NEVER commit these)
+credentials/
+*.json.token
+token.json
+client_secret*.json
+
+# Data files (large; tracked separately or regenerated)
+data/raw/
+data/processed/*.csv
+data/processed/*.json
+
+# Dashboard backup files
+dashboard/*.bak
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp

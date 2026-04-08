@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m py_compile refresh.py)",
+      "Bash(python3 -m py_compile scripts/jc_heights_clean.py)",
+      "Bash(python3 -m py_compile scripts/jc_heights_emerging.py)",
+      "Bash(python3 -m py_compile scripts/enrich_walkscore.py)",
+      "Bash(python3 -m py_compile scripts/enrich_modiiv.py)"
+    ]
+  }
+}
