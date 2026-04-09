@@ -1142,17 +1142,25 @@ function getBlockMeta(blockKey) {
 
 // Forward-biased, null-safe block quality.
 // Missing emg ≠ zero — absence of emerging data doesn't cap appreciation potential.
-function blockQualityScore(est, emg) {
-  if (est != null && emg != null) return est * 0.35 + emg * 0.65;
-  if (est != null) return est;
-  if (emg != null) return emg;
-  return null;
+function blockQualityScore(est, emg, nSales) {
+  let bq;
+  if (est != null && emg != null) bq = est * 0.35 + emg * 0.65;
+  else if (est != null) bq = est;
+  else if (emg != null) bq = emg;
+  else return null;
+  // Reliability discount for thin blocks: 5 sales → 50%, 10+ sales → 100%
+  // Prevents a 3-sale outlier from inflating block quality to 90+
+  if (nSales != null && nSales < 10) {
+    const confidence = Math.max(0.5, nSales / 10);
+    bq = bq * confidence + 50 * (1 - confidence); // blend toward neutral (50) for thin blocks
+  }
+  return bq;
 }
 
 function computeDealScore(p) {
   const compPsf = p.block_psf || p.radius_psf;
   if (!p.psf || !compPsf) return null;
-  const bq = blockQualityScore(p.est_score, p.emg_score);
+  const bq = blockQualityScore(p.est_score, p.emg_score, p.block_n);
   if (bq === null) return null;
   const bedsKey = String(Math.min(p.beds||2, 3));
   const parkPct = p.parking ? (prems.by_beds?.parking?.[bedsKey] ?? prems.parking_psf_pct ?? 8.3) : 0;
@@ -2005,7 +2013,7 @@ function renderScorerResults(d) {
   const gainToday = yearsSinceSale > 0.1 ? todayEst - (d.price || 0) : null;
 
   // ── DEAL SCORE ──────────────────────────────────────────────
-  const blockQuality = blockQualityScore(d.est_score, d.emg_score);
+  const blockQuality = blockQualityScore(d.est_score, d.emg_score, d.block_n);
 
   // Compare estimated TODAY psf vs current block median — apples-to-apples regardless of sale date.
   let pricePct = null, priceScore = 50, adjustedBlockPsf = null, bmRef = null;
