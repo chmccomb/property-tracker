@@ -544,6 +544,15 @@ const allBlocks = D.blocks;
 const trends    = D.trends;
 const overallTrend = D.overall_trend;
 
+// Compute Heights-wide CAGR from overall median PSF trend (used as fallback for thin blocks)
+const heightsCagr = (() => {
+  const yrs = Object.keys(overallTrend || {}).map(Number).sort();
+  if (yrs.length < 2) return null;
+  const first = overallTrend[yrs[0]], last = overallTrend[yrs[yrs.length - 1]];
+  if (!first || !last) return null;
+  return Math.pow(last / first, 1 / (yrs[yrs.length - 1] - yrs[0])) - 1;
+})();
+
 // ═══════════════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════════════
@@ -2062,10 +2071,12 @@ function renderScorerResults(d) {
   const price = d.price || 0;
   const _blockMeta = getBlockMeta(d.block);
   const _thinBlock = (_blockMeta.n_sales || 0) < 10;
-  // Suppress forward projections on thin blocks — CAGR from < 10 sales is too noisy.
-  // A single outlier sale can flip the sign; showing a 5yr figure would mislead.
-  const proj3 = _cagr && todayEst && !_thinBlock ? Math.round(todayEst * Math.pow(1 + _cagr, 3) / 1000) * 1000 : null;
-  const proj5 = _cagr && todayEst && !_thinBlock ? Math.round(todayEst * Math.pow(1 + _cagr, 5) / 1000) * 1000 : null;
+  // For thin blocks use Heights-wide CAGR as fallback instead of suppressing projections.
+  // Block CAGR from < 10 sales is too noisy on its own, but the Heights trend is reliable.
+  const _projCagr  = _thinBlock ? (heightsCagr ?? _cagr) : _cagr;
+  const _usingAreaCagr = _thinBlock && heightsCagr != null;
+  const proj3 = _projCagr && todayEst ? Math.round(todayEst * Math.pow(1 + _projCagr, 3) / 1000) * 1000 : null;
+  const proj5 = _projCagr && todayEst ? Math.round(todayEst * Math.pow(1 + _projCagr, 5) / 1000) * 1000 : null;
   const gain3 = proj3 ? proj3 - todayEst : null;
   const gain5 = proj5 ? proj5 - todayEst : null;
 
@@ -2275,8 +2286,8 @@ function renderScorerResults(d) {
     <!-- Value projections -->
     ${_cagr && price ? `
     <div class="scorer-card">
-      <h3>Value Projection — If Block CAGR Continues</h3>
-      ${_thinBlock ? `<div style="background:var(--yellow)11;border:1px solid var(--yellow)33;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--yellow);">⚠ Only ${Math.round(_blockMeta.n_sales||0)} sales on this block — forward projections suppressed. CAGR from a thin sample is unreliable; a single outlier sale can flip the trend. Block quality and price-vs-median signals are still valid.</div>` : ''}
+      <h3>Value Projection — ${_usingAreaCagr ? 'Heights-Wide CAGR' : 'If Block CAGR Continues'}</h3>
+      ${_usingAreaCagr ? `<div style="background:var(--yellow)11;border:1px solid var(--yellow)33;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--yellow);">⚠ Only ${Math.round(_blockMeta.n_sales||0)} sales on this block — using Heights-wide CAGR (${heightsCagr!=null?(heightsCagr*100).toFixed(1)+'%':'—'}/yr) instead of block trend. Block-specific trajectory may differ.</div>` : ''}
       <div class="proj-row">
         ${yearsSinceSale > 0.1 ? `
         <div class="proj-box" style="border-color:var(--border);">
@@ -2306,7 +2317,7 @@ function renderScorerResults(d) {
       <div style="margin-top:10px;font-size:10px;color:var(--muted);">
         ${todayEstNote?'Est. today: '+todayEstNote+'. ':''}${(()=>{
           const bm=getBlockMeta(d.block);const nS=Math.round(bm.n_sales||0);
-          if((d.block_cagr||0)<0&&nS<10) return '<span style="color:var(--yellow);">⚠ Negative CAGR on only '+nS+' sales — unreliable. One outlier sale can flip this. Treat projection as illustrative.</span>';
+          if(_usingAreaCagr) return 'Projection uses Heights-wide CAGR ('+( heightsCagr!=null?(heightsCagr*100).toFixed(1):'—')+'%/yr) — block has only '+nS+' sales. Past performance does not guarantee future results.';
           if((d.block_cagr||0)<0) return '<span style="color:var(--yellow);">⚠ Negative CAGR may reflect mixed building types on this tax block, not genuine price decline.</span>';
           return 'Projection assumes '+Number(d.block_cagr).toFixed(1)+'% CAGR forward. Past performance does not guarantee future results.';
         })()}
