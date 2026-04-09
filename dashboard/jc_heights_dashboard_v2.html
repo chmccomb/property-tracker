@@ -188,14 +188,14 @@ tbody td{padding:6px 10px;vertical-align:middle;white-space:nowrap;}
 
 <!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('analysis')">📊 Block Analysis</div>
-  <div class="tab" onclick="switchTab('active')">🔴 Active Listings</div>
+  <div class="tab" onclick="switchTab('analysis')">📊 Block Analysis</div>
+  <div class="tab active" onclick="switchTab('active')">🔴 Active Listings</div>
   <div class="tab" onclick="switchTab('map')">🗺 Map View</div>
   <div class="tab" onclick="switchTab('scorer')">🏠 Deal Scorer</div>
 </div>
 
 <!-- ANALYSIS TAB -->
-<div class="tab-panel active" id="tab-analysis">
+<div class="tab-panel" id="tab-analysis">
   <div class="analysis-layout">
     <!-- LEFT: Block Leaderboard -->
     <div class="left-col">
@@ -291,7 +291,7 @@ tbody td{padding:6px 10px;vertical-align:middle;white-space:nowrap;}
 </div>
 
 <!-- ACTIVE LISTINGS TAB -->
-<div class="tab-panel" id="tab-active">
+<div class="tab-panel active" id="tab-active">
   <div style="display:flex;flex-direction:column;width:100%;overflow:hidden;height:100%;">
 
     <!-- Filters bar -->
