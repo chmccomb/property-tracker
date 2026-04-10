@@ -41,6 +41,9 @@ CLEAN_SCRIPT      = SCRIPTS_DIR / "jc_heights_clean.py"
 EMERGING_SCRIPT   = SCRIPTS_DIR / "jc_heights_emerging.py"
 WALKSCORE_SCRIPT  = SCRIPTS_DIR / "enrich_walkscore.py"
 CENSUS_SCRIPT     = SCRIPTS_DIR / "enrich_census.py"
+MODIIV_SCRIPT     = SCRIPTS_DIR / "enrich_modiiv.py"
+GEOCODE_SCRIPT    = SCRIPTS_DIR / "geocode.py"
+TRANSIT_SCRIPT    = SCRIPTS_DIR / "enrich_transit.py"
 INPUT_CSV_DEST    = DATA_DIR / "Testing.csv"
 OUTPUT_JSON       = DATA_DIR / "dashboard_data_v2.json"
 DOCS_DIR          = ROOT / "docs"
@@ -100,7 +103,7 @@ def embed_json_in_dashboard(json_path: Path, html_path: Path) -> None:
 
 
 def run_enrichment() -> None:
-    """Run optional enrichment scripts (Walk Score, Census ACS)."""
+    """Run optional enrichment scripts (Geocode, Walk Score, Census ACS)."""
     print(f"\n{'='*60}")
     print("  Running enrichment scripts")
     print(f"{'='*60}")
@@ -119,6 +122,12 @@ def run_enrichment() -> None:
     run_step(
         "Census ACS enrichment",
         [sys.executable, str(CENSUS_SCRIPT)],
+        cwd=DATA_DIR,
+    )
+
+    run_step(
+        "MOD-IV assessment enrichment",
+        [sys.executable, str(MODIIV_SCRIPT)],
         cwd=DATA_DIR,
     )
 
@@ -158,7 +167,44 @@ def deploy_to_github(timestamp: str) -> None:
         print("  Nothing to commit (dashboard unchanged)")
 
 
-def refresh(csv_path: Path, enrich: bool = False, deploy: bool = False) -> None:
+def merge_incremental(base_path: Path, incremental_path: Path, dest: Path) -> int:
+    """
+    Merge incremental CSV (e.g. gmail rows) into the base Paragon export.
+    Base rows are kept in full; incremental rows whose MLS # is not already
+    present in the base are appended.  Returns the number of new rows added.
+    """
+    import csv as _csv
+
+    with open(base_path, encoding="utf-8-sig") as f:
+        base_rows = list(_csv.DictReader(f))
+    base_mls = {r.get("MLS #", "").strip() for r in base_rows if r.get("MLS #", "").strip()}
+    fieldnames = list(base_rows[0].keys()) if base_rows else []
+
+    with open(incremental_path, encoding="utf-8-sig") as f:
+        inc_rows = list(_csv.DictReader(f))
+
+    # Strip internal gmail fields before merging
+    new_rows = []
+    for row in inc_rows:
+        mls = row.get("MLS #", "").strip()
+        if mls and mls not in base_mls:
+            # Add any missing columns as empty strings
+            merged = {k: "" for k in fieldnames}
+            merged.update({k: v for k, v in row.items() if k in fieldnames})
+            new_rows.append(merged)
+            base_mls.add(mls)
+
+    with open(dest, "w", newline="", encoding="utf-8") as f:
+        writer = _csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(base_rows)
+        writer.writerows(new_rows)
+
+    return len(new_rows)
+
+
+def refresh(csv_path: Path, enrich: bool = False, deploy: bool = False,
+            incremental: Path = None) -> None:
     if not csv_path.exists():
         print(f"✗ CSV not found: {csv_path}", file=sys.stderr)
         sys.exit(1)
@@ -169,14 +215,37 @@ def refresh(csv_path: Path, enrich: bool = False, deploy: bool = False) -> None:
     print(f"  Input: {csv_path}")
     print(f"{'='*60}")
 
-    # 1. (Optional) Run enrichment scripts before cleaning
-    if enrich:
-        run_enrichment()
-
-    # 2. Stage input CSV where clean.py expects it
+    # 1. Stage input CSV where clean.py expects it (must happen before enrichment
+    #    so enrich_census.py can read Testing.csv to discover which ZIPs to pull)
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     shutil.copy2(csv_path, INPUT_CSV_DEST)
     print(f"\n✓ Copied {csv_path.name} → {INPUT_CSV_DEST.relative_to(ROOT)}")
+
+    # 1b. (Optional) Merge incremental gmail rows on top of the base export
+    if incremental:
+        if not incremental.exists():
+            print(f"✗ Incremental CSV not found: {incremental}", file=sys.stderr)
+            sys.exit(1)
+        n = merge_incremental(csv_path, incremental, INPUT_CSV_DEST)
+        print(f"✓ Merged {n} new rows from {incremental.name} into Testing.csv")
+
+    # 2. Geocode new addresses (always runs — instant for cached addresses)
+    run_step(
+        "Geocoding new addresses",
+        [sys.executable, str(GEOCODE_SCRIPT)],
+        cwd=DATA_DIR,
+    )
+
+    # 2a. Transit proximity (always runs — pure math, no API, instant)
+    run_step(
+        "Transit proximity",
+        [sys.executable, str(TRANSIT_SCRIPT)],
+        cwd=DATA_DIR,
+    )
+
+    # 2b. (Optional) Run heavier enrichment scripts (Walk Score, Census ACS)
+    if enrich:
+        run_enrichment()
 
     # 3. Clean + score
     run_step(
@@ -263,12 +332,18 @@ def main() -> None:
         action="store_true",
         help="After refresh, copy dashboard to docs/index.html and git push (GitHub Pages)",
     )
+    parser.add_argument(
+        "--incremental",
+        type=Path,
+        default=None,
+        help="Incremental CSV (e.g. from gmail_ingest.py) to merge on top of --csv base export",
+    )
     args = parser.parse_args()
 
     if args.watch:
         watch(args.csv, interval=args.interval, enrich=args.enrich, deploy=args.deploy)
     else:
-        refresh(args.csv, enrich=args.enrich, deploy=args.deploy)
+        refresh(args.csv, enrich=args.enrich, deploy=args.deploy, incremental=args.incremental)
 
 
 if __name__ == "__main__":

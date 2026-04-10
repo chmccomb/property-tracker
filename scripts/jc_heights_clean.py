@@ -23,7 +23,7 @@ OUT_BLOCK    = "jc_heights_block.csv"
 
 BLOCKSTREET_MIN  = 5     # min sales on a (block, street) pair to split into sub-key
 CAGR_WINDOW_START = 2022  # standardised CAGR window — prevents open-ended span comparisons
-CAGR_WINDOW_END   = 2025  # inclusive; fall back to full range if < 2 years in window
+CAGR_WINDOW_END   = 2026  # inclusive; fall back to full range if < 2 years in window
 
 SCORE_WEIGHTS = {
     "block_cagr":          0.30,   # block-level price appreciation rate
@@ -149,6 +149,32 @@ print(f"  Block+street pairs with >= {BLOCKSTREET_MIN} sales: "
 # These files are produced by the enrich_*.py scripts in scripts/ and are
 # joined in below.  If a file doesn't exist the pipeline runs unchanged.
 
+# Geocode cache: keyed on MLS street address → (lat, lon)
+geocode_lu: dict = {}
+geo_path = Path("address_geocoded.csv")
+if geo_path.exists():
+    with open(geo_path, encoding="utf-8") as _f:
+        for _row in csv.DictReader(_f):
+            if _row.get("lat") and _row.get("lon"):
+                try:
+                    geocode_lu[_row["address"]] = (float(_row["lat"]), float(_row["lon"]))
+                except (ValueError, TypeError):
+                    pass
+    print(f"  Geocode cache: {len(geocode_lu)} addresses with coordinates")
+else:
+    print("  Geocode cache not found (run geocode.py to generate)")
+
+# Transit proximity: keyed on MLS street address
+transit_lu: dict = {}
+transit_path = Path("address_transit.csv")
+if transit_path.exists():
+    with open(transit_path, encoding="utf-8") as _f:
+        for _row in csv.DictReader(_f):
+            transit_lu[_row["address"]] = _row
+    print(f"  Transit proximity: {len(transit_lu)} addresses loaded")
+else:
+    print("  Transit data not found (run enrich_transit.py to generate)")
+
 # Walk Score: keyed on MLS street address
 walkscore_lu: dict = {}
 ws_path = Path("address_walkscore.csv")
@@ -160,15 +186,27 @@ if ws_path.exists():
 else:
     print("  Walk Score data not found (run enrich_walkscore.py to generate)")
 
-# MOD-IV: keyed on (block_raw_normalized, lot_normalized)
-modiiv_lu: dict = {}
-modiiv_path = Path("block_modiiv.csv")
-if modiiv_path.exists():
-    with open(modiiv_path, encoding="utf-8") as _f:
+# MOD-IV: lot-level lookup (block, lot) → net_value
+# Also block-level fallback for unmatched lots and swapped-key cases
+modiiv_lot_lu: dict = {}
+modiiv_block_lu: dict = {}
+modiiv_lot_path  = Path("modiiv_lot.csv")
+modiiv_block_path = Path("modiiv_block.csv")
+if modiiv_lot_path.exists() and modiiv_block_path.exists():
+    with open(modiiv_lot_path, encoding="utf-8") as _f:
         for _row in csv.DictReader(_f):
-            _key = (_row.get("block_raw", "").strip(), _row.get("lot", "").strip())
-            modiiv_lu[_key] = _row
-    print(f"  MOD-IV data: {len(modiiv_lu)} (block, lot) pairs loaded")
+            _b = _row.get("block","").strip()
+            _l = _row.get("lot",  "").strip()
+            _v = _row.get("net_value","").strip()
+            if _b and _l and _v and _v != "0":
+                modiiv_lot_lu[(_b, _l)] = int(float(_v))
+    with open(modiiv_block_path, encoding="utf-8") as _f:
+        for _row in csv.DictReader(_f):
+            _b = _row.get("block","").strip()
+            _v = _row.get("median_net_value","").strip()
+            if _b and _v and _v != "0":
+                modiiv_block_lu[_b] = int(float(_v))
+    print(f"  MOD-IV data: {len(modiiv_lot_lu):,} lot pairs, {len(modiiv_block_lu):,} block medians loaded")
 else:
     print("  MOD-IV data not found (run enrich_modiiv.py to generate)")
 
@@ -203,7 +241,6 @@ for row in raw:
     price_per_sqft    = round(sold_price / sqft, 2) if sold_price and sqft and sqft > 0 else None
     sale_to_list      = round(sold_price / list_price, 4) if sold_price and list_price and list_price > 0 else None
     orig_to_sold_pct  = round((sold_price - orig_price) / orig_price * 100, 2) if sold_price and orig_price and orig_price > 0 else None
-    assess_ratio      = round(sold_price / effective_assessed, 4) if sold_price and effective_assessed and effective_assessed > 0 else None
     total_baths       = (full_baths or 0) + 0.5 * (half_baths or 0)
     closing_year      = closing_date.year if closing_date else None
     closing_quarter   = year_quarter(closing_date)
@@ -222,16 +259,65 @@ for row in raw:
     transit_score = parse_int(_ws.get("transit_score", "")) if _ws else None
     bike_score    = parse_int(_ws.get("bike_score",    "")) if _ws else None
 
+    # ── Enrichment: Transit proximity ────────────────────────────────────
+    _tr = transit_lu.get(row.get("Address", "").strip(), {})
+    path_station    = _tr.get("path_station",    "") or None
+    path_dist_mi    = parse_float(_tr.get("path_dist_mi",    ""))
+    hblr_station    = _tr.get("hblr_station",    "") or None
+    hblr_dist_mi    = parse_float(_tr.get("hblr_dist_mi",    ""))
+    transit_station = _tr.get("transit_station", "") or None
+    transit_dist_mi = parse_float(_tr.get("transit_dist_mi", ""))
+
     # ── Enrichment: MOD-IV assessed value ────────────────────────────────
-    # Normalize block/lot the same way enrich_modiiv.py does (strip leading zeros)
-    _block_raw = row.get("Block", "").strip()
-    _lot_raw   = row.get("Lot",   "").strip()
-    _block_norm = str(int(_block_raw)) if _block_raw.isdigit() else _block_raw
-    _lot_norm   = str(int(_lot_raw))   if _lot_raw.isdigit()   else _lot_raw
-    _modiiv = modiiv_lu.get((_block_norm, _lot_norm), {})
-    modiiv_assessed = parse_price(_modiiv.get("modiiv_assessed", "")) if _modiiv else None
-    # Use MOD-IV assessed value when the MLS field is missing or zero
+    _block_raw  = row.get("Block", "").strip()
+    _lot_raw    = row.get("Lot",   "").strip()
+    _block_norm = str(int(_block_raw)) if _block_raw.isdigit() else _block_raw.lstrip("0") or "0"
+    _lot_norm   = str(int(_lot_raw))   if _lot_raw.isdigit()   else _lot_raw.lstrip("0")   or "0"
+    # Lot-level match → block-level fallback → swapped key fallback
+    _modiiv_val = (
+        modiiv_lot_lu.get((_block_norm, _lot_norm))
+        or modiiv_lot_lu.get((_lot_norm, _block_norm))   # some MLS records have block/lot swapped
+        or modiiv_block_lu.get(_block_norm)              # block-level median fallback
+        or modiiv_block_lu.get(_lot_norm)                # swapped block fallback
+    )
+    modiiv_assessed    = _modiiv_val if _modiiv_val and _modiiv_val > 0 else None
     effective_assessed = assessed_val or modiiv_assessed
+    assess_ratio = round(sold_price / effective_assessed, 4) if sold_price and effective_assessed and effective_assessed > 0 else None
+
+    # ── Parse parking and outdoor from Advertising Remarks ───────────────
+    remarks = (row.get("Advertising Remarks", "") or "").strip()
+    _rem = remarks.lower()
+
+    _park_strong = bool(re.search(
+        r'\b(deeded\s+parking|indoor\s+parking|garage\s+parking|assigned\s+parking|'
+        r'private\s+parking|parking\s+space|parking\s+spot|parking\s+included|'
+        r'1\s+car\s+garage|2\s+car\s+garage|parking\s+deeded)\b', _rem))
+    _park_weak = bool(re.search(r'\b(parking|garage|carport|driveway)\b', _rem))
+    _park_neg  = bool(re.search(r'\b(no\s+parking|street\s+parking\s+only)\b', _rem))
+
+    if _park_neg:
+        parking, parking_conf = False, "high"
+    elif _park_strong:
+        parking, parking_conf = True, "high"
+    elif _park_weak:
+        parking, parking_conf = True, "medium"
+    else:
+        parking, parking_conf = False, "low"
+
+    _outdoor_types = {
+        "rooftop": r'\b(rooftop|roof\s+top|roof\s+deck)\b',
+        "terrace": r'\bterrace\b',
+        "balcony": r'\bbalcon(y|ies)\b',
+        "deck":    r'\bdeck\b',
+        "yard":    r'\b(backyard|back\s+yard|front\s+yard|private\s+yard|yard)\b',
+        "patio":   r'\bpatio\b',
+    }
+    outdoor_type = next(
+        (otype for otype, pat in _outdoor_types.items() if re.search(pat, _rem)),
+        None
+    )
+    outdoor      = outdoor_type is not None
+    outdoor_conf = "high" if outdoor else "low"
 
     c = {
         "mls_id":           row.get("MLS #", "").strip(),
@@ -270,13 +356,27 @@ for row in raw:
         "is_distressed":    is_distressed,
         "is_short_sale":    is_short_sale,
         "is_bank_owned":    is_bank_owned,
-        "lat":              parse_float(row.get("Y Coordinates", "")),
-        "lon":              parse_float(row.get("X Coordinates", "")),
+        "lat":              geocode_lu.get(row.get("Address","").strip(), (parse_float(row.get("Y Coordinates","")), None))[0],
+        "lon":              geocode_lu.get(row.get("Address","").strip(), (None, parse_float(row.get("X Coordinates",""))))[1],
         "between":          row.get("Between", "").strip(),
+        "remarks":          remarks,
+        # Parking / outdoor (parsed from Advertising Remarks)
+        "parking":          parking,
+        "parking_conf":     parking_conf,
+        "outdoor":          outdoor,
+        "outdoor_type":     outdoor_type,
+        "outdoor_conf":     outdoor_conf,
         # Walk Score enrichment (None when enrich_walkscore.py hasn't been run)
         "walk_score":       walk_score,
         "transit_score":    transit_score,
         "bike_score":       bike_score,
+        # Transit proximity (None when enrich_transit.py hasn't been run)
+        "path_station":     path_station,
+        "path_dist_mi":     path_dist_mi,
+        "hblr_station":     hblr_station,
+        "hblr_dist_mi":     hblr_dist_mi,
+        "transit_station":  transit_station,
+        "transit_dist_mi":  transit_dist_mi,
         # MOD-IV enrichment
         "modiiv_assessed":  modiiv_assessed,   # official current-year assessment
         "assessed_value":   effective_assessed, # MLS value if available, else MOD-IV

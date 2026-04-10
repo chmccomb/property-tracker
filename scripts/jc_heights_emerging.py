@@ -24,13 +24,22 @@ with open('jc_heights_cleaned.csv') as f:
 with open('jc_heights_block.csv') as f:
     blocks = list(csv.DictReader(f))
 
-# Load geocache if available
-try:
-    with open('/sessions/loving-vigilant-mayer/geocache.json') as f:
-        geocache = json.load(f)
-    print(f"Geocache loaded: {sum(1 for v in geocache.values() if v)} hits")
-except FileNotFoundError:
-    geocache = {}
+# Load geocode cache produced by geocode.py (lat/lon already joined by clean.py,
+# but we also need it here for the radius-based comp fallback spatial index).
+geocache: dict = {}
+_geo_path = Path("address_geocoded.csv")
+if _geo_path.exists():
+    with open(_geo_path, encoding="utf-8") as _f:
+        for _row in csv.DictReader(_f):
+            if _row.get("lat") and _row.get("lon"):
+                try:
+                    geocache[_row["address"]] = {
+                        "lat": float(_row["lat"]), "lon": float(_row["lon"])
+                    }
+                except (ValueError, TypeError):
+                    pass
+    print(f"Geocache loaded: {len(geocache)} addresses")
+else:
     print("No geocache found — proceeding without coordinates")
 
 # ── OPTIONAL ENRICHMENT: Census ACS neighborhood data ────────────────────────
@@ -45,6 +54,23 @@ if census_path.exists():
     print(f"Census ACS data: {len(census_lu)} ZIP codes loaded")
 else:
     print("Census ACS data not found (run enrich_census.py to generate)")
+
+# ── OPEN HOUSE SCHEDULE ───────────────────────────────────────────────────
+open_house_lu: dict = {}
+oh_path = Path("open_houses.csv")
+if oh_path.exists():
+    with open(oh_path, encoding="utf-8-sig") as _f:
+        for _row in csv.DictReader(_f):
+            mls = _row.get("MLS #", "").strip()
+            d   = _row.get("Tour/Open House - Start Date", "").strip()
+            s   = _row.get("Tour/Open House - Start Time", "").strip()
+            e   = _row.get("Tour/Open House - End Time",   "").strip()
+            if mls and d:
+                open_house_lu.setdefault(mls, []).append({"date": d, "start": s, "end": e})
+    print(f"Open houses: {sum(len(v) for v in open_house_lu.values())} sessions "
+          f"across {len(open_house_lu)} listings")
+else:
+    print("Open house data not found (copy Tour_Open_House_Thumbnail.csv → open_houses.csv)")
 
 # ── HELPERS ──────────────────────────────────────────────────────────────
 def flt(v):
@@ -103,6 +129,43 @@ for p in props:
         sold.append(p)
 
 print(f"Arm's-length sold: {len(sold)}")
+
+# ── SPATIAL INDEX FOR RADIUS-BASED COMP FALLBACK ─────────────────────────
+# Used when a property's block has < RADIUS_MIN_BLOCK_SALES sold transactions.
+# Find all arm's-length sold comps within RADIUS_MILES and take median PSF.
+
+RADIUS_MILES          = 0.30   # ~5-minute walk; ~4–6 blocks in the Heights grid
+RADIUS_MIN_COMPS      = 5      # need at least this many comps for a valid estimate
+RADIUS_MIN_BLOCK_SALES = 10    # use radius fallback when block has fewer than this
+
+def _haversine_miles(lat1, lon1, lat2, lon2):
+    R = 3958.8
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+    return R * 2 * math.asin(math.sqrt(a))
+
+# Build list of (lat, lon, psf, property_type) for all geocoded sold comps
+_spatial_comps = []
+for _p in sold:
+    _geo = geocache.get(_p.get('address', ''))
+    if _geo and _p.get('_psf'):
+        _spatial_comps.append((_geo['lat'], _geo['lon'], _p['_psf'], _p.get('property_type', '')))
+
+print(f"Spatial comp index: {len(_spatial_comps)} geocoded sold properties")
+
+def radius_median_psf(lat, lon, prop_type=''):
+    """Return (median_psf, n_comps) for sold comps within RADIUS_MILES.
+    Prefers same property type; falls back to all types if too few same-type comps."""
+    same_type = [psf for clat, clon, psf, ctype in _spatial_comps
+                 if ctype == prop_type and _haversine_miles(lat, lon, clat, clon) <= RADIUS_MILES]
+    if len(same_type) >= RADIUS_MIN_COMPS:
+        return statistics.median(same_type), len(same_type)
+    all_nearby = [psf for clat, clon, psf, _ in _spatial_comps
+                  if _haversine_miles(lat, lon, clat, clon) <= RADIUS_MILES]
+    if len(all_nearby) >= RADIUS_MIN_COMPS:
+        return statistics.median(all_nearby), len(all_nearby)
+    return None, 0
 
 # ── ZIP-LEVEL MEDIAN PSF (benchmark for undervaluation) ──────────────────
 zip_psfs = defaultdict(list)
@@ -334,25 +397,55 @@ for bk in all_block_keys:
 # ── ENRICH PROPERTIES WITH GEOCOORDS + EMERGING SCORE ───────────────────
 emg_lookup = {b['block']: b for b in merged_blocks}
 
+_radius_used = _radius_skipped = 0
+
 enriched_props = []
 for p in props:
     r = dict(p)
     addr = r.get('address','')
-    geo  = geocache.get(addr)
-    r['lat'] = geo['lat'] if geo else None
-    r['lon'] = geo['lon'] if geo else None
+
+    # lat/lon: prefer geocache (authoritative), fall back to whatever clean.py set
+    geo = geocache.get(addr)
+    r['lat'] = geo['lat'] if geo else (flt(r.get('lat')) or None)
+    r['lon'] = geo['lon'] if geo else (flt(r.get('lon')) or None)
 
     bdata = emg_lookup.get(r.get('block',''), {})
     r['est_score'] = bdata.get('est_score')
     r['emg_score'] = bdata.get('emg_score')
     r['est_rank']  = bdata.get('est_rank')
     r['emg_rank']  = bdata.get('emg_rank')
-    r['block_cagr_pct'] = bdata.get('cagr')
-    r['block_median_psf'] = bdata.get('med_psf')
+    r['block_cagr_pct']  = bdata.get('cagr')
     r['block_median_dom'] = bdata.get('med_dom')
     r['block_median_stl'] = bdata.get('med_stl')
-    r['block_n_sales'] = bdata.get('n_sales')
+    r['block_n_sales']    = bdata.get('n_sales')
+
+    # ── Radius-based comp fallback ────────────────────────────────────────
+    # Use block PSF when reliable; fall back to radius median when block is
+    # thin (< RADIUS_MIN_BLOCK_SALES) or missing entirely.
+    block_psf   = bdata.get('med_psf')
+    block_n     = flt(bdata.get('n_sales')) or 0
+    rad_psf     = None
+    rad_n       = 0
+    psf_source  = 'block'
+
+    if (not block_psf or block_n < RADIUS_MIN_BLOCK_SALES) and r['lat'] and r['lon']:
+        rad_psf, rad_n = radius_median_psf(r['lat'], r['lon'], r.get('property_type',''))
+        if rad_psf:
+            _radius_used += 1
+            psf_source = 'radius'
+        else:
+            _radius_skipped += 1
+    elif not block_psf:
+        _radius_skipped += 1
+
+    r['block_median_psf'] = block_psf or rad_psf   # prefer block; use radius when block absent/thin
+    r['radius_median_psf'] = rad_psf
+    r['radius_n_comps']    = rad_n if rad_psf else None
+    r['psf_source']        = psf_source
     enriched_props.append(r)
+
+print(f"PSF source — block: {len(enriched_props)-_radius_used-_radius_skipped}  "
+      f"radius fallback: {_radius_used}  no data: {_radius_skipped}")
 
 # ── WRITE UPDATED BLOCK CSV ──────────────────────────────────────────────
 with open('jc_heights_blocks_v2.csv', 'w', newline='') as f:
@@ -419,10 +512,18 @@ for p in enriched_props:
         'est_rank':   to_num(p.get('est_rank')),
         'emg_rank':   to_num(p.get('emg_rank')),
         'block_cagr': to_num(p.get('block_cagr_pct')),
-        'block_psf':  to_num(p.get('block_median_psf')),
+        'block_psf':       to_num(p.get('block_median_psf')),
+        'radius_psf':      to_num(p.get('radius_median_psf')),
+        'radius_n_comps':  to_num(p.get('radius_n_comps')),
+        'psf_source':      p.get('psf_source', 'block'),
         'block_dom':  to_num(p.get('block_median_dom')),
         'block_stl':  to_num(p.get('block_median_stl')),
         'block_n':    to_num(p.get('block_n_sales')),
+        'parking':      p.get('parking') == 'True',
+        'parking_conf': p.get('parking_conf',''),
+        'outdoor':      p.get('outdoor') == 'True',
+        'outdoor_type': p.get('outdoor_type',''),
+        'outdoor_conf': p.get('outdoor_conf',''),
         'distressed': p.get('is_distressed') == 'True',
         'status':     p.get('status',''),
         'lat':        to_num(p.get('lat')),
@@ -431,8 +532,16 @@ for p in enriched_props:
         'walk_score':    to_num(p.get('walk_score')),
         'transit_score': to_num(p.get('transit_score')),
         'bike_score':    to_num(p.get('bike_score')),
+        # Transit proximity
+        'path_station':    p.get('path_station') or None,
+        'path_dist_mi':    to_num(p.get('path_dist_mi')),
+        'hblr_station':    p.get('hblr_station') or None,
+        'hblr_dist_mi':    to_num(p.get('hblr_dist_mi')),
+        'transit_station': p.get('transit_station') or None,
+        'transit_dist_mi': to_num(p.get('transit_dist_mi')),
         # MOD-IV
         'modiiv_assessed': to_num(p.get('modiiv_assessed')),
+        'open_houses':     open_house_lu.get(p.get('mls_id', ''), []),
     })
 
 # Blocks for JSON
