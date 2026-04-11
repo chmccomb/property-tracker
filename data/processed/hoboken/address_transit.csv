@@ -1,0 +1,969 @@
+address,path_station,path_dist_mi,hblr_station,hblr_dist_mi,transit_station,transit_dist_mi
+10 PATERSON AVE,Newport,0.814,Pavonia/Newport,0.775,Pavonia/Newport,0.775
+100 CLINTON ST,Hoboken,0.59,Pavonia/Newport,0.743,Hoboken,0.59
+100 GARDEN ST,Hoboken,0.441,Pavonia/Newport,0.705,Hoboken,0.441
+100 PARK AVE,Hoboken,0.491,Pavonia/Newport,0.715,Hoboken,0.491
+100 PATERSON AVE,Newport,0.928,Pavonia/Newport,0.889,Pavonia/Newport,0.889
+1000 HUDSON ST,Hoboken,0.897,Port Imperial,0.205,Port Imperial,0.205
+1000 MAXWELL LANE,Hoboken,0.927,Port Imperial,0.145,Port Imperial,0.145
+1001 CLINTON ST,Hoboken,1.013,Port Imperial,0.425,Port Imperial,0.425
+1002 WASHINGTON ST,Hoboken,0.91,Port Imperial,0.244,Port Imperial,0.244
+1003 GARDEN ST,Hoboken,0.941,Port Imperial,0.299,Port Imperial,0.299
+1004 WILLOW AVE,Hoboken,1.001,Port Imperial,0.389,Port Imperial,0.389
+1006 GARDEN ST,Hoboken,0.954,Port Imperial,0.301,Port Imperial,0.301
+1007 WILLOW AVE,Hoboken,0.998,Port Imperial,0.376,Port Imperial,0.376
+1008 WILLOW AVE,Hoboken,1.009,Port Imperial,0.385,Port Imperial,0.385
+1009 WILLOW AVE,Hoboken,1.002,Port Imperial,0.373,Port Imperial,0.373
+101 PARK AVE,Hoboken,0.477,Pavonia/Newport,0.711,Hoboken,0.477
+101 WILLOW AVE,Hoboken,0.526,Pavonia/Newport,0.724,Hoboken,0.526
+1010 WASHINGTON ST,Hoboken,0.929,Port Imperial,0.231,Port Imperial,0.231
+1010 WILLOW AVE,Hoboken,1.013,Port Imperial,0.383,Port Imperial,0.383
+1011 PARK AVE,Hoboken,0.981,Port Imperial,0.329,Port Imperial,0.329
+1011 WILLOW AVE,Hoboken,1.006,Port Imperial,0.371,Port Imperial,0.371
+1012 PARK AVE,Hoboken,0.991,Port Imperial,0.337,Port Imperial,0.337
+1012 WASHINGTON ST,Hoboken,0.932,Port Imperial,0.226,Port Imperial,0.226
+1013 PARK AVE,Hoboken,0.985,Port Imperial,0.327,Port Imperial,0.327
+1015 GRAND ST,Hoboken,1.069,Port Imperial,0.458,Port Imperial,0.458
+1015 WASHINGTON ST,Hoboken,0.919,Port Imperial,0.206,Port Imperial,0.206
+1016 WASHINGTON ST,Hoboken,0.942,Port Imperial,0.22,Port Imperial,0.22
+1016 WILLOW AVE,Hoboken,1.025,Port Imperial,0.377,Port Imperial,0.377
+102 JEFFERSON ST,Hoboken,0.74,Pavonia/Newport,0.813,Hoboken,0.74
+102 PARK AVE,Hoboken,0.496,Pavonia/Newport,0.72,Hoboken,0.496
+1021 GRAND ST,Hoboken,1.08,Port Imperial,0.453,Port Imperial,0.453
+1022 HUDSON ST,Hoboken,0.929,Port Imperial,0.174,Port Imperial,0.174
+1023 CLINTON ST,Hoboken,1.056,Port Imperial,0.405,Port Imperial,0.405
+1023 WASHINGTON ST,Hoboken,0.934,Port Imperial,0.197,Port Imperial,0.197
+1023 WILLOW AVE,Hoboken,1.03,Port Imperial,0.359,Port Imperial,0.359
+1024 ADAMS ST,Hoboken,1.111,Port Imperial,0.515,Port Imperial,0.515
+1025 MAXWELL LANE,Hoboken,0.995,Port Imperial,0.075,Port Imperial,0.075
+1025 WASHINGTON ST,Hoboken,0.937,Port Imperial,0.193,Port Imperial,0.193
+1026 CLINTON ST,Hoboken,1.07,Port Imperial,0.414,Port Imperial,0.414
+1026 WASHINGTON ST,Hoboken,0.958,Port Imperial,0.208,Port Imperial,0.208
+1027 WASHINGTON ST,Hoboken,0.941,Port Imperial,0.19,Port Imperial,0.19
+1028 HUDSON ST,Hoboken,0.944,Port Imperial,0.162,Port Imperial,0.162
+103 9TH ST,Hoboken,0.809,Port Imperial,0.332,Port Imperial,0.332
+1030 HUDSON ST,Hoboken,0.95,Port Imperial,0.158,Port Imperial,0.158
+1030 WILLOW AVE,Hoboken,1.053,Port Imperial,0.365,Port Imperial,0.365
+1031 PARK AVE,Hoboken,1.023,Port Imperial,0.307,Port Imperial,0.307
+1031 WASHINGTON ST,Hoboken,0.949,Port Imperial,0.184,Port Imperial,0.184
+1032 WILLOW AVE,Hoboken,1.014,Port Imperial,0.381,Port Imperial,0.381
+1033 WASHINGTON ST,Hoboken,0.953,Port Imperial,0.181,Port Imperial,0.181
+1034 CLINTON ST,Hoboken,1.042,Port Imperial,0.424,Port Imperial,0.424
+1034 GARDEN ST,Hoboken,0.967,Port Imperial,0.292,Port Imperial,0.292
+1037 PARK AVE,Hoboken,0.986,Port Imperial,0.326,Port Imperial,0.326
+104 6TH ST,Hoboken,0.593,Port Imperial,0.577,Port Imperial,0.577
+106 GARDEN ST,Hoboken,0.442,Pavonia/Newport,0.716,Hoboken,0.442
+107 HARRISON ST,Hoboken,0.928,Pavonia/Newport,0.921,Pavonia/Newport,0.921
+108 14TH ST,Hoboken,1.217,Port Imperial,0.208,Port Imperial,0.208
+108 JACKSON ST,Hoboken,0.889,Pavonia/Newport,0.898,Hoboken,0.889
+108 JEFFERSON ST,Hoboken,0.741,Pavonia/Newport,0.825,Hoboken,0.741
+108 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.84,Hoboken,0.789
+108 WILLOW AVE,Hoboken,0.537,Pavonia/Newport,0.733,Hoboken,0.537
+109 2ND ST,Hoboken,0.388,Pavonia/Newport,0.773,Hoboken,0.388
+109 GRAND ST,Hoboken,0.628,Pavonia/Newport,0.763,Hoboken,0.628
+109 HARRISON ST,Hoboken,0.928,Pavonia/Newport,0.922,Pavonia/Newport,0.922
+109 JACKSON ST,Hoboken,0.878,Pavonia/Newport,0.891,Hoboken,0.878
+110 ADAMS ST,Hoboken,0.689,Pavonia/Newport,0.791,Hoboken,0.689
+110 PARK AVE,Hoboken,0.49,Pavonia/Newport,0.722,Hoboken,0.49
+110 WASHINGTON ST,Hoboken,0.36,Pavonia/Newport,0.722,Hoboken,0.36
+110 WILLOW AVE,Hoboken,0.538,Pavonia/Newport,0.734,Hoboken,0.538
+1100 ADAMS ST,Hoboken,1.142,Port Imperial,0.509,Port Imperial,0.509
+1100 CLINTON ST,Hoboken,1.093,Port Imperial,0.406,Port Imperial,0.406
+1100 MAXWELL LANE,Hoboken,0.995,Port Imperial,0.075,Port Imperial,0.075
+1101 BLOOMFIELD ST,Hoboken,1.004,Port Imperial,0.204,Port Imperial,0.204
+1102 WASHINGTON ST,Hoboken,1.002,Port Imperial,0.181,Port Imperial,0.181
+1103 WASHINGTON ST,Hoboken,0.992,Port Imperial,0.155,Port Imperial,0.155
+1105 WASHINGTON ST,Hoboken,0.998,Port Imperial,0.152,Port Imperial,0.152
+1106 PARK AVE,Hoboken,1.064,Port Imperial,0.305,Port Imperial,0.305
+1106 WASHINGTON ST,Hoboken,1.012,Port Imperial,0.175,Port Imperial,0.175
+1107 GRAND ST,Hoboken,1.127,Port Imperial,0.44,Port Imperial,0.44
+1107 WASHINGTON ST,Hoboken,1.002,Port Imperial,0.149,Port Imperial,0.149
+1107 WILLOW AVE,Hoboken,1.08,Port Imperial,0.34,Port Imperial,0.34
+1108 HUDSON ST,Hoboken,0.99,Port Imperial,0.119,Port Imperial,0.119
+111 GARDEN ST,Hoboken,0.43,Pavonia/Newport,0.722,Hoboken,0.43
+111 MONROE ST,Hoboken,0.828,Pavonia/Newport,0.869,Hoboken,0.828
+111 PARK AVE,Hoboken,0.479,Pavonia/Newport,0.72,Hoboken,0.479
+1110 CLINTON ST,Hoboken,1.114,Port Imperial,0.401,Port Imperial,0.401
+1110 HUDSON ST,Hoboken,0.994,Port Imperial,0.116,Port Imperial,0.116
+1110 PARK AVE,Hoboken,1.071,Port Imperial,0.303,Port Imperial,0.303
+1112 HUDSON ST,Hoboken,0.998,Port Imperial,0.114,Port Imperial,0.114
+1112 PARK AVE,Hoboken,1.074,Port Imperial,0.302,Port Imperial,0.302
+1114 HUDSON ST,Hoboken,1.002,Port Imperial,0.111,Port Imperial,0.111
+1114 PARK AVE,Hoboken,1.078,Port Imperial,0.301,Port Imperial,0.301
+1115 GRAND ST,Hoboken,1.143,Port Imperial,0.436,Port Imperial,0.436
+1115 WILLOW AVE,Hoboken,1.095,Port Imperial,0.324,Port Imperial,0.324
+1117 WASHINGTON ST,Hoboken,1.024,Port Imperial,0.139,Port Imperial,0.139
+1119 WASHINGTON ST,Hoboken,1.027,Port Imperial,0.137,Port Imperial,0.137
+112 BLOOMFIELD ST,Hoboken,0.395,Pavonia/Newport,0.727,Hoboken,0.395
+112 JEFFERSON ST,Hoboken,0.742,Pavonia/Newport,0.833,Hoboken,0.742
+112 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.842,Hoboken,0.789
+112 PARK AVE,Hoboken,0.49,Pavonia/Newport,0.724,Hoboken,0.49
+1120 CLINTON ST,Hoboken,1.134,Port Imperial,0.396,Port Imperial,0.396
+1120 HUDSON ST,Hoboken,1.015,Port Imperial,0.104,Port Imperial,0.104
+1122 HUDSON ST,Hoboken,1.019,Port Imperial,0.102,Port Imperial,0.102
+1122 WASHINGTON ST,Hoboken,1.048,Port Imperial,0.163,Port Imperial,0.163
+1123 WASHINGTON ST,Hoboken,1.035,Port Imperial,0.135,Port Imperial,0.135
+1125 MAXWELL LANE,Hoboken,0.949,Port Imperial,0.105,Port Imperial,0.105
+1125 WASHINGTON ST,Hoboken,1.038,Port Imperial,0.133,Port Imperial,0.133
+1127 WILLOW AVE,Hoboken,1.117,Port Imperial,0.332,Port Imperial,0.332
+113 CLINTON ST,Hoboken,0.577,Pavonia/Newport,0.748,Hoboken,0.577
+113 MADISON ST,Hoboken,0.778,Pavonia/Newport,0.836,Hoboken,0.778
+113 WILLOW AVE,Hoboken,0.526,Pavonia/Newport,0.733,Hoboken,0.526
+114 ADAMS ST,Hoboken,0.689,Pavonia/Newport,0.793,Hoboken,0.689
+114 JACKSON ST,Hoboken,0.889,Pavonia/Newport,0.901,Hoboken,0.889
+114 MONROE ST,Hoboken,0.84,Pavonia/Newport,0.872,Hoboken,0.84
+114 WILLOW AVE,Hoboken,0.538,Pavonia/Newport,0.737,Hoboken,0.538
+115 CLINTON ST,Hoboken,0.577,Pavonia/Newport,0.749,Hoboken,0.577
+115 GARDEN ST,Hoboken,0.431,Pavonia/Newport,0.73,Hoboken,0.431
+115 GRAND ST,Hoboken,0.628,Pavonia/Newport,0.768,Hoboken,0.628
+115 WILLOW AVE,Hoboken,0.527,Pavonia/Newport,0.734,Hoboken,0.527
+116 ADAMS ST,Hoboken,0.689,Pavonia/Newport,0.795,Hoboken,0.689
+116 BLOOMFIELD ST,Hoboken,0.397,Pavonia/Newport,0.736,Hoboken,0.397
+116 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.845,Hoboken,0.789
+116 WILLOW AVE,Hoboken,0.538,Pavonia/Newport,0.739,Hoboken,0.538
+117 BLOOMFIELD ST,Hoboken,0.383,Pavonia/Newport,0.73,Hoboken,0.383
+117 CLINTON ST,Hoboken,0.577,Pavonia/Newport,0.75,Hoboken,0.577
+117 HARRISON ST,Hoboken,0.928,Pavonia/Newport,0.927,Pavonia/Newport,0.927
+117 MADISON ST,Hoboken,0.778,Pavonia/Newport,0.838,Hoboken,0.778
+118 BLOOMFIELD ST,Hoboken,0.398,Pavonia/Newport,0.741,Hoboken,0.398
+118 CLINTON ST,Hoboken,0.592,Pavonia/Newport,0.761,Hoboken,0.592
+118 JEFFERSON ST,Hoboken,0.744,Pavonia/Newport,0.845,Hoboken,0.744
+118 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.846,Hoboken,0.789
+118 WASHINGTON ST,Hoboken,0.358,Pavonia/Newport,0.74,Hoboken,0.358
+118 WILLOW AVE,Hoboken,0.538,Pavonia/Newport,0.74,Hoboken,0.538
+119 CLINTON ST,Hoboken,0.577,Pavonia/Newport,0.752,Hoboken,0.577
+119 MADISON ST,Hoboken,0.778,Pavonia/Newport,0.84,Hoboken,0.778
+120 BLOOMFIELD ST,Hoboken,0.399,Pavonia/Newport,0.745,Hoboken,0.399
+120 COURT ST,Hoboken,0.318,Pavonia/Newport,0.712,Hoboken,0.318
+120 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.847,Hoboken,0.789
+120 WILLOW AVE,Hoboken,0.538,Pavonia/Newport,0.741,Hoboken,0.538
+1200 GRAND ST,Hoboken,1.198,Port Imperial,0.443,Port Imperial,0.443
+1201 ADAMS ST,Hoboken,1.22,Port Imperial,0.481,Port Imperial,0.481
+1208 WASHINGTON ST,Hoboken,1.086,Port Imperial,0.148,Port Imperial,0.148
+121 BLOOMFIELD ST,Hoboken,0.385,Pavonia/Newport,0.738,Hoboken,0.385
+121 JACKSON ST,Hoboken,0.878,Pavonia/Newport,0.898,Hoboken,0.878
+1210 PARK AVE,Hoboken,1.146,Port Imperial,0.295,Port Imperial,0.295
+1212 WASHINGTON ST,Hoboken,1.103,Port Imperial,0.155,Port Imperial,0.155
+1214 PARK AVE,Hoboken,1.154,Port Imperial,0.295,Port Imperial,0.295
+1214 WASHINGTON ST,Hoboken,1.099,Port Imperial,0.149,Port Imperial,0.149
+1216 BLOOMFIELD ST,Hoboken,1.119,Port Imperial,0.193,Port Imperial,0.193
+1216 WASHINGTON ST,Hoboken,1.104,Port Imperial,0.15,Port Imperial,0.15
+1218 WASHINGTON ST,Hoboken,1.119,Port Imperial,0.158,Port Imperial,0.158
+122 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.848,Hoboken,0.789
+122 MONROE ST,Hoboken,0.84,Pavonia/Newport,0.877,Hoboken,0.84
+1222 WASHINGTON ST,Hoboken,1.129,Port Imperial,0.161,Port Imperial,0.161
+1226 PARK AVE,Hoboken,1.18,Port Imperial,0.299,Port Imperial,0.299
+1228 PARK AVE,Hoboken,1.184,Port Imperial,0.3,Port Imperial,0.3
+123 JACKSON ST,Hoboken,0.879,Pavonia/Newport,0.899,Hoboken,0.879
+123 WASHINGTON ST,Hoboken,0.336,Pavonia/Newport,0.745,Hoboken,0.336
+123 WILLOW AVE,Hoboken,0.527,Pavonia/Newport,0.74,Hoboken,0.527
+124 JEFFERSON ST,Hoboken,0.745,Pavonia/Newport,0.858,Hoboken,0.745
+124 MADISON ST,Hoboken,0.79,Pavonia/Newport,0.85,Hoboken,0.79
+124 MONROE ST,Hoboken,0.84,Pavonia/Newport,0.878,Hoboken,0.84
+125 GARDEN ST,Hoboken,0.435,Pavonia/Newport,0.748,Hoboken,0.435
+125 WILLOW AVE,Hoboken,0.528,Pavonia/Newport,0.741,Hoboken,0.528
+126 GARDEN ST,Hoboken,0.449,Pavonia/Newport,0.752,Hoboken,0.449
+126 MADISON ST,Hoboken,0.79,Pavonia/Newport,0.851,Hoboken,0.79
+126 MONROE ST,Hoboken,0.84,Pavonia/Newport,0.879,Hoboken,0.84
+127 CLINTON ST,Hoboken,0.578,Pavonia/Newport,0.758,Hoboken,0.578
+127 PARK AVE,Hoboken,0.48,Pavonia/Newport,0.732,Hoboken,0.48
+127 WILLOW AVE,Hoboken,0.528,Pavonia/Newport,0.743,Hoboken,0.528
+128 ADAMS ST,Hoboken,0.698,Pavonia/Newport,0.847,Hoboken,0.698
+128 GARDEN ST,Hoboken,0.45,Pavonia/Newport,0.755,Hoboken,0.45
+128 HARRISON ST,Hoboken,0.94,Pavonia/Newport,0.941,Hoboken,0.94
+128 JACKSON ST,Hoboken,0.89,Pavonia/Newport,0.91,Hoboken,0.89
+128 MADISON ST,Hoboken,0.79,Pavonia/Newport,0.852,Hoboken,0.79
+128-130 JACKSON ST,Newport,0.802,Pavonia/Newport,0.764,Pavonia/Newport,0.764
+129 CLINTON ST,Hoboken,0.578,Pavonia/Newport,0.759,Hoboken,0.578
+129 HARRISON ST,Hoboken,0.929,Pavonia/Newport,0.934,Hoboken,0.929
+129 WILLOW AVE,Hoboken,0.528,Pavonia/Newport,0.744,Hoboken,0.528
+130 ADAMS ST,Hoboken,0.69,Pavonia/Newport,0.804,Hoboken,0.69
+130 JEFFERSON ST,Hoboken,0.747,Pavonia/Newport,0.87,Hoboken,0.747
+130 MADISON ST,Hoboken,0.79,Pavonia/Newport,0.853,Hoboken,0.79
+130 PARK AVE,Hoboken,0.492,Pavonia/Newport,0.737,Hoboken,0.492
+1300 GRAND ST,Hoboken,1.255,Port Imperial,0.447,Port Imperial,0.447
+1300 HUDSON ST,Hoboken,1.139,Port Imperial,0.119,Port Imperial,0.119
+1300 PARK AVE,Hoboken,1.208,Port Imperial,0.305,Port Imperial,0.305
+1302 PARK AVE,Hoboken,1.211,Port Imperial,0.306,Port Imperial,0.306
+131 GARDEN ST,Hoboken,0.438,Pavonia/Newport,0.76,Hoboken,0.438
+131 MADISON ST,Hoboken,0.779,Pavonia/Newport,0.847,Hoboken,0.779
+131 MONROE ST,Hoboken,0.833,Pavonia/Newport,0.914,Hoboken,0.833
+1313 PARK AVE,Hoboken,1.22,Port Imperial,0.298,Port Imperial,0.298
+1313 WILLOW AVE,Hoboken,1.229,Port Imperial,0.33,Port Imperial,0.33
+1314 HUDSON ST,Hoboken,1.158,Port Imperial,0.133,Port Imperial,0.133
+1315 WASHINGTON ST,Hoboken,1.171,Port Imperial,0.167,Port Imperial,0.167
+1319 WASHINGTON ST,Hoboken,1.178,Port Imperial,0.171,Port Imperial,0.171
+132 ADAMS ST,Hoboken,0.691,Pavonia/Newport,0.805,Hoboken,0.691
+132 BLOOMFIELD ST,Hoboken,0.406,Pavonia/Newport,0.773,Hoboken,0.406
+132 JACKSON ST,Hoboken,0.89,Pavonia/Newport,0.912,Hoboken,0.89
+132 MONROE ST,Hoboken,0.848,Pavonia/Newport,0.927,Hoboken,0.848
+1320 BLOOMFIELD ST,Hoboken,1.198,Port Imperial,0.22,Port Imperial,0.22
+1325 ADAMS ST,Hoboken,1.259,Port Imperial,0.483,Port Imperial,0.483
+133 GRAND ST,Hoboken,0.63,Pavonia/Newport,0.78,Hoboken,0.63
+133 JACKSON ST,Hoboken,0.882,Pavonia/Newport,0.946,Hoboken,0.882
+133 MADISON ST,Hoboken,0.785,Pavonia/Newport,0.893,Hoboken,0.785
+133 MONROE ST,Hoboken,0.834,Pavonia/Newport,0.919,Hoboken,0.834
+133 PARK AVE,Hoboken,0.481,Pavonia/Newport,0.736,Hoboken,0.481
+1331 GRAND ST,Hoboken,1.234,Port Imperial,0.433,Port Imperial,0.433
+135 GARDEN ST,Hoboken,0.44,Pavonia/Newport,0.767,Hoboken,0.44
+135 PARK AVE,Hoboken,0.481,Pavonia/Newport,0.737,Hoboken,0.481
+137 GARDEN ST,Hoboken,0.441,Pavonia/Newport,0.771,Hoboken,0.441
+137 PARK AVE,Hoboken,0.481,Pavonia/Newport,0.739,Hoboken,0.481
+138 GARDEN ST,Hoboken,0.454,Pavonia/Newport,0.773,Hoboken,0.454
+138 PARK AVE,Hoboken,0.493,Pavonia/Newport,0.743,Hoboken,0.493
+139 BLOOMFIELD ST,Hoboken,0.394,Pavonia/Newport,0.773,Hoboken,0.394
+140 GARDEN ST,Hoboken,0.455,Pavonia/Newport,0.777,Hoboken,0.455
+1400 HUDSON ST,Hoboken,1.153,Port Imperial,0.127,Port Imperial,0.127
+1404 GRAND ST,Hoboken,1.334,Port Imperial,0.466,Port Imperial,0.466
+1410 GRAND ST,Hoboken,1.338,Port Imperial,0.467,Port Imperial,0.467
+1425 GARDEN ST,Hoboken,1.251,Port Imperial,0.276,Port Imperial,0.276
+1425 HUDSON ST,Hoboken,1.154,Port Imperial,0.123,Port Imperial,0.123
+1450 WASHINGTON ST,Hoboken,1.241,Port Imperial,0.224,Port Imperial,0.224
+150 14TH ST,Hoboken,1.222,Port Imperial,0.223,Port Imperial,0.223
+1500 GARDEN ST,Hoboken,1.279,Port Imperial,0.3,Port Imperial,0.3
+1500 HUDSON ST,Hoboken,1.169,Port Imperial,0.14,Port Imperial,0.14
+1500 WASHINGTON ST,Hoboken,0.34,Pavonia/Newport,0.604,Hoboken,0.34
+151 2ND ST,Hoboken,0.408,Pavonia/Newport,0.775,Hoboken,0.408
+152 2ND ST,Hoboken,0.418,Pavonia/Newport,0.79,Hoboken,0.418
+152 6TH ST,Hoboken,0.614,Port Imperial,0.589,Port Imperial,0.589
+155 14TH ST,Hoboken,1.219,Port Imperial,0.235,Port Imperial,0.235
+157 14TH ST,Hoboken,1.219,Port Imperial,0.236,Port Imperial,0.236
+157 7TH ST,Hoboken,0.679,Port Imperial,0.52,Port Imperial,0.52
+158 NEWARK ST,Hoboken,0.403,Pavonia/Newport,0.666,Hoboken,0.403
+159 14TH ST,Hoboken,1.219,Port Imperial,0.237,Port Imperial,0.237
+159 NEWARK ST,Hoboken,0.395,Pavonia/Newport,0.645,Hoboken,0.395
+160 2ND ST,Hoboken,0.435,Pavonia/Newport,0.792,Hoboken,0.435
+161 5TH ST,Hoboken,0.541,Port Imperial,0.686,Hoboken,0.541
+162 2ND ST,Hoboken,0.439,Pavonia/Newport,0.792,Hoboken,0.439
+163 14TH ST,Hoboken,1.22,Port Imperial,0.24,Port Imperial,0.24
+163-165 NEWARK ST,Hoboken,0.64,Pavonia/Newport,0.678,Hoboken,0.64
+165 7TH ST,Hoboken,0.686,Port Imperial,0.525,Port Imperial,0.525
+2 CONSTITUTION CT,Hoboken,1.13,Port Imperial,0.091,Port Imperial,0.091
+2 PATERSON AVE,Newport,0.808,Pavonia/Newport,0.769,Pavonia/Newport,0.769
+200 HUDSON ST,Hoboken,0.315,Pavonia/Newport,0.786,Hoboken,0.315
+200 JACKSON ST,Hoboken,0.902,Pavonia/Newport,0.971,Hoboken,0.902
+201 BLOOMFIELD ST,Hoboken,0.398,Pavonia/Newport,0.789,Hoboken,0.398
+201 GARDEN ST,Hoboken,0.444,Pavonia/Newport,0.793,Hoboken,0.444
+201 PARK AVE,Hoboken,0.495,Pavonia/Newport,0.801,Hoboken,0.495
+201-203 14TH ST,Hoboken,1.183,Port Imperial,0.14,Port Imperial,0.14
+202 PARK AVE,Hoboken,0.509,Pavonia/Newport,0.809,Hoboken,0.509
+203 MADISON ST,Hoboken,0.788,Pavonia/Newport,0.907,Hoboken,0.788
+203 WASHINGTON ST,Hoboken,0.352,Pavonia/Newport,0.792,Hoboken,0.352
+204 GARDEN ST,Hoboken,0.462,Pavonia/Newport,0.803,Hoboken,0.462
+204 JACKSON ST,Hoboken,0.898,Pavonia/Newport,0.968,Hoboken,0.898
+204 WILLOW AVE,Hoboken,0.558,Pavonia/Newport,0.824,Hoboken,0.558
+205 14TH ST,Hoboken,1.235,Port Imperial,0.279,Port Imperial,0.279
+205 ADAMS ST,Hoboken,0.691,Pavonia/Newport,0.868,Hoboken,0.691
+205 PARK AVE,Hoboken,0.495,Pavonia/Newport,0.81,Hoboken,0.495
+206 ADAMS ST,Hoboken,0.704,Pavonia/Newport,0.873,Hoboken,0.704
+206 JEFFERSON ST,Hoboken,0.753,Pavonia/Newport,0.899,Hoboken,0.753
+206 WILLOW AVE,Hoboken,0.559,Pavonia/Newport,0.828,Hoboken,0.559
+207 14TH ST,Hoboken,1.236,Port Imperial,0.28,Port Imperial,0.28
+207 2ND ST,Hoboken,0.461,Pavonia/Newport,0.782,Hoboken,0.461
+208 BLOOMFIELD ST,Hoboken,0.417,Pavonia/Newport,0.806,Hoboken,0.417
+208 PARK AVE,Hoboken,0.512,Pavonia/Newport,0.821,Hoboken,0.512
+208 WILLOW AVE,Hoboken,0.56,Pavonia/Newport,0.833,Hoboken,0.56
+209 14TH ST,Hoboken,1.236,Port Imperial,0.281,Port Imperial,0.281
+209 2ND ST,Hoboken,0.462,Pavonia/Newport,0.782,Hoboken,0.462
+209 6TH ST,Hoboken,0.649,Port Imperial,0.625,Port Imperial,0.625
+209 ADAMS ST,Hoboken,0.642,Pavonia/Newport,0.859,Hoboken,0.642
+209 BLOOMFIELD ST,Hoboken,0.4,Pavonia/Newport,0.803,Hoboken,0.4
+209 GARDEN ST,Hoboken,0.449,Pavonia/Newport,0.807,Hoboken,0.449
+210 3RD ST,Hoboken,0.515,Port Imperial,0.842,Hoboken,0.515
+210 ADAMS ST,Hoboken,0.658,Pavonia/Newport,0.867,Hoboken,0.658
+210 BLOOMFIELD ST,Hoboken,0.418,Pavonia/Newport,0.811,Hoboken,0.418
+210 JACKSON ST,Hoboken,0.899,Pavonia/Newport,0.972,Hoboken,0.899
+211 14TH ST,Hoboken,1.236,Port Imperial,0.282,Port Imperial,0.282
+211 3RD ST,Hoboken,0.508,Port Imperial,0.86,Hoboken,0.508
+211 ADAMS ST,Hoboken,0.694,Pavonia/Newport,0.882,Hoboken,0.694
+211 JEFFERSON ST,Hoboken,0.74,Pavonia/Newport,0.889,Hoboken,0.74
+211 MADISON ST,Hoboken,0.789,Pavonia/Newport,0.912,Hoboken,0.789
+212 JACKSON ST,Hoboken,0.899,Pavonia/Newport,0.973,Hoboken,0.899
+212 MADISON ST,Hoboken,0.801,Pavonia/Newport,0.919,Hoboken,0.801
+213 14TH ST,Hoboken,1.237,Port Imperial,0.283,Port Imperial,0.283
+213 CLINTON ST,Hoboken,0.596,Pavonia/Newport,0.853,Hoboken,0.596
+213 MONROE ST,Hoboken,0.842,Pavonia/Newport,0.957,Hoboken,0.842
+214 JACKSON ST,Hoboken,0.899,Pavonia/Newport,0.974,Hoboken,0.899
+214 JEFFERSON ST,Hoboken,0.757,Pavonia/Newport,0.915,Hoboken,0.757
+214 PARK AVE,Hoboken,0.516,Pavonia/Newport,0.832,Hoboken,0.516
+214 WILLOW AVE,Hoboken,0.564,Pavonia/Newport,0.846,Hoboken,0.564
+215 ADAMS ST,Hoboken,0.696,Pavonia/Newport,0.891,Hoboken,0.696
+215 BLOOMFIELD ST,Hoboken,0.406,Pavonia/Newport,0.817,Hoboken,0.406
+215 CLINTON ST,Hoboken,0.598,Pavonia/Newport,0.857,Hoboken,0.598
+215 GRAND ST,Hoboken,0.643,Pavonia/Newport,0.852,Hoboken,0.643
+215 MONROE ST,Hoboken,0.839,Pavonia/Newport,0.94,Hoboken,0.839
+217 BLOOMFIELD ST,Hoboken,0.407,Pavonia/Newport,0.821,Hoboken,0.407
+217 WILLOW AVE,Hoboken,0.551,Pavonia/Newport,0.847,Hoboken,0.551
+218 HUDSON ST,Hoboken,0.32,Pavonia/Newport,0.803,Hoboken,0.32
+218 JACKSON ST,Hoboken,0.9,Pavonia/Newport,0.976,Hoboken,0.9
+218 JEFFERSON ST,Hoboken,0.759,Pavonia/Newport,0.924,Hoboken,0.759
+218 MADISON ST,Hoboken,0.801,Pavonia/Newport,0.923,Hoboken,0.801
+218 WILLOW AVE,Hoboken,0.567,Pavonia/Newport,0.855,Hoboken,0.567
+219 GRAND ST,Hoboken,0.644,Pavonia/Newport,0.854,Hoboken,0.644
+219 MADISON ST,Hoboken,0.79,Pavonia/Newport,0.917,Hoboken,0.79
+219 WILLOW AVE,Hoboken,0.553,Pavonia/Newport,0.852,Hoboken,0.553
+220 7TH ST,Hoboken,0.735,Port Imperial,0.541,Port Imperial,0.541
+220 JEFFERSON ST,Hoboken,0.76,Pavonia/Newport,0.928,Hoboken,0.76
+220 WASHINGTON ST,Hoboken,0.375,Pavonia/Newport,0.803,Hoboken,0.375
+221 CLINTON ST,Hoboken,0.601,Pavonia/Newport,0.869,Hoboken,0.601
+221 MONROE ST,Hoboken,0.84,Pavonia/Newport,0.944,Hoboken,0.84
+221 WILLOW AVE,Hoboken,0.554,Pavonia/Newport,0.856,Hoboken,0.554
+222 BLOOMFIELD ST,Hoboken,0.429,Pavonia/Newport,0.837,Hoboken,0.429
+222 CLINTON ST,Hoboken,0.618,Pavonia/Newport,0.878,Hoboken,0.618
+222 GRAND ST,Hoboken,0.666,Pavonia/Newport,0.895,Hoboken,0.666
+222 HUDSON ST,Hoboken,0.322,Pavonia/Newport,0.806,Hoboken,0.322
+222 MADISON ST,Hoboken,0.802,Pavonia/Newport,0.926,Hoboken,0.802
+222 MONROE ST,Hoboken,0.852,Pavonia/Newport,0.952,Hoboken,0.852
+222 PARK AVE,Hoboken,0.522,Pavonia/Newport,0.848,Hoboken,0.522
+222 WILLOW AVE,Hoboken,0.57,Pavonia/Newport,0.864,Hoboken,0.57
+223 BLOOMFIELD ST,Hoboken,0.415,Pavonia/Newport,0.832,Hoboken,0.415
+223 CLINTON ST,Hoboken,0.603,Pavonia/Newport,0.873,Hoboken,0.603
+223 PARK AVE,Hoboken,0.508,Pavonia/Newport,0.848,Hoboken,0.508
+224 BLOOMFIELD ST,Hoboken,0.431,Pavonia/Newport,0.842,Hoboken,0.431
+224 HUDSON ST,Hoboken,0.323,Pavonia/Newport,0.807,Hoboken,0.323
+224 JEFFERSON ST,Hoboken,0.763,Pavonia/Newport,0.936,Hoboken,0.763
+224 MADISON ST,Hoboken,0.802,Pavonia/Newport,0.927,Hoboken,0.802
+224 MONROE ST,Hoboken,0.852,Pavonia/Newport,0.953,Hoboken,0.852
+224 PARK AVE,Hoboken,0.523,Pavonia/Newport,0.852,Hoboken,0.523
+224 WILLOW AVE,Hoboken,0.571,Pavonia/Newport,0.869,Hoboken,0.571
+224-226 WILLOW AVE,Hoboken,0.532,Pavonia/Newport,0.653,Hoboken,0.532
+225 PARK AVE,Hoboken,0.51,Pavonia/Newport,0.852,Hoboken,0.51
+225 RIVER ST,Hoboken,0.272,Port Imperial,0.823,Hoboken,0.272
+226 JEFFERSON ST,Hoboken,0.764,Pavonia/Newport,0.941,Hoboken,0.764
+226 MONROE ST,Hoboken,0.852,Pavonia/Newport,0.954,Hoboken,0.852
+226 PARK AVE,Hoboken,0.524,Pavonia/Newport,0.855,Hoboken,0.524
+226 WILLOW AVE,Hoboken,0.573,Pavonia/Newport,0.874,Hoboken,0.573
+227 GRAND ST,Hoboken,0.645,Pavonia/Newport,0.86,Hoboken,0.645
+227 MADISON ST,Hoboken,0.791,Pavonia/Newport,0.923,Hoboken,0.791
+227 MONROE ST,Hoboken,0.841,Pavonia/Newport,0.948,Hoboken,0.841
+228 BLOOMFIELD ST,Hoboken,0.441,Pavonia/Newport,0.851,Hoboken,0.441
+228 MONROE ST,Hoboken,0.852,Pavonia/Newport,0.955,Hoboken,0.852
+229 WILLOW AVE,Hoboken,0.561,Pavonia/Newport,0.874,Hoboken,0.561
+230 BLOOMFIELD ST,Hoboken,0.441,Port Imperial,0.847,Hoboken,0.441
+230 MONROE ST,Hoboken,0.853,Pavonia/Newport,0.957,Hoboken,0.853
+230 PARK AVE,Hoboken,0.527,Pavonia/Newport,0.863,Hoboken,0.527
+231 GRAND ST,Hoboken,0.646,Pavonia/Newport,0.863,Hoboken,0.646
+231 MADISON ST,Hoboken,0.792,Pavonia/Newport,0.925,Hoboken,0.792
+231 PARK AVE,Hoboken,0.514,Pavonia/Newport,0.864,Hoboken,0.514
+232 BLOOMFIELD ST,Hoboken,0.444,Port Imperial,0.841,Hoboken,0.444
+232 MONROE ST,Hoboken,0.864,Pavonia/Newport,1.001,Hoboken,0.864
+232 PARK AVE,Hoboken,0.529,Pavonia/Newport,0.867,Hoboken,0.529
+233 GRAND ST,Hoboken,0.658,Pavonia/Newport,0.911,Hoboken,0.658
+233 MONROE ST,Hoboken,0.803,Pavonia/Newport,0.97,Hoboken,0.803
+233 WASHINGTON ST,Hoboken,0.381,Port Imperial,0.832,Hoboken,0.381
+233 WILLOW AVE,Hoboken,0.564,Port Imperial,0.879,Hoboken,0.564
+235 MONROE ST,Hoboken,0.842,Pavonia/Newport,0.953,Hoboken,0.842
+235 PARK AVE,Hoboken,0.518,Port Imperial,0.862,Hoboken,0.518
+252-256 1ST ST,Hoboken,0.202,Pavonia/Newport,0.702,Hoboken,0.202
+253 10TH ST,Hoboken,0.958,Port Imperial,0.36,Port Imperial,0.36
+257 12TH ST,Hoboken,1.115,Port Imperial,0.302,Port Imperial,0.302
+258 9TH ST,Hoboken,0.892,Port Imperial,0.413,Port Imperial,0.413
+259 12TH ST,Hoboken,1.116,Port Imperial,0.304,Port Imperial,0.304
+261 12TH ST,Hoboken,1.116,Port Imperial,0.305,Port Imperial,0.305
+261 1ST ST,Hoboken,0.514,Pavonia/Newport,0.706,Hoboken,0.514
+262 1ST ST,Hoboken,0.5,Pavonia/Newport,0.715,Hoboken,0.5
+264 5TH ST,Hoboken,0.628,Port Imperial,0.713,Hoboken,0.628
+264 7TH ST,Hoboken,0.762,Port Imperial,0.564,Port Imperial,0.564
+300 1ST ST,Hoboken,0.545,Pavonia/Newport,0.715,Hoboken,0.545
+300 HUDSON ST,Hoboken,0.364,Port Imperial,0.804,Hoboken,0.364
+300 NEWARK ST,Hoboken,0.556,Pavonia/Newport,0.695,Hoboken,0.556
+300 PARK AVE,Hoboken,0.544,Port Imperial,0.854,Hoboken,0.544
+301 1ST ST,Hoboken,0.54,Pavonia/Newport,0.712,Hoboken,0.54
+301 MONROE ST,Hoboken,0.855,Pavonia/Newport,1.008,Hoboken,0.855
+302 1ST ST,Hoboken,0.542,Pavonia/Newport,0.726,Hoboken,0.542
+302 MONROE ST,Hoboken,0.868,Pavonia/Newport,1.015,Hoboken,0.868
+303 MONROE ST,Hoboken,0.857,Pavonia/Newport,1.01,Hoboken,0.857
+304 HUDSON ST,Hoboken,0.364,Port Imperial,0.801,Hoboken,0.364
+306 BLOOMFIELD ST,Hoboken,0.459,Port Imperial,0.804,Hoboken,0.459
+306 PARK AVE,Hoboken,0.548,Port Imperial,0.842,Hoboken,0.548
+307 1ST ST,Hoboken,0.544,Pavonia/Newport,0.716,Hoboken,0.544
+308 9TH ST,Hoboken,0.919,Port Imperial,0.449,Port Imperial,0.449
+308 GARDEN ST,Hoboken,0.5,Port Imperial,0.822,Hoboken,0.5
+308 MONROE ST,Hoboken,0.869,Pavonia/Newport,1.019,Hoboken,0.869
+309 1ST ST,Hoboken,0.561,Pavonia/Newport,0.72,Hoboken,0.561
+309 2ND ST,Hoboken,0.729,Pavonia/Newport,0.865,Hoboken,0.729
+309 MONROE ST,Hoboken,0.858,Pavonia/Newport,1.014,Hoboken,0.858
+310 HUDSON ST,Hoboken,0.367,Port Imperial,0.797,Hoboken,0.367
+311 COURT ST,Hoboken,0.381,Port Imperial,0.799,Hoboken,0.381
+311 MONROE ST,Hoboken,0.859,Port Imperial,1.013,Hoboken,0.859
+312 10TH ST,Hoboken,0.996,Port Imperial,0.399,Port Imperial,0.399
+312 MADISON ST,Hoboken,0.822,Port Imperial,0.988,Hoboken,0.822
+313 GRAND ST,Hoboken,0.673,Port Imperial,0.882,Hoboken,0.673
+313 MONROE ST,Hoboken,0.859,Port Imperial,1.012,Hoboken,0.859
+314 HUDSON ST,Hoboken,0.368,Port Imperial,0.794,Hoboken,0.368
+315 GRAND ST,Hoboken,0.675,Port Imperial,0.877,Hoboken,0.675
+315 MONROE ST,Hoboken,0.859,Port Imperial,1.011,Hoboken,0.859
+316 HUDSON ST,Hoboken,0.369,Port Imperial,0.792,Hoboken,0.369
+316 PARK AVE,Hoboken,0.554,Port Imperial,0.827,Hoboken,0.554
+316-318 GARDEN ST,Hoboken,0.454,Pavonia/Newport,0.799,Hoboken,0.454
+318 HUDSON ST,Hoboken,0.37,Port Imperial,0.791,Hoboken,0.37
+318 MADISON ST,Hoboken,0.823,Port Imperial,0.985,Hoboken,0.823
+318 PARK AVE,Hoboken,0.557,Port Imperial,0.823,Hoboken,0.557
+319 GRAND ST,Hoboken,0.679,Port Imperial,0.869,Hoboken,0.679
+319 MONROE ST,Hoboken,0.86,Port Imperial,1.008,Hoboken,0.86
+319 PARK AVE,Hoboken,0.541,Port Imperial,0.814,Hoboken,0.541
+320 BLOOMFIELD ST,Hoboken,0.472,Port Imperial,0.781,Hoboken,0.472
+320 MADISON ST,Hoboken,0.824,Port Imperial,0.983,Hoboken,0.824
+321 ADAMS ST,Hoboken,0.728,Port Imperial,0.893,Hoboken,0.728
+321 MONROE ST,Hoboken,0.861,Port Imperial,1.007,Hoboken,0.861
+322 GRAND ST,Hoboken,0.698,Port Imperial,0.869,Hoboken,0.698
+322 HUDSON ST,Hoboken,0.372,Port Imperial,0.788,Hoboken,0.372
+322 MADISON ST,Hoboken,0.824,Port Imperial,0.982,Hoboken,0.824
+323 JACKSON ST,Hoboken,0.908,Port Imperial,1.037,Hoboken,0.908
+324 HUDSON ST,Hoboken,0.373,Port Imperial,0.786,Hoboken,0.373
+325 ADAMS ST,Hoboken,0.732,Port Imperial,0.886,Hoboken,0.732
+325 WILLOW AVE,Hoboken,0.596,Port Imperial,0.81,Hoboken,0.596
+326 GRAND ST,Hoboken,0.702,Port Imperial,0.861,Hoboken,0.702
+326 MONROE ST,Hoboken,0.873,Port Imperial,1.011,Hoboken,0.873
+327 MONROE ST,Hoboken,0.862,Port Imperial,1.004,Hoboken,0.862
+328 GARDEN ST,Hoboken,0.518,Port Imperial,0.789,Hoboken,0.518
+328 MADISON ST,Hoboken,0.825,Port Imperial,0.979,Hoboken,0.825
+329 ADAMS ST,Hoboken,0.735,Port Imperial,0.878,Hoboken,0.735
+329 WILLOW AVE,Hoboken,0.601,Port Imperial,0.801,Hoboken,0.601
+330 MONROE ST,Hoboken,0.874,Port Imperial,1.008,Hoboken,0.874
+331 ADAMS ST,Hoboken,0.737,Port Imperial,0.874,Hoboken,0.737
+331 GRAND ST,Hoboken,0.691,Port Imperial,0.844,Hoboken,0.691
+331 JEFFERSON ST,Hoboken,0.784,Port Imperial,0.899,Hoboken,0.784
+332 MADISON ST,Hoboken,0.845,Port Imperial,0.937,Hoboken,0.845
+332 MONROE ST,Hoboken,0.892,Port Imperial,0.969,Hoboken,0.892
+333 ADAMS ST,Hoboken,0.739,Port Imperial,0.87,Hoboken,0.739
+333 GARDEN ST,Hoboken,0.493,Port Imperial,0.809,Hoboken,0.493
+333 MONROE ST,Hoboken,0.879,Port Imperial,0.959,Hoboken,0.879
+336 BLOOMFIELD ST,Hoboken,0.488,Port Imperial,0.755,Hoboken,0.488
+336 PARK AVE,Hoboken,0.574,Port Imperial,0.788,Hoboken,0.574
+337 PARK AVE,Hoboken,0.559,Port Imperial,0.783,Hoboken,0.559
+338 BLOOMFIELD ST,Hoboken,0.49,Port Imperial,0.752,Hoboken,0.49
+341 GARDEN ST,Hoboken,0.496,Port Imperial,0.804,Hoboken,0.496
+350 7TH ST,Hoboken,0.817,Port Imperial,0.611,Port Imperial,0.611
+354 1ST ST,Hoboken,0.6,Pavonia/Newport,0.747,Hoboken,0.6
+356 1ST ST,Hoboken,0.605,Pavonia/Newport,0.748,Hoboken,0.605
+358 14TH ST,Hoboken,1.316,Port Imperial,0.438,Port Imperial,0.438
+358 3RD ST,Hoboken,0.652,Port Imperial,0.902,Hoboken,0.652
+358 6TH ST,Hoboken,0.758,Port Imperial,0.685,Port Imperial,0.685
+360 1ST ST,Hoboken,0.615,Pavonia/Newport,0.752,Hoboken,0.615
+367 1ST ST,Hoboken,0.62,Pavonia/Newport,0.742,Hoboken,0.62
+369 1ST ST,Hoboken,0.624,Pavonia/Newport,0.743,Hoboken,0.624
+38 JACKSON ST,Newport,0.815,Pavonia/Newport,0.778,Pavonia/Newport,0.778
+380 NEWARK ST,Hoboken,0.62,Pavonia/Newport,0.691,Hoboken,0.62
+400 9TH ST,Hoboken,0.978,Port Imperial,0.527,Port Imperial,0.527
+400 MADISON ST,Hoboken,0.851,Port Imperial,0.927,Hoboken,0.851
+401 JEFFERSON ST,Hoboken,0.788,Port Imperial,0.885,Hoboken,0.788
+401 MONROE ST,Hoboken,0.883,Port Imperial,0.949,Hoboken,0.883
+402 9TH ST,Hoboken,0.98,Port Imperial,0.529,Port Imperial,0.529
+402 ADAMS ST,Hoboken,0.757,Port Imperial,0.863,Hoboken,0.757
+402 GRAND ST,Hoboken,0.711,Port Imperial,0.836,Hoboken,0.711
+402 JEFFERSON ST,Hoboken,0.802,Port Imperial,0.893,Hoboken,0.802
+402 MADISON ST,Hoboken,0.849,Port Imperial,0.924,Hoboken,0.849
+402 MONROE ST,Hoboken,0.896,Port Imperial,0.956,Hoboken,0.896
+403 ADAMS ST,Hoboken,0.746,Port Imperial,0.857,Hoboken,0.746
+403 MONROE ST,Hoboken,0.881,Port Imperial,0.943,Hoboken,0.881
+405 BLOOMFIELD ST,Hoboken,0.492,Port Imperial,0.73,Hoboken,0.492
+405 JEFFERSON ST,Hoboken,0.792,Port Imperial,0.885,Hoboken,0.792
+406 4TH ST,Hoboken,0.734,Port Imperial,0.849,Hoboken,0.734
+406 GRAND ST,Hoboken,0.712,Port Imperial,0.834,Hoboken,0.712
+406 MADISON ST,Hoboken,0.85,Port Imperial,0.923,Hoboken,0.85
+407 MONROE ST,Hoboken,0.886,Port Imperial,0.932,Hoboken,0.886
+407 WASHINGTON ST,Hoboken,0.463,Port Imperial,0.706,Hoboken,0.463
+408 ADAMS ST,Hoboken,0.758,Port Imperial,0.861,Hoboken,0.758
+409 4TH ST,Hoboken,0.727,Port Imperial,0.864,Hoboken,0.727
+409 ADAMS ST,Hoboken,0.748,Port Imperial,0.854,Hoboken,0.748
+409 WASHINGTON ST,Hoboken,0.466,Port Imperial,0.702,Hoboken,0.466
+41 1ST ST,Hoboken,0.269,Pavonia/Newport,0.685,Hoboken,0.269
+410 ADAMS ST,Hoboken,0.758,Port Imperial,0.86,Hoboken,0.758
+410 JEFFERSON ST,Hoboken,0.804,Port Imperial,0.889,Hoboken,0.804
+410 MADISON ST,Hoboken,0.85,Port Imperial,0.921,Hoboken,0.85
+411 JEFFERSON ST,Hoboken,0.793,Port Imperial,0.882,Hoboken,0.793
+411 MONROE ST,Hoboken,0.889,Port Imperial,0.927,Hoboken,0.889
+411 WASHINGTON ST,Hoboken,0.47,Port Imperial,0.697,Hoboken,0.47
+412 MONROE ST,Hoboken,0.897,Port Imperial,0.952,Hoboken,0.897
+412 WASHINGTON ST,Hoboken,0.498,Port Imperial,0.697,Hoboken,0.498
+413 1ST ST,Hoboken,0.672,Pavonia/Newport,0.763,Hoboken,0.672
+413 JEFFERSON ST,Hoboken,0.794,Port Imperial,0.882,Hoboken,0.794
+413 MADISON ST,Hoboken,0.84,Port Imperial,0.913,Hoboken,0.84
+413 MONROE ST,Hoboken,0.891,Port Imperial,0.924,Hoboken,0.891
+414 JEFFERSON ST,Hoboken,0.804,Port Imperial,0.888,Hoboken,0.804
+414 MADISON ST,Hoboken,0.851,Port Imperial,0.92,Hoboken,0.851
+415 ADAMS ST,Hoboken,0.749,Port Imperial,0.852,Hoboken,0.749
+415 MADISON ST,Hoboken,0.841,Port Imperial,0.912,Hoboken,0.841
+415 MONROE ST,Hoboken,0.893,Port Imperial,0.918,Hoboken,0.893
+415 NEWARK ST,Hoboken,0.673,Pavonia/Newport,0.674,Hoboken,0.673
+415 WASHINGTON ST,Hoboken,0.473,Port Imperial,0.687,Hoboken,0.473
+416 GRAND ST,Hoboken,0.715,Port Imperial,0.83,Hoboken,0.715
+416 MONROE ST,Hoboken,0.898,Port Imperial,0.95,Hoboken,0.898
+417 ADAMS ST,Hoboken,0.749,Port Imperial,0.851,Hoboken,0.749
+418 BLOOMFIELD ST,Hoboken,0.505,Port Imperial,0.726,Hoboken,0.505
+418 MONROE ST,Hoboken,0.911,Port Imperial,0.934,Hoboken,0.911
+419 ADAMS ST,Hoboken,0.75,Port Imperial,0.85,Hoboken,0.75
+419 BLOOMFIELD ST,Hoboken,0.496,Port Imperial,0.723,Hoboken,0.496
+420 JEFFERSON ST,Hoboken,0.806,Port Imperial,0.885,Hoboken,0.806
+420 MADISON ST,Hoboken,0.852,Port Imperial,0.917,Hoboken,0.852
+420 MONROE ST,Hoboken,0.899,Port Imperial,0.949,Hoboken,0.899
+421 MADISON ST,Hoboken,0.842,Port Imperial,0.91,Hoboken,0.842
+422 BLOOMFIELD ST,Hoboken,0.506,Port Imperial,0.724,Hoboken,0.506
+422 GRAND ST,Hoboken,0.716,Port Imperial,0.827,Hoboken,0.716
+422 MADISON ST,Hoboken,0.853,Port Imperial,0.916,Hoboken,0.853
+423 ADAMS ST,Hoboken,0.751,Port Imperial,0.849,Hoboken,0.751
+423 JEFFERSON ST,Hoboken,0.796,Port Imperial,0.878,Hoboken,0.796
+450 1ST ST,Hoboken,0.726,Pavonia/Newport,0.789,Hoboken,0.726
+450 7TH ST,Hoboken,0.901,Port Imperial,0.686,Port Imperial,0.686
+452 1ST ST,Hoboken,0.703,Pavonia/Newport,0.788,Hoboken,0.703
+452 2ND ST,Hoboken,0.703,Pavonia/Newport,0.865,Hoboken,0.703
+456 9TH ST,Hoboken,1.02,Port Imperial,0.582,Port Imperial,0.582
+457 2ND ST,Hoboken,0.721,Pavonia/Newport,0.861,Hoboken,0.721
+461 4TH ST,Hoboken,0.771,Port Imperial,0.891,Hoboken,0.771
+462 NEWARK ST,Hoboken,0.707,Pavonia/Newport,0.689,Pavonia/Newport,0.689
+463 1ST ST,Hoboken,0.716,Pavonia/Newport,0.78,Hoboken,0.716
+464 NEWARK ST,Hoboken,0.708,Pavonia/Newport,0.689,Pavonia/Newport,0.689
+500 HUDSON ST,Hoboken,0.483,Port Imperial,0.651,Hoboken,0.483
+501 9TH ST,Hoboken,1.08,Port Imperial,0.662,Port Imperial,0.662
+501 ADAMS ST,Hoboken,0.777,Port Imperial,0.803,Hoboken,0.777
+501 COURT ST,Hoboken,0.488,Port Imperial,0.651,Hoboken,0.488
+501 MONROE ST,Hoboken,0.91,Port Imperial,0.901,Port Imperial,0.901
+502 JEFFERSON ST,Hoboken,0.832,Port Imperial,0.839,Hoboken,0.832
+502 MADISON ST,Hoboken,0.876,Port Imperial,0.874,Port Imperial,0.874
+502 MONROE ST,Hoboken,0.921,Port Imperial,0.908,Port Imperial,0.908
+502 OBSERVER HIGHWAY,Newport,0.742,Pavonia/Newport,0.702,Pavonia/Newport,0.702
+503 BLOOMFIELD ST,Hoboken,0.538,Port Imperial,0.665,Hoboken,0.538
+503 MONROE ST,Hoboken,0.91,Port Imperial,0.9,Port Imperial,0.9
+504 1ST ST,Hoboken,0.744,Pavonia/Newport,0.809,Hoboken,0.744
+504 2ND ST,Hoboken,0.767,Pavonia/Newport,0.894,Hoboken,0.767
+504 4TH ST,Hoboken,0.814,Port Imperial,0.902,Hoboken,0.814
+504 GRAND ST,Hoboken,0.747,Port Imperial,0.775,Hoboken,0.747
+505 MONROE ST,Hoboken,0.911,Port Imperial,0.899,Port Imperial,0.899
+506 GARDEN ST,Hoboken,0.589,Port Imperial,0.676,Hoboken,0.589
+507 GARDEN ST,Hoboken,0.583,Port Imperial,0.667,Hoboken,0.583
+507 MADISON ST,Hoboken,0.871,Port Imperial,0.858,Port Imperial,0.858
+507 PARK AVE,Hoboken,0.618,Port Imperial,0.691,Hoboken,0.618
+508 1ST ST,Hoboken,0.747,Pavonia/Newport,0.81,Hoboken,0.747
+508 GARDEN ST,Hoboken,0.592,Port Imperial,0.672,Hoboken,0.592
+508 GRAND ST,Hoboken,0.751,Port Imperial,0.768,Hoboken,0.751
+509 2ND ST,Hoboken,0.768,Pavonia/Newport,0.883,Hoboken,0.768
+509 BLOOMFIELD ST,Hoboken,0.547,Port Imperial,0.653,Hoboken,0.547
+509 GARDEN ST,Hoboken,0.585,Port Imperial,0.663,Hoboken,0.585
+509 JEFFERSON ST,Hoboken,0.829,Port Imperial,0.819,Port Imperial,0.819
+509 MADISON ST,Hoboken,0.873,Port Imperial,0.854,Port Imperial,0.854
+509 MONROE ST,Hoboken,0.912,Port Imperial,0.897,Port Imperial,0.897
+509 WILLOW AVE,Hoboken,0.659,Port Imperial,0.704,Hoboken,0.659
+51-53 14TH ST,Hoboken,1.183,Port Imperial,0.14,Port Imperial,0.14
+510 MONROE ST,Hoboken,0.923,Port Imperial,0.904,Port Imperial,0.904
+510 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+511 MADISON ST,Hoboken,0.875,Port Imperial,0.851,Port Imperial,0.851
+512 1ST ST,Hoboken,0.749,Pavonia/Newport,0.811,Hoboken,0.749
+512 JEFFERSON ST,Hoboken,0.843,Port Imperial,0.822,Port Imperial,0.822
+512 MADISON ST,Hoboken,0.88,Port Imperial,0.868,Port Imperial,0.868
+513 MONROE ST,Hoboken,0.914,Port Imperial,0.894,Port Imperial,0.894
+514 1ST ST,Hoboken,0.775,Pavonia/Newport,0.83,Hoboken,0.775
+514 ADAMS ST,Hoboken,0.801,Port Imperial,0.787,Port Imperial,0.787
+515 MONROE ST,Hoboken,0.914,Port Imperial,0.893,Port Imperial,0.893
+515 WILLOW AVE,Hoboken,0.657,Port Imperial,0.713,Hoboken,0.657
+516 ADAMS ST,Hoboken,0.803,Port Imperial,0.783,Port Imperial,0.783
+516 GRAND ST,Hoboken,0.76,Port Imperial,0.755,Port Imperial,0.755
+516 JEFFERSON ST,Hoboken,0.848,Port Imperial,0.815,Port Imperial,0.815
+517 ADAMS ST,Hoboken,0.795,Port Imperial,0.774,Port Imperial,0.774
+517 JACKSON ST,Hoboken,0.961,Port Imperial,0.929,Port Imperial,0.929
+518 GRAND ST,Hoboken,0.763,Port Imperial,0.751,Port Imperial,0.751
+518 MONROE ST,Hoboken,0.926,Port Imperial,0.899,Port Imperial,0.899
+518 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+519 ADAMS ST,Hoboken,0.798,Port Imperial,0.77,Port Imperial,0.77
+519 JEFFERSON ST,Hoboken,0.841,Port Imperial,0.8,Port Imperial,0.8
+519 MONROE ST,Hoboken,0.916,Port Imperial,0.891,Port Imperial,0.891
+519 WILLOW AVE,Hoboken,0.671,Port Imperial,0.684,Hoboken,0.671
+520 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+521 ADAMS ST,Hoboken,0.8,Port Imperial,0.767,Port Imperial,0.767
+522 HUDSON ST,Hoboken,0.522,Port Imperial,0.601,Hoboken,0.522
+522 JEFFERSON ST,Hoboken,0.855,Port Imperial,0.804,Port Imperial,0.804
+523 JEFFERSON ST,Hoboken,0.846,Port Imperial,0.792,Port Imperial,0.792
+525 JACKSON ST,Hoboken,0.963,Port Imperial,0.925,Port Imperial,0.925
+527 JEFFERSON ST,Hoboken,0.852,Port Imperial,0.785,Port Imperial,0.785
+528 MADISON ST,Hoboken,0.885,Port Imperial,0.859,Port Imperial,0.859
+528 MONROE ST,Hoboken,0.929,Port Imperial,0.894,Port Imperial,0.894
+530 MADISON ST,Hoboken,0.911,Port Imperial,0.821,Port Imperial,0.821
+531 BLOOMFIELD ST,Hoboken,0.581,Port Imperial,0.61,Hoboken,0.581
+531 MADISON ST,Hoboken,0.898,Port Imperial,0.817,Port Imperial,0.817
+531 PARK AVE,Hoboken,0.65,Port Imperial,0.647,Port Imperial,0.647
+532 ADAMS ST,Hoboken,0.823,Port Imperial,0.756,Port Imperial,0.756
+532 HUDSON ST,Hoboken,0.536,Port Imperial,0.583,Hoboken,0.536
+532 MONROE ST,Hoboken,0.954,Port Imperial,0.857,Port Imperial,0.857
+532 WASHINGTON ST,Hoboken,0.571,Port Imperial,0.598,Hoboken,0.571
+533 ADAMS ST,Hoboken,0.815,Port Imperial,0.746,Port Imperial,0.746
+533 MADISON ST,Hoboken,0.9,Port Imperial,0.813,Port Imperial,0.813
+533 MONROE ST,Hoboken,0.92,Port Imperial,0.884,Port Imperial,0.884
+535 BLOOMFIELD ST,Hoboken,0.587,Port Imperial,0.602,Hoboken,0.587
+536 BLOOMFIELD ST,Hoboken,0.564,Port Imperial,0.644,Hoboken,0.564
+536 GRAND ST,Hoboken,0.784,Port Imperial,0.721,Port Imperial,0.721
+547 BLOOMFIELD ST,Hoboken,0.561,Port Imperial,0.634,Hoboken,0.561
+550 1ST ST,Hoboken,0.791,Pavonia/Newport,0.835,Hoboken,0.791
+550 2ND ST,Hoboken,0.801,Pavonia/Newport,0.91,Hoboken,0.801
+550 OBSERVER HIGHWAY,Newport,0.779,Pavonia/Newport,0.739,Pavonia/Newport,0.739
+551 OBSERVER HIGHWAY,Newport,0.763,Pavonia/Newport,0.724,Pavonia/Newport,0.724
+554 OBSERVER HIGHWAY,Newport,0.781,Pavonia/Newport,0.741,Pavonia/Newport,0.741
+556 1ST ST,Hoboken,0.806,Pavonia/Newport,0.844,Hoboken,0.806
+56 JEFFERSON ST,Hoboken,0.744,Pavonia/Newport,0.707,Pavonia/Newport,0.707
+561 1ST ST,Hoboken,0.814,Pavonia/Newport,0.836,Hoboken,0.814
+562 1ST ST,Hoboken,0.821,Pavonia/Newport,0.852,Hoboken,0.821
+565 1ST ST,Hoboken,0.824,Pavonia/Newport,0.842,Hoboken,0.824
+59 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.776,Hoboken,0.776
+60 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.784,Pavonia/Newport,0.784
+60 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.814,Pavonia/Newport,0.814
+600 1ST ST,Hoboken,0.84,Pavonia/Newport,0.864,Hoboken,0.84
+600 CLINTON ST,Hoboken,0.754,Port Imperial,0.679,Port Imperial,0.679
+600 HUDSON ST,Hoboken,0.562,Port Imperial,0.556,Port Imperial,0.556
+600 NEWARK ST,Newport,0.766,Pavonia/Newport,0.728,Pavonia/Newport,0.728
+601 1ST ST,Hoboken,0.839,Pavonia/Newport,0.851,Hoboken,0.839
+601 MADISON ST,Hoboken,0.908,Port Imperial,0.802,Port Imperial,0.802
+601 MONROE ST,Hoboken,0.949,Port Imperial,0.837,Port Imperial,0.837
+601 OBSERVER HIGHWAY,Newport,0.791,Pavonia/Newport,0.752,Pavonia/Newport,0.752
+602 MADISON ST,Hoboken,0.92,Port Imperial,0.809,Port Imperial,0.809
+602 WILLOW AVE,Hoboken,0.718,Port Imperial,0.646,Port Imperial,0.646
+603 1ST ST,Hoboken,0.843,Pavonia/Newport,0.854,Hoboken,0.843
+603 MONROE ST,Hoboken,0.952,Port Imperial,0.837,Port Imperial,0.837
+603-07 MONROE ST,Newport,0.773,Pavonia/Newport,0.734,Pavonia/Newport,0.734
+604 GRAND ST,Hoboken,0.795,Port Imperial,0.706,Port Imperial,0.706
+604 MONROE ST,Hoboken,0.963,Port Imperial,0.845,Port Imperial,0.845
+605 1ST ST,Hoboken,0.844,Pavonia/Newport,0.855,Hoboken,0.844
+606 1ST ST,Hoboken,0.846,Pavonia/Newport,0.865,Hoboken,0.846
+606 ADAMS ST,Hoboken,0.841,Port Imperial,0.732,Port Imperial,0.732
+607 1ST ST,Hoboken,0.845,Pavonia/Newport,0.856,Hoboken,0.845
+607 CLINTON ST,Hoboken,0.745,Port Imperial,0.671,Port Imperial,0.671
+607 HUDSON ST,Hoboken,0.55,Port Imperial,0.553,Hoboken,0.55
+607 JEFFERSON ST,Hoboken,0.874,Port Imperial,0.755,Port Imperial,0.755
+608 MADISON ST,Hoboken,0.922,Port Imperial,0.806,Port Imperial,0.806
+608 MONROE ST,Hoboken,0.964,Port Imperial,0.843,Port Imperial,0.843
+609 HUDSON ST,Hoboken,0.552,Port Imperial,0.551,Port Imperial,0.551
+609 JEFFERSON ST,Hoboken,0.877,Port Imperial,0.751,Port Imperial,0.751
+609 MADISON ST,Hoboken,0.917,Port Imperial,0.79,Port Imperial,0.79
+609 OBSERVER HIGHWAY,Newport,0.806,Pavonia/Newport,0.768,Pavonia/Newport,0.768
+61 14TH ST,Hoboken,1.193,Port Imperial,0.17,Port Imperial,0.17
+61 5TH ST,Hoboken,0.487,Port Imperial,0.667,Hoboken,0.487
+610 CLINTON ST,Hoboken,0.766,Port Imperial,0.662,Port Imperial,0.662
+610 JEFFERSON ST,Hoboken,0.889,Port Imperial,0.759,Port Imperial,0.759
+610 MADISON ST,Hoboken,0.923,Port Imperial,0.805,Port Imperial,0.805
+610 MONROE ST,Hoboken,0.965,Port Imperial,0.842,Port Imperial,0.842
+610 NEWARK ST,Newport,0.787,Pavonia/Newport,0.749,Pavonia/Newport,0.749
+610 WASHINGTON ST,Hoboken,0.607,Port Imperial,0.556,Port Imperial,0.556
+611 GRAND ST,Hoboken,0.788,Port Imperial,0.696,Port Imperial,0.696
+611 HUDSON ST,Hoboken,0.553,Port Imperial,0.55,Port Imperial,0.55
+611 WILLOW AVE,Hoboken,0.718,Port Imperial,0.623,Port Imperial,0.623
+612 ADAMS ST,Hoboken,0.85,Port Imperial,0.721,Port Imperial,0.721
+612 CLINTON ST,Hoboken,0.777,Port Imperial,0.649,Port Imperial,0.649
+613 HUDSON ST,Hoboken,0.554,Port Imperial,0.548,Port Imperial,0.548
+613 MONROE ST,Hoboken,0.956,Port Imperial,0.832,Port Imperial,0.832
+614 MONROE ST,Hoboken,0.966,Port Imperial,0.84,Port Imperial,0.84
+615 ADAMS ST,Hoboken,0.859,Port Imperial,0.688,Port Imperial,0.688
+615 HUDSON ST,Hoboken,0.555,Port Imperial,0.547,Port Imperial,0.547
+616 ADAMS ST,Hoboken,0.856,Port Imperial,0.714,Port Imperial,0.714
+616 JEFFERSON ST,Hoboken,0.896,Port Imperial,0.75,Port Imperial,0.75
+616 MONROE ST,Hoboken,0.967,Port Imperial,0.839,Port Imperial,0.839
+618 JEFFERSON ST,Hoboken,0.899,Port Imperial,0.746,Port Imperial,0.746
+618 MADISON ST,Hoboken,0.926,Port Imperial,0.801,Port Imperial,0.801
+619 MADISON ST,Hoboken,0.929,Port Imperial,0.776,Port Imperial,0.776
+619 WILLOW AVE,Hoboken,0.731,Port Imperial,0.606,Port Imperial,0.606
+62 JEFFERSON ST,Hoboken,0.737,Pavonia/Newport,0.759,Hoboken,0.737
+62 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.786,Pavonia/Newport,0.786
+62 PATERSON AVE,Newport,0.873,Pavonia/Newport,0.835,Pavonia/Newport,0.835
+620 JEFFERSON ST,Hoboken,0.901,Port Imperial,0.743,Port Imperial,0.743
+620 MONROE ST,Hoboken,0.968,Port Imperial,0.837,Port Imperial,0.837
+621 MONROE ST,Hoboken,0.959,Port Imperial,0.829,Port Imperial,0.829
+622 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+623 MONROE ST,Hoboken,1.041,Port Imperial,0.776,Port Imperial,0.776
+624 MONROE ST,Hoboken,1.0,Port Imperial,0.802,Port Imperial,0.802
+624 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+625 JEFFERSON ST,Hoboken,0.902,Port Imperial,0.721,Port Imperial,0.721
+625 MADISON ST,Hoboken,0.937,Port Imperial,0.767,Port Imperial,0.767
+625 WILLOW AVE,Hoboken,0.743,Port Imperial,0.593,Port Imperial,0.593
+626 GRAND ST,Hoboken,0.805,Port Imperial,0.693,Port Imperial,0.693
+626 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+628 GRAND ST,Hoboken,0.805,Port Imperial,0.692,Port Imperial,0.692
+629 JEFFERSON ST,Hoboken,0.909,Port Imperial,0.714,Port Imperial,0.714
+629 MADISON ST,Hoboken,0.942,Port Imperial,0.761,Port Imperial,0.761
+63 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.753,Hoboken,0.726
+63 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.78,Hoboken,0.776
+630 ADAMS ST,Hoboken,0.877,Port Imperial,0.689,Port Imperial,0.689
+632 JEFFERSON ST,Hoboken,0.918,Port Imperial,0.725,Port Imperial,0.725
+634 PARK AVE,Hoboken,0.734,Port Imperial,0.56,Port Imperial,0.56
+635 6TH ST,Hoboken,1.007,Port Imperial,0.902,Port Imperial,0.902
+635 GARDEN ST,Hoboken,0.677,Port Imperial,0.547,Port Imperial,0.547
+635 MADISON ST,Hoboken,0.949,Port Imperial,0.753,Port Imperial,0.753
+636 5TH ST,Hoboken,0.933,Port Imperial,0.922,Port Imperial,0.922
+64 2ND ST,Hoboken,0.347,Pavonia/Newport,0.785,Hoboken,0.347
+64 JEFFERSON ST,Hoboken,0.737,Pavonia/Newport,0.761,Hoboken,0.737
+64 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.788,Hoboken,0.787
+64 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.818,Pavonia/Newport,0.818
+65 10TH ST,Hoboken,0.873,Port Imperial,0.239,Port Imperial,0.239
+650 2ND ST,Hoboken,0.9,Pavonia/Newport,0.965,Hoboken,0.9
+659 1ST ST,Hoboken,0.897,Pavonia/Newport,0.887,Pavonia/Newport,0.887
+66 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.789,Hoboken,0.787
+66 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.82,Pavonia/Newport,0.82
+662 1ST ST,Hoboken,0.9,Pavonia/Newport,0.898,Pavonia/Newport,0.898
+68 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.791,Hoboken,0.787
+68 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.822,Pavonia/Newport,0.822
+68 PARK AVE,Hoboken,0.488,Pavonia/Newport,0.646,Hoboken,0.488
+69 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.759,Hoboken,0.726
+70 ADAMS ST,Hoboken,0.687,Pavonia/Newport,0.746,Hoboken,0.687
+70 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.793,Hoboken,0.787
+70 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.824,Pavonia/Newport,0.824
+70 PARK AVE,Hoboken,0.488,Pavonia/Newport,0.648,Hoboken,0.488
+700 1ST ST,Hoboken,0.942,Pavonia/Newport,0.925,Pavonia/Newport,0.925
+700 BLOOMFIELD ST,Hoboken,0.68,Port Imperial,0.503,Port Imperial,0.503
+701 MONROE ST,Hoboken,0.999,Port Imperial,0.782,Port Imperial,0.782
+701 PARK AVE,Hoboken,0.737,Port Imperial,0.54,Port Imperial,0.54
+702 HUDSON ST,Hoboken,0.639,Port Imperial,0.468,Port Imperial,0.468
+703 ADAMS ST,Hoboken,0.878,Port Imperial,0.659,Port Imperial,0.659
+703 CLINTON ST,Hoboken,0.808,Port Imperial,0.596,Port Imperial,0.596
+703 PARK AVE,Hoboken,0.74,Port Imperial,0.536,Port Imperial,0.536
+704 BLOOMFIELD ST,Hoboken,0.689,Port Imperial,0.494,Port Imperial,0.494
+704 CLINTON ST,Hoboken,0.82,Port Imperial,0.6,Port Imperial,0.6
+704 MADISON ST,Hoboken,0.969,Port Imperial,0.751,Port Imperial,0.751
+705 ADAMS ST,Hoboken,0.881,Port Imperial,0.655,Port Imperial,0.655
+705 CLINTON ST,Hoboken,0.811,Port Imperial,0.592,Port Imperial,0.592
+705 PARK AVE,Hoboken,0.744,Port Imperial,0.532,Port Imperial,0.532
+706 GRAND ST,Hoboken,0.866,Port Imperial,0.634,Port Imperial,0.634
+706 PARK AVE,Hoboken,0.757,Port Imperial,0.535,Port Imperial,0.535
+706 WILLOW AVE,Hoboken,0.791,Port Imperial,0.561,Port Imperial,0.561
+707 BLOOMFIELD ST,Hoboken,0.688,Port Imperial,0.485,Port Imperial,0.485
+707 MONROE ST,Hoboken,1.001,Port Imperial,0.769,Port Imperial,0.769
+708 GARDEN ST,Hoboken,0.729,Port Imperial,0.505,Port Imperial,0.505
+708 GRAND ST,Hoboken,0.869,Port Imperial,0.631,Port Imperial,0.631
+708 WILLOW AVE,Hoboken,0.796,Port Imperial,0.555,Port Imperial,0.555
+709 ADAMS ST,Hoboken,0.888,Port Imperial,0.649,Port Imperial,0.649
+709 MONROE ST,Hoboken,1.002,Port Imperial,0.779,Port Imperial,0.779
+71 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.761,Hoboken,0.726
+71 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.787,Hoboken,0.776
+711 1ST ST,Hoboken,0.945,Pavonia/Newport,0.919,Pavonia/Newport,0.919
+711 CLINTON ST,Hoboken,0.821,Port Imperial,0.581,Port Imperial,0.581
+711 WILLOW AVE,Hoboken,0.79,Port Imperial,0.545,Port Imperial,0.545
+712 GRAND ST,Hoboken,0.877,Port Imperial,0.626,Port Imperial,0.626
+712 WILLOW AVE,Hoboken,0.806,Port Imperial,0.545,Port Imperial,0.545
+713 ADAMS ST,Hoboken,0.894,Port Imperial,0.643,Port Imperial,0.643
+713 WILLOW AVE,Hoboken,0.793,Port Imperial,0.541,Port Imperial,0.541
+715 GRAND ST,Hoboken,0.863,Port Imperial,0.607,Port Imperial,0.607
+715 MONROE ST,Hoboken,1.021,Port Imperial,0.754,Port Imperial,0.754
+715 WILLOW AVE,Hoboken,0.797,Port Imperial,0.532,Port Imperial,0.532
+716 ADAMS ST,Hoboken,0.896,Port Imperial,0.668,Port Imperial,0.668
+716 HUDSON ST,Hoboken,0.664,Port Imperial,0.442,Port Imperial,0.442
+717 ADAMS ST,Hoboken,0.9,Port Imperial,0.636,Port Imperial,0.636
+717 MADISON ST,Hoboken,0.965,Port Imperial,0.736,Port Imperial,0.736
+717 WILLOW AVE,Hoboken,0.801,Port Imperial,0.527,Port Imperial,0.527
+718 GRAND ST,Hoboken,0.883,Port Imperial,0.613,Port Imperial,0.613
+718 JEFFERSON ST,Hoboken,0.935,Port Imperial,0.704,Port Imperial,0.704
+719 ADAMS ST,Hoboken,0.904,Port Imperial,0.634,Port Imperial,0.634
+719 MONROE ST,Hoboken,1.006,Port Imperial,0.775,Port Imperial,0.775
+72 GARDEN ST,Hoboken,0.439,Pavonia/Newport,0.641,Hoboken,0.439
+72 PARK AVE,Hoboken,0.488,Pavonia/Newport,0.649,Hoboken,0.488
+720 CLINTON ST,Hoboken,0.876,Port Imperial,0.57,Port Imperial,0.57
+720 GRAND ST,Hoboken,0.883,Port Imperial,0.608,Port Imperial,0.608
+720 WILLOW AVE,Hoboken,0.826,Port Imperial,0.525,Port Imperial,0.525
+721 MADISON ST,Hoboken,0.967,Port Imperial,0.734,Port Imperial,0.734
+722 ADAMS ST,Hoboken,0.898,Port Imperial,0.665,Port Imperial,0.665
+722 JEFFERSON ST,Hoboken,0.937,Port Imperial,0.702,Port Imperial,0.702
+723 MADISON ST,Hoboken,0.968,Port Imperial,0.734,Port Imperial,0.734
+723 WASHINGTON ST,Hoboken,0.668,Port Imperial,0.466,Port Imperial,0.466
+723 WILLOW AVE,Hoboken,0.814,Port Imperial,0.513,Port Imperial,0.513
+724 BLOOMFIELD ST,Hoboken,0.73,Port Imperial,0.449,Port Imperial,0.449
+725 JEFFERSON ST,Hoboken,0.929,Port Imperial,0.692,Port Imperial,0.692
+725 WASHINGTON ST,Hoboken,0.669,Port Imperial,0.465,Port Imperial,0.465
+726 ADAMS ST,Hoboken,0.9,Port Imperial,0.663,Port Imperial,0.663
+727 GARDEN ST,Hoboken,0.755,Port Imperial,0.462,Port Imperial,0.462
+727 JEFFERSON ST,Hoboken,0.93,Port Imperial,0.691,Port Imperial,0.691
+727 MONROE ST,Hoboken,1.009,Port Imperial,0.771,Port Imperial,0.771
+727 WASHINGTON ST,Hoboken,0.67,Port Imperial,0.464,Port Imperial,0.464
+728 BLOOMFIELD ST,Hoboken,0.738,Port Imperial,0.441,Port Imperial,0.441
+728 GRAND ST,Hoboken,0.897,Port Imperial,0.595,Port Imperial,0.595
+728 WILLOW AVE,Hoboken,0.793,Port Imperial,0.558,Port Imperial,0.558
+729 MADISON ST,Hoboken,0.971,Port Imperial,0.731,Port Imperial,0.731
+729 WASHINGTON ST,Hoboken,0.671,Port Imperial,0.462,Port Imperial,0.462
+73 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.641,Hoboken,0.427
+73 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.789,Hoboken,0.776
+731 CLINTON ST,Hoboken,0.855,Port Imperial,0.546,Port Imperial,0.546
+734 ADAMS ST,Hoboken,0.904,Port Imperial,0.659,Port Imperial,0.659
+736 GARDEN ST,Hoboken,0.734,Port Imperial,0.497,Port Imperial,0.497
+737 GARDEN ST,Hoboken,0.727,Port Imperial,0.492,Port Imperial,0.492
+738 WASHINGTON ST,Hoboken,0.726,Port Imperial,0.42,Port Imperial,0.42
+739 BLOOMFIELD ST,Hoboken,0.701,Port Imperial,0.47,Port Imperial,0.47
+74 GARDEN ST,Hoboken,0.438,Pavonia/Newport,0.643,Hoboken,0.438
+74 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.797,Hoboken,0.787
+74 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.827,Pavonia/Newport,0.827
+740 WASHINGTON ST,Hoboken,0.729,Port Imperial,0.416,Port Imperial,0.416
+741 PARK AVE,Hoboken,0.76,Port Imperial,0.515,Port Imperial,0.515
+744 PARK AVE,Hoboken,0.77,Port Imperial,0.519,Port Imperial,0.519
+75 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.643,Hoboken,0.427
+75 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.765,Hoboken,0.726
+76 JACKSON ST,Hoboken,0.888,Pavonia/Newport,0.867,Pavonia/Newport,0.867
+77 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.645,Hoboken,0.427
+77 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.767,Hoboken,0.726
+77 RIVER ST,Hoboken,0.219,Pavonia/Newport,0.637,Hoboken,0.219
+78 JACKSON ST,Hoboken,0.888,Pavonia/Newport,0.868,Pavonia/Newport,0.868
+78 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.801,Hoboken,0.787
+78 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.831,Pavonia/Newport,0.831
+78-80 JACKSON ST,Newport,0.802,Pavonia/Newport,0.764,Pavonia/Newport,0.764
+79 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.647,Hoboken,0.427
+79 GRAND ST,Hoboken,0.626,Pavonia/Newport,0.73,Hoboken,0.626
+79 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.795,Hoboken,0.776
+79 MONROE ST,Hoboken,0.826,Pavonia/Newport,0.824,Pavonia/Newport,0.824
+80 BLOOMFIELD ST,Hoboken,0.387,Pavonia/Newport,0.628,Hoboken,0.387
+80 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.803,Hoboken,0.787
+80 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.833,Pavonia/Newport,0.833
+80 PARK AVE,Hoboken,0.487,Pavonia/Newport,0.657,Hoboken,0.487
+800 JACKSON ST,Hoboken,1.138,Port Imperial,0.77,Port Imperial,0.77
+801 WILLOW AVE,Hoboken,0.836,Port Imperial,0.499,Port Imperial,0.499
+803 WILLOW AVE,Hoboken,0.84,Port Imperial,0.489,Port Imperial,0.489
+805 PARK AVE,Hoboken,0.815,Port Imperial,0.459,Port Imperial,0.459
+805 WILLOW AVE,Hoboken,0.844,Port Imperial,0.485,Port Imperial,0.485
+806 BLOOMFIELD ST,Hoboken,0.771,Port Imperial,0.408,Port Imperial,0.408
+806 WASHINGTON ST,Hoboken,0.749,Port Imperial,0.39,Port Imperial,0.39
+807 CLINTON ST,Hoboken,0.88,Port Imperial,0.522,Port Imperial,0.522
+807 GARDEN ST,Hoboken,0.791,Port Imperial,0.426,Port Imperial,0.426
+807 WASHINGTON ST,Hoboken,0.743,Port Imperial,0.379,Port Imperial,0.379
+809 WILLOW AVE,Hoboken,0.852,Port Imperial,0.477,Port Imperial,0.477
+81 ADAMS ST,Hoboken,0.676,Pavonia/Newport,0.749,Hoboken,0.676
+81 GRAND ST,Hoboken,0.626,Pavonia/Newport,0.731,Hoboken,0.626
+81 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.77,Hoboken,0.726
+81 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.797,Hoboken,0.776
+81 MONROE ST,Hoboken,0.826,Pavonia/Newport,0.826,Hoboken,0.826
+810 PARK AVE,Hoboken,0.833,Port Imperial,0.455,Port Imperial,0.455
+810 WASHINGTON ST,Hoboken,0.757,Port Imperial,0.381,Port Imperial,0.381
+811 WASHINGTON ST,Hoboken,0.752,Port Imperial,0.375,Port Imperial,0.375
+811 WILLOW AVE,Hoboken,0.856,Port Imperial,0.473,Port Imperial,0.473
+812 BLOOMFIELD ST,Hoboken,0.784,Port Imperial,0.395,Port Imperial,0.395
+812 GARDEN ST,Hoboken,0.811,Port Imperial,0.42,Port Imperial,0.42
+812 GRAND ST,Hoboken,0.934,Port Imperial,0.559,Port Imperial,0.559
+812 WASHINGTON ST,Hoboken,0.762,Port Imperial,0.376,Port Imperial,0.376
+813 PARK AVE,Hoboken,0.832,Port Imperial,0.443,Port Imperial,0.443
+813 WASHINGTON ST,Hoboken,0.756,Port Imperial,0.37,Port Imperial,0.37
+813 WILLOW AVE,Hoboken,0.862,Port Imperial,0.469,Port Imperial,0.469
+814 WASHINGTON ST,Hoboken,0.766,Port Imperial,0.372,Port Imperial,0.372
+814 WILLOW AVE,Hoboken,0.871,Port Imperial,0.483,Port Imperial,0.483
+815 PARK AVE,Hoboken,0.836,Port Imperial,0.439,Port Imperial,0.439
+815 WILLOW AVE,Hoboken,0.858,Port Imperial,0.479,Port Imperial,0.479
+816 PARK AVE,Hoboken,0.845,Port Imperial,0.444,Port Imperial,0.444
+816 WILLOW AVE,Hoboken,0.875,Port Imperial,0.48,Port Imperial,0.48
+817 PARK AVE,Hoboken,0.84,Port Imperial,0.435,Port Imperial,0.435
+818 JEFFERSON ST,Hoboken,0.993,Port Imperial,0.649,Port Imperial,0.649
+818 WILLOW AVE,Hoboken,0.879,Port Imperial,0.476,Port Imperial,0.476
+819 WASHINGTON ST,Hoboken,0.77,Port Imperial,0.356,Port Imperial,0.356
+82 BLOOMFIELD ST,Hoboken,0.386,Pavonia/Newport,0.629,Hoboken,0.386
+82 CLINTON ST,Hoboken,0.595,Pavonia/Newport,0.694,Hoboken,0.595
+82 JACKSON ST,Hoboken,0.888,Pavonia/Newport,0.87,Pavonia/Newport,0.87
+82 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.805,Hoboken,0.787
+820 HUDSON ST,Hoboken,0.753,Port Imperial,0.348,Port Imperial,0.348
+821 WASHINGTON ST,Hoboken,0.775,Port Imperial,0.351,Port Imperial,0.351
+822 GARDEN ST,Hoboken,0.8,Port Imperial,0.429,Port Imperial,0.429
+822 HUDSON ST,Hoboken,0.762,Port Imperial,0.339,Port Imperial,0.339
+823 WASHINGTON ST,Hoboken,0.779,Port Imperial,0.346,Port Imperial,0.346
+825 ADAMS ST,Hoboken,0.953,Port Imperial,0.597,Port Imperial,0.597
+825 WASHINGTON ST,Hoboken,0.784,Port Imperial,0.342,Port Imperial,0.342
+826 HUDSON ST,Hoboken,0.768,Port Imperial,0.329,Port Imperial,0.329
+826 WASHINGTON ST,Hoboken,0.792,Port Imperial,0.345,Port Imperial,0.345
+827 BLOOMFIELD ST,Hoboken,0.807,Port Imperial,0.359,Port Imperial,0.359
+827 GARDEN ST,Hoboken,0.832,Port Imperial,0.385,Port Imperial,0.385
+828 HUDSON ST,Hoboken,0.772,Port Imperial,0.325,Port Imperial,0.325
+828 PARK AVE,Hoboken,0.869,Port Imperial,0.423,Port Imperial,0.423
+828 WASHINGTON ST,Hoboken,0.797,Port Imperial,0.341,Port Imperial,0.341
+829 GARDEN ST,Hoboken,0.836,Port Imperial,0.381,Port Imperial,0.381
+829 WASHINGTON ST,Hoboken,0.793,Port Imperial,0.332,Port Imperial,0.332
+829-831 HUDSON ST,Hoboken,1.088,Port Imperial,0.088,Port Imperial,0.088
+83 GRAND ST,Hoboken,0.626,Pavonia/Newport,0.732,Hoboken,0.626
+83 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.772,Hoboken,0.726
+83 MADISON ST,Hoboken,0.776,Pavonia/Newport,0.799,Hoboken,0.776
+83 MONROE ST,Hoboken,0.827,Pavonia/Newport,0.828,Hoboken,0.827
+83-85 GRAND ST,Hoboken,0.855,Port Imperial,0.627,Port Imperial,0.627
+83-85 JEFFERSON ST,Hoboken,0.768,Port Imperial,0.957,Hoboken,0.768
+830 BLOOMFIELD ST,Hoboken,0.823,Port Imperial,0.357,Port Imperial,0.357
+830 MONROE ST,Hoboken,1.074,Port Imperial,0.732,Port Imperial,0.732
+830 PARK AVE,Hoboken,0.873,Port Imperial,0.419,Port Imperial,0.419
+831 CLINTON ST,Hoboken,0.925,Port Imperial,0.484,Port Imperial,0.484
+832 WASHINGTON ST,Hoboken,0.804,Port Imperial,0.338,Port Imperial,0.338
+833 WILLOW AVE,Hoboken,0.887,Port Imperial,0.454,Port Imperial,0.454
+834 BLOOMFIELD ST,Hoboken,0.781,Port Imperial,0.396,Port Imperial,0.396
+836 PARK AVE,Hoboken,0.837,Port Imperial,0.451,Port Imperial,0.451
+839 WILLOW AVE,Hoboken,0.891,Port Imperial,0.441,Port Imperial,0.441
+84 ADAMS ST,Hoboken,0.687,Pavonia/Newport,0.757,Hoboken,0.687
+84 BLOOMFIELD ST,Hoboken,0.386,Pavonia/Newport,0.631,Hoboken,0.386
+84 JEFFERSON ST,Hoboken,0.737,Pavonia/Newport,0.78,Hoboken,0.737
+84 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.836,Pavonia/Newport,0.836
+84 WILLOW AVE,Hoboken,0.536,Pavonia/Newport,0.648,Hoboken,0.536
+841 WILLOW AVE,Hoboken,0.9,Port Imperial,0.443,Port Imperial,0.443
+849 GARDEN ST,Hoboken,0.811,Port Imperial,0.406,Port Imperial,0.406
+85 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.774,Hoboken,0.726
+86 CLINTON ST,Hoboken,0.586,Pavonia/Newport,0.722,Hoboken,0.586
+86 GARDEN ST,Hoboken,0.438,Pavonia/Newport,0.671,Hoboken,0.438
+86 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.838,Hoboken,0.838
+87 JACKSON ST,Hoboken,0.877,Pavonia/Newport,0.866,Pavonia/Newport,0.866
+87 JEFFERSON ST,Hoboken,0.726,Pavonia/Newport,0.776,Hoboken,0.726
+87 PARK AVE,Hoboken,0.471,Pavonia/Newport,0.676,Hoboken,0.471
+88 CLINTON ST,Hoboken,0.586,Pavonia/Newport,0.723,Hoboken,0.586
+88 JEFFERSON ST,Hoboken,0.737,Pavonia/Newport,0.784,Hoboken,0.737
+88 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.84,Hoboken,0.838
+88 PARK AVE,Hoboken,0.488,Pavonia/Newport,0.68,Hoboken,0.488
+89 GRAND ST,Hoboken,0.626,Pavonia/Newport,0.736,Hoboken,0.626
+89 JEFFERSON ST,Hoboken,0.727,Pavonia/Newport,0.785,Hoboken,0.727
+89 WILLOW AVE,Hoboken,0.52,Pavonia/Newport,0.691,Hoboken,0.52
+89-91 PARK AVE,Hoboken,0.493,Pavonia/Newport,0.775,Hoboken,0.493
+90 ADAMS ST,Hoboken,0.687,Pavonia/Newport,0.762,Hoboken,0.687
+90 MADISON ST,Hoboken,0.787,Pavonia/Newport,0.813,Hoboken,0.787
+90 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.842,Hoboken,0.838
+900 BLOOMFIELD ST,Hoboken,0.839,Port Imperial,0.341,Port Imperial,0.341
+900 GARDEN ST,Hoboken,0.862,Port Imperial,0.372,Port Imperial,0.372
+901 BLOOMFIELD ST,Hoboken,0.832,Port Imperial,0.336,Port Imperial,0.336
+901 GARDEN ST,Hoboken,0.856,Port Imperial,0.366,Port Imperial,0.366
+901 HUDSON ST,Hoboken,0.789,Port Imperial,0.289,Port Imperial,0.289
+901 MADISON ST,Hoboken,1.07,Port Imperial,0.646,Port Imperial,0.646
+902 WILLOW AVE,Hoboken,0.921,Port Imperial,0.442,Port Imperial,0.442
+903 GARDEN ST,Hoboken,0.86,Port Imperial,0.363,Port Imperial,0.363
+903 WILLOW AVE,Hoboken,0.912,Port Imperial,0.429,Port Imperial,0.429
+904 JEFFERSON ST,Hoboken,1.047,Port Imperial,0.609,Port Imperial,0.609
+906 PARK AVE,Hoboken,0.902,Port Imperial,0.397,Port Imperial,0.397
+906 WASHINGTON ST,Hoboken,0.831,Port Imperial,0.307,Port Imperial,0.307
+907 GARDEN ST,Hoboken,0.869,Port Imperial,0.355,Port Imperial,0.355
+907 WILLOW AVE,Hoboken,0.917,Port Imperial,0.424,Port Imperial,0.424
+908 GARDEN ST,Hoboken,0.879,Port Imperial,0.357,Port Imperial,0.357
+909 GARDEN ST,Hoboken,0.873,Port Imperial,0.351,Port Imperial,0.351
+91 ADAMS ST,Hoboken,0.676,Pavonia/Newport,0.757,Hoboken,0.676
+91 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.677,Hoboken,0.427
+91 MONROE ST,Hoboken,0.82,Pavonia/Newport,0.827,Hoboken,0.82
+910 WILLOW AVE,Hoboken,0.938,Port Imperial,0.43,Port Imperial,0.43
+911 WILLOW AVE,Hoboken,0.929,Port Imperial,0.421,Port Imperial,0.421
+912 PARK AVE,Hoboken,0.914,Port Imperial,0.387,Port Imperial,0.387
+914 GARDEN ST,Hoboken,0.892,Port Imperial,0.347,Port Imperial,0.347
+915 MADISON ST,Hoboken,1.078,Port Imperial,0.643,Port Imperial,0.643
+916 PARK AVE,Hoboken,0.922,Port Imperial,0.381,Port Imperial,0.381
+917 WILLOW AVE,Hoboken,0.931,Port Imperial,0.413,Port Imperial,0.413
+919 PARK AVE,Hoboken,0.921,Port Imperial,0.37,Port Imperial,0.37
+92 JEFFERSON ST,Hoboken,0.737,Pavonia/Newport,0.788,Hoboken,0.737
+92 MONROE ST,Hoboken,0.839,Pavonia/Newport,0.847,Hoboken,0.839
+920 HUDSON ST,Hoboken,0.842,Port Imperial,0.257,Port Imperial,0.257
+920 JEFFERSON ST,Hoboken,1.076,Port Imperial,0.592,Port Imperial,0.592
+921 GARDEN ST,Hoboken,0.899,Port Imperial,0.329,Port Imperial,0.329
+921 MADISON ST,Hoboken,1.081,Port Imperial,0.642,Port Imperial,0.642
+921 WILLOW AVE,Hoboken,0.939,Port Imperial,0.407,Port Imperial,0.407
+924 GARDEN ST,Hoboken,0.914,Port Imperial,0.33,Port Imperial,0.33
+924 JEFFERSON ST,Hoboken,1.076,Port Imperial,0.592,Port Imperial,0.592
+924 WILLOW AVE,Hoboken,0.967,Port Imperial,0.41,Port Imperial,0.41
+926 GARDEN ST,Hoboken,0.918,Port Imperial,0.327,Port Imperial,0.327
+926 WILLOW AVE,Hoboken,0.971,Port Imperial,0.408,Port Imperial,0.408
+927 HUDSON ST,Hoboken,0.846,Port Imperial,0.232,Port Imperial,0.232
+928 GARDEN ST,Hoboken,0.923,Port Imperial,0.324,Port Imperial,0.324
+928 WILLOW AVE,Hoboken,0.975,Port Imperial,0.405,Port Imperial,0.405
+929 GARDEN ST,Hoboken,0.917,Port Imperial,0.315,Port Imperial,0.315
+93 ADAMS ST,Hoboken,0.676,Pavonia/Newport,0.759,Hoboken,0.676
+93 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.679,Hoboken,0.427
+93 GRAND ST,Hoboken,0.625,Pavonia/Newport,0.736,Hoboken,0.625
+930 JEFFERSON ST,Hoboken,1.078,Port Imperial,0.591,Port Imperial,0.591
+930 PARK AVE,Hoboken,0.951,Port Imperial,0.361,Port Imperial,0.361
+931 HUDSON ST,Hoboken,0.851,Port Imperial,0.226,Port Imperial,0.226
+931 PARK AVE,Hoboken,0.945,Port Imperial,0.352,Port Imperial,0.352
+931 WILLOW AVE,Hoboken,0.96,Port Imperial,0.391,Port Imperial,0.391
+933 GARDEN ST,Hoboken,0.88,Port Imperial,0.345,Port Imperial,0.345
+933 HUDSON ST,Hoboken,0.858,Port Imperial,0.22,Port Imperial,0.22
+933 WILLOW AVE,Hoboken,0.965,Port Imperial,0.388,Port Imperial,0.388
+937 WASHINGTON ST,Hoboken,0.84,Port Imperial,0.289,Port Imperial,0.289
+938 HUDSON ST,Hoboken,0.87,Port Imperial,0.222,Port Imperial,0.222
+94 CLINTON ST,Hoboken,0.589,Pavonia/Newport,0.728,Hoboken,0.589
+94 MONROE ST,Hoboken,0.838,Pavonia/Newport,0.846,Hoboken,0.838
+940 BLOOMFIELD ST,Hoboken,0.866,Port Imperial,0.316,Port Imperial,0.316
+95 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.682,Hoboken,0.427
+95 WILLOW AVE,Hoboken,0.524,Pavonia/Newport,0.703,Hoboken,0.524
+98 ADAMS ST,Hoboken,0.687,Pavonia/Newport,0.769,Hoboken,0.687
+98 PARK AVE,Hoboken,0.489,Pavonia/Newport,0.696,Hoboken,0.489
+99 GARDEN ST,Hoboken,0.427,Pavonia/Newport,0.688,Hoboken,0.427
+99 PARK AVE,Hoboken,0.475,Pavonia/Newport,0.694,Hoboken,0.475

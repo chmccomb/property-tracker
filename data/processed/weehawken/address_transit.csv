@@ -1,0 +1,97 @@
+address,path_station,path_dist_mi,hblr_station,hblr_dist_mi,transit_station,transit_dist_mi
+1 GRAND ST,Hoboken,1.62,Port Imperial,0.644,Port Imperial,0.644
+10 HENLEY PL,Hoboken,2.186,Port Imperial,1.157,Port Imperial,1.157
+100 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+1000 AVENUE AT PORT IMPERIAL,Hoboken,2.748,Port Imperial,1.743,Port Imperial,1.743
+1055 BLVD EAST,Hoboken,2.09,Port Imperial,1.047,Port Imperial,1.047
+106 MAPLE ST,Hoboken,2.19,Port Imperial,1.152,Port Imperial,1.152
+1200 AVENUE AT PORT IMPERIAL,Hoboken,2.64,Port Imperial,1.632,Port Imperial,1.632
+124 HIGHPOINT AVE,Hoboken,1.992,Port Imperial,0.967,Port Imperial,0.967
+136 HIGHPOINT AVE,Hoboken,1.995,Port Imperial,0.97,Port Imperial,0.97
+150 HENLEY PL,Hoboken,2.187,Port Imperial,1.161,Port Imperial,1.161
+17 51ST ST,Hoboken,3.129,Port Imperial,2.107,Port Imperial,2.107
+17 REGENCY PL,Hoboken,2.401,Port Imperial,1.382,Port Imperial,1.382
+1826 WILLOW AVE,Hoboken,1.619,Port Imperial,0.606,Port Imperial,0.606
+20 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+20 WEST 19TH ST,Hoboken,1.701,Port Imperial,0.733,Port Imperial,0.733
+200 HIGHPOINT AVE,Hoboken,2.019,Port Imperial,0.999,Port Imperial,0.999
+21 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+22 50TH ST,Hoboken,3.078,Port Imperial,2.056,Port Imperial,2.056
+22 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+221 JANE ST,Hoboken,2.184,Port Imperial,1.152,Port Imperial,1.152
+227 DODD ST,Hoboken,2.145,Port Imperial,1.118,Port Imperial,1.118
+23 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+24 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+24 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+24 OXFORD LANDING,Hoboken,2.309,Port Imperial,1.288,Port Imperial,1.288
+25 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+250 HENLEY PL,Hoboken,2.248,Port Imperial,1.226,Port Imperial,1.226
+26 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+2600 PALISADE AVE,Hoboken,2.23,Port Imperial,1.204,Port Imperial,1.204
+2614 PALISADE AVE,Hoboken,2.233,Port Imperial,1.207,Port Imperial,1.207
+2716 PALISADE AVE,Hoboken,2.289,Port Imperial,1.258,Port Imperial,1.258
+29-33 51ST ST,Hoboken,3.133,Port Imperial,2.109,Port Imperial,2.109
+3 BONN PL,Hoboken,2.452,Port Imperial,1.415,Port Imperial,1.415
+3 OXFORD LANDING,Hoboken,2.301,Port Imperial,1.281,Port Imperial,1.281
+31 ETON ROW,Hoboken,2.225,Port Imperial,1.198,Port Imperial,1.198
+32 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+32 OXFORD LANDING,Hoboken,2.309,Port Imperial,1.288,Port Imperial,1.288
+33 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+33 OXFORD LANDING,Hoboken,2.302,Port Imperial,1.282,Port Imperial,1.282
+34 48TH ST,Hoboken,2.976,Port Imperial,1.948,Port Imperial,1.948
+34-40 48TH ST,Hoboken,2.99,Port Imperial,1.961,Port Imperial,1.961
+35 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+35-39 51ST ST,Hoboken,3.133,Port Imperial,2.109,Port Imperial,2.109
+36 REGENCY PL,Hoboken,2.431,Port Imperial,1.412,Port Imperial,1.412
+3718 PARK AVE,Hoboken,2.525,Port Imperial,1.481,Port Imperial,1.481
+3726 PARK AVE,Hoboken,2.527,Port Imperial,1.484,Port Imperial,1.484
+385 PARK AVE,Hoboken,2.105,Port Imperial,1.062,Port Imperial,1.062
+39 OXFORD LANDING,Hoboken,2.303,Port Imperial,1.282,Port Imperial,1.282
+40 WEST 19TH ST,Hoboken,1.701,Port Imperial,0.733,Port Imperial,0.733
+4110 PARK AVE,Hoboken,2.7,Port Imperial,1.658,Port Imperial,1.658
+412 GREGORY AVE,Hoboken,1.849,Port Imperial,0.824,Port Imperial,0.824
+414 GREGORY AVE,Hoboken,1.85,Port Imperial,0.825,Port Imperial,0.825
+47 47TH ST,Hoboken,2.938,Port Imperial,1.908,Port Imperial,1.908
+5 GRAND ST,Hoboken,1.621,Port Imperial,0.646,Port Imperial,0.646
+515 GREGORY AVE,Hoboken,2.053,Port Imperial,1.014,Port Imperial,1.014
+518 GREGORY AVE,Hoboken,2.074,Port Imperial,1.033,Port Imperial,1.033
+518-530 GREGORY AVE,Hoboken,2.059,Port Imperial,1.021,Port Imperial,1.021
+52 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+520 HUDSON AVE,Hoboken,2.184,Port Imperial,1.15,Port Imperial,1.15
+522 GREGORY AVE,Hoboken,2.057,Port Imperial,1.018,Port Imperial,1.018
+53 ETON ROW,Hoboken,2.223,Port Imperial,1.197,Port Imperial,1.197
+530 GREGORY AVE,Hoboken,2.066,Port Imperial,1.027,Port Imperial,1.027
+54 47TH ST,Hoboken,2.953,Port Imperial,1.922,Port Imperial,1.922
+55 WEST 19TH ST,Hoboken,1.701,Port Imperial,0.736,Port Imperial,0.736
+550 GREGORY AVE,Hoboken,2.089,Port Imperial,1.048,Port Imperial,1.048
+56 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+564 GREGORY AVE,Hoboken,2.105,Port Imperial,1.064,Port Imperial,1.064
+57 HUDSON PL,Hoboken,2.569,Port Imperial,1.535,Port Imperial,1.535
+59A CHESTNUT ST,Hoboken,1.671,Port Imperial,0.7,Port Imperial,0.7
+59B CHESTNUT ST,Hoboken,1.671,Port Imperial,0.7,Port Imperial,0.7
+5B WEST 19TH ST,Hoboken,1.701,Port Imperial,0.733,Port Imperial,0.733
+6 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+600 HARBOR BLVD,Hoboken,1.683,Port Imperial,0.642,Port Imperial,0.642
+62 ETON ROW,Hoboken,2.225,Port Imperial,1.2,Port Imperial,1.2
+63 ETON ROW,Hoboken,2.221,Port Imperial,1.196,Port Imperial,1.196
+72 46TH ST,Hoboken,2.925,Port Imperial,1.891,Port Imperial,1.891
+720 BLVD EAST,Hoboken,3.086,Port Imperial,2.066,Port Imperial,2.066
+8 CAMBRIDGE WAY,Hoboken,2.292,Port Imperial,1.269,Port Imperial,1.269
+800 AVENUE AT PORT IMPERIAL,Hoboken,2.915,Port Imperial,1.905,Port Imperial,1.905
+81-83 HIGHWOOD TERRACE,Hoboken,2.495,Port Imperial,1.453,Port Imperial,1.453
+83 LIBERTY PL,Hoboken,2.707,Port Imperial,1.666,Port Imperial,1.666
+843-849 BLVD EAST,Hoboken,3.086,Port Imperial,2.066,Port Imperial,2.066
+848-849 BLVD EAST,Hoboken,2.09,Port Imperial,1.047,Port Imperial,1.047
+849 BLVD EAST,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+851 BLVD EAST,Hoboken,3.086,Port Imperial,2.066,Port Imperial,2.066
+851 JOHN F KENNEDY BLVD,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+875 BLVD EAST,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+883 BLVD EAST,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+899 BLVD EAST,Hoboken,2.09,Port Imperial,1.047,Port Imperial,1.047
+9 GRAND ST,Hoboken,1.623,Port Imperial,0.647,Port Imperial,0.647
+941 BLVD EAST,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+963 BLVD EAST,Hoboken,3.086,Port Imperial,2.066,Port Imperial,2.066
+963-965 BLVD EAST,Hoboken,2.09,Port Imperial,1.047,Port Imperial,1.047
+965 BLVD EAST,Hoboken,2.174,Port Imperial,1.131,Port Imperial,1.131
+TH1 OXFORD LANDING,Hoboken,2.309,Port Imperial,1.288,Port Imperial,1.288
+TH12 HENLEY PL,Hoboken,2.306,Port Imperial,1.287,Port Imperial,1.287
