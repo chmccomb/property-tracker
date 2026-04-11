@@ -388,7 +388,10 @@ for p in props:
     rad_n      = 0
     psf_source = 'block'
 
-    if (not block_psf or block_n < RADIUS_MIN_BLOCK_SALES) and r['lat'] and r['lon']:
+    # For zip-fallback blocks, always compute radius PSF and prefer it —
+    # zip_07086 mixes inland and Port Imperial waterfront (~$400 vs $1000+/sqft)
+    is_zip_block = r.get('block', '').startswith('zip_')
+    if (not block_psf or block_n < RADIUS_MIN_BLOCK_SALES or is_zip_block) and r['lat'] and r['lon']:
         rad_psf, rad_n = radius_median_psf(r['lat'], r['lon'], r.get('property_type',''))
         if rad_psf:
             _radius_used += 1
@@ -398,7 +401,8 @@ for p in props:
     elif not block_psf:
         _radius_skipped += 1
 
-    r['block_median_psf'] = block_psf or rad_psf
+    # Use radius PSF as the primary comp when available and block is a zip fallback
+    r['block_median_psf'] = (rad_psf if (is_zip_block and rad_psf) else None) or block_psf or rad_psf
     r['radius_median_psf'] = rad_psf
     r['radius_n_comps']    = rad_n if rad_psf else None
     r['psf_source']        = psf_source
