@@ -1976,9 +1976,17 @@ function computeFairPrice() {
     return Math.abs(p.sqft - sqft) / sqft <= 0.35;
   }
 
-  const blockSold = allProps.filter(p =>
-    p.block === blockKey && p.status === 'SOLD' && p.psf > 0 && p.closing_date >= cut36
-  );
+  const _fpIsZip = blockKey && blockKey.startsWith('zip_');
+  const _fpProp  = _fpIsZip ? allProps.find(p => p.block === blockKey && p.lat && p.lon) : null;
+  const blockSold = allProps.filter(p => {
+    if (!(p.status === 'SOLD' && p.psf > 0 && p.closing_date >= cut36)) return false;
+    if (_fpIsZip && _fpProp?.lat && _fpProp?.lon && p.lat && p.lon) {
+      const dlat = (p.lat - _fpProp.lat) * Math.PI/180, dlon = (p.lon - _fpProp.lon) * Math.PI/180;
+      const a = Math.sin(dlat/2)**2 + Math.cos(_fpProp.lat*Math.PI/180)*Math.cos(p.lat*Math.PI/180)*Math.sin(dlon/2)**2;
+      return 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) <= 0.35;
+    }
+    return p.block === blockKey;
+  });
 
   // Try progressively wider pools
   let comps, compLabel, usingSize = false;
@@ -2444,11 +2452,18 @@ function renderScorerResults(d) {
   const gain5 = proj5 ? proj5 - todayEst : null;
 
   // ── RECENT COMPS ─────────────────────────────────────────────
-  // Prefer amenity-matched comps, fall back to all block comps
-  const blockComps = allProps.filter(p =>
-    p.block === d.block && p.status==='SOLD' && !p.distressed &&
-    p.sold_price && p.psf && (() => { const c = new Date(); c.setFullYear(c.getFullYear()-2); return p.closing_date >= c.toISOString().slice(0,10); })()
-  ).sort((a,b) => (b.closing_date||'').localeCompare(a.closing_date||''));
+  // For zip-fallback blocks use radius comps to avoid cross-neighborhood pollution
+  const _cut2yr = (() => { const c = new Date(); c.setFullYear(c.getFullYear()-2); return c.toISOString().slice(0,10); })();
+  const _isZipBlock = d.block && d.block.startsWith('zip_');
+  const blockComps = allProps.filter(p => {
+    if (!(p.status==='SOLD' && !p.distressed && p.sold_price && p.psf && p.closing_date >= _cut2yr)) return false;
+    if (_isZipBlock && d.lat && d.lon && p.lat && p.lon) {
+      const dlat = (p.lat - d.lat) * Math.PI/180, dlon = (p.lon - d.lon) * Math.PI/180;
+      const a = Math.sin(dlat/2)**2 + Math.cos(d.lat*Math.PI/180)*Math.cos(p.lat*Math.PI/180)*Math.sin(dlon/2)**2;
+      return 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) <= 0.35;
+    }
+    return p.block === d.block;
+  }).sort((a,b) => (b.closing_date||'').localeCompare(a.closing_date||''));
 
   const matchedComps = blockComps.filter(p =>
     p.parking === d.parking && p.outdoor === d.outdoor
