@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ':*)",
+      "Bash(python3 ../../../scripts/geocode.py --city \", Hoboken, NJ\")",
+      "Bash(python3 ../../../scripts/enrich_transit.py)",
+      "Bash(open /Users/charles/Downloads/jc-heights-analysis/dashboard/hoboken_dashboard.html)",
+      "Bash(ls -lt /Users/charles/Downloads/*.csv)",
+      "Bash(python3 ../../scripts/jc_heights_emerging.py)",
+      "Bash(open /Users/charles/Downloads/jc-heights-analysis/dashboard/jc_heights_dashboard_v2.html)",
+      "Bash(grep -n \"tab-map\\\\|tab-scorer\\\\|</div>\\\\s*$\\\\|switchTab\\\\|gcalUrl\\\\|renderOpenHouseCell\\\\|function gcal\\\\|function render\" /Users/charles/Downloads/jc-heights-analysis/dashboard/jc_heights_dashboard_v2.html)",
+      "Bash(awk 'NR>=535 && NR<=545' /Users/charles/Downloads/jc-heights-analysis/dashboard/jc_heights_dashboard_v2.html)",
+      "Bash(grep -n \"^</div>$\\\\|^<script>\" /Users/charles/Downloads/jc-heights-analysis/dashboard/jc_heights_dashboard_v2.html)"
+    ]
+  }
+}

@@ -56,7 +56,7 @@ OUTPUT_CSV   = ROOT / "data" / "raw" / "mls_incremental.csv"
 
 # Gmail search query — adjust label/sender to match your Paragon alert setup
 DEFAULT_LABEL  = "INBOX"
-PARAGON_SENDER = "noreply@paragonrels.com"    # typical Paragon MLS sender
+PARAGON_SENDER = "email@paragonmessaging.com"  # Paragon MLS alert sender
 
 # Scopes (read-only is sufficient)
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -172,11 +172,9 @@ def parse_paragon_email(subject: str, html: str) -> list[dict]:
     """
     Parse a Paragon MLS alert email and return a list of property dicts.
 
-    Paragon alert emails typically contain a table or series of divs with
-    property details.  This parser handles the most common formats.
-
-    If your Paragon portal has a custom template, inspect the raw HTML and
-    update the selectors below.  The --dump-sample flag prints the HTML.
+    Uses <span id="displayMlsNum"> as the anchor for each listing, then
+    walks up ancestors to find the full listing container (the <td> that
+    also includes the status badge and all field labels).
     """
     try:
         from bs4 import BeautifulSoup
@@ -187,104 +185,108 @@ def parse_paragon_email(subject: str, html: str) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     properties = []
 
-    # ── Strategy 1: Paragon "Property Card" table layout ─────────────────
-    # Each listing is usually in a <table> or <div> block identified by an
-    # MLS number.  We look for cells/divs that label their content.
+    STATUS_KEYWORDS = {"active", "sold", "under contract", "pending", "expired", "withdrawn"}
 
-    def text(el) -> str:
-        return el.get_text(separator=" ", strip=True) if el else ""
+    def listing_container(span_el):
+        """
+        Walk up from the <span id="displayMlsNum"> until we find a <td>
+        ancestor whose text contains a known status keyword.  This is the
+        full per-listing block including status, address, price, and fields.
+        """
+        node = span_el
+        for _ in range(25):
+            node = node.parent
+            if node is None:
+                break
+            if node.name == "td":
+                t = node.get_text(separator=" ", strip=True).lower()
+                if any(kw in t for kw in STATUS_KEYWORDS):
+                    return node
+        return None
 
-    def find_labelled(container, label: str) -> str:
-        """Find a value next to a label cell/span in the container."""
-        label_lower = label.lower()
-        for el in container.find_all(["td", "th", "span", "div", "strong", "b"]):
-            el_text = el.get_text(strip=True).lower().rstrip(":").strip()
-            if el_text == label_lower:
-                # Try sibling
-                nxt = el.find_next_sibling()
-                if nxt:
-                    return text(nxt)
-                # Try parent's next sibling
-                parent_nxt = el.parent.find_next_sibling() if el.parent else None
-                if parent_nxt:
-                    return text(parent_nxt)
-        return ""
-
-    # ── Try to find per-listing blocks ───────────────────────────────────
-    # Common patterns: each listing wrapped in a <tr> group or a <div class="listing">
-    listing_blocks = (
-        soup.find_all("div", class_=re.compile(r"listing|property|result", re.I))
-        or soup.find_all("table", class_=re.compile(r"listing|property", re.I))
-    )
-
-    if not listing_blocks:
-        # Fallback: treat entire email as one listing (single-listing alert)
-        listing_blocks = [soup]
-
-    for block in listing_blocks:
-        row = dict(BLANK_ROW)
-        row["_source"] = "gmail_alert"
-
-        # MLS number — usually formatted as "MLS#: 24012345" or "#24012345"
-        mls_match = re.search(r"(?:MLS\s*#?:?\s*|#)(\d{7,10})", text(block), re.I)
-        row["MLS #"] = mls_match.group(1) if mls_match else ""
-
-        # Skip blocks without an MLS number (navigation/footer blocks)
-        if not row["MLS #"]:
+    for mls_span in soup.find_all("span", id="displayMlsNum"):
+        mls_num = mls_span.get_text(strip=True)
+        if not re.match(r"^\d{7,10}$", mls_num):
             continue
 
-        # Status — "Active", "Sold", "Under Contract", etc.
+        block = listing_container(mls_span)
+        if block is None:
+            continue
+
+        # Use pipe-separated text for reliable field extraction
+        block_text = block.get_text(separator="|", strip=True)
+        tokens = [t.strip() for t in block_text.split("|") if t.strip()]
+
+        row = dict(BLANK_ROW)
+        row["_source"] = "gmail_alert"
+        row["MLS #"] = mls_num
+
+        # ── Status ────────────────────────────────────────────────────────
+        # Paragon format: "Active - ACTIVE" or "New|Active - ACTIVE" etc.
         status_match = re.search(
             r"\b(Active|Sold|Under Contract|Pending|Expired|Withdrawn)\b",
-            text(block), re.I)
+            block_text, re.I)
         row["Status"] = status_match.group(1).upper() if status_match else ""
 
-        # Address — look for a strong/h3 element with a number-word-word pattern
-        for tag in block.find_all(["h2", "h3", "h4", "strong", "b", "a"]):
-            t = text(tag)
-            if re.match(r"^\d+\s+\w", t) and len(t) < 80:
-                row["Address"] = t.split(",")[0].strip()
+        # ── Address ───────────────────────────────────────────────────────
+        # First token matching "<number> <STREET NAME>"
+        for tok in tokens:
+            if re.match(r"^\d+\s+[A-Z]", tok) and len(tok) < 80:
+                # strip trailing unit if present ("272 TERRACE AVE UNIT 2A")
+                addr = re.sub(r"\s+(?:UNIT|APT|#)\s*\S+$", "", tok, flags=re.I).strip()
+                row["Address"] = addr
+                # Unit: anything after UNIT/APT/#
+                unit_m = re.search(r"(?:UNIT|APT|#)\s*(\S+)$", tok, re.I)
+                if unit_m:
+                    row["Unit Number"] = unit_m.group(1)
                 break
 
-        # Price — first dollar amount
-        price_match = re.search(r"\$[\d,]+", text(block))
+        # ── ZIP ───────────────────────────────────────────────────────────
+        zip_match = re.search(r"\b(07\d{3})\b", block_text)
+        if zip_match:
+            row["Zip"] = zip_match.group(1)
+
+        # ── Property type ─────────────────────────────────────────────────
+        type_match = re.search(
+            r"\b(Condominium|Townhouse|Single.Family|Multi.Family|Co.Op|Land)\b",
+            block_text, re.I)
+        if type_match:
+            row["Type"] = type_match.group(1)
+
+        # ── Price ─────────────────────────────────────────────────────────
+        price_match = re.search(r"\$([\d,]+)", block_text)
         if price_match:
-            price_str = price_match.group(0)
+            price_str = "$" + price_match.group(1)
             if row["Status"] == "SOLD":
                 row["Sold Price"] = price_str
             else:
                 row["Asking Price"] = price_str
 
-        # Beds / baths — "3 BD / 2 BA" or "Beds: 3" etc.
-        bd_match = re.search(r"(\d)\s*(?:BD|Bed|BR)\b", text(block), re.I)
-        ba_match = re.search(r"(\d)\s*(?:BA|Bath|Full Bath)\b", text(block), re.I)
-        if bd_match: row["Bedrooms"] = bd_match.group(1)
-        if ba_match: row["Total # Full Baths"] = ba_match.group(1)
+        # ── Field extraction using label→next-token pattern ───────────────
+        # tokens looks like: [..., "Bedrooms:", "3", "Total Bathrooms:", "2", ...]
+        for i, tok in enumerate(tokens):
+            val = tokens[i + 1] if i + 1 < len(tokens) else ""
+            tok_lower = tok.lower().rstrip(":")
+            if tok_lower == "bedrooms":
+                row["Bedrooms"] = val
+            elif tok_lower == "total bathrooms":
+                row["Total # Full Baths"] = val
+            elif tok_lower in ("approx sq ft", "approx. sq ft", "sq ft"):
+                row["Approx Sq Ft"] = val.replace(",", "")
+            elif tok_lower == "days on market":
+                row["Days On Market"] = val
+            elif tok_lower in ("year built",):
+                row["Year Built"] = val
+            elif tok_lower in ("monthly maintenance", "hoa", "maintenance"):
+                row["Monthly Maintenance Fee"] = val
 
-        # Sqft
-        sqft_match = re.search(r"([\d,]+)\s*(?:sq\.?\s*ft|sqft|SF)\b", text(block), re.I)
-        if sqft_match:
-            row["Approx Sq Ft"] = sqft_match.group(1).replace(",", "")
-
-        # Closing / listing date
-        date_matches = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", text(block))
+        # ── Closing / listing date ────────────────────────────────────────
+        date_matches = re.findall(r"\d{1,2}/\d{1,2}/\d{4}", block_text)
         if date_matches:
-            if row["Status"] == "SOLD" and len(date_matches) >= 1:
+            if row["Status"] == "SOLD":
                 row["Closing Date"] = date_matches[-1]
-            elif len(date_matches) >= 1:
+            else:
                 row["Listing Date"] = date_matches[0]
-
-        # ZIP — 5-digit code
-        zip_match = re.search(r"\b(07\d{3})\b", text(block))
-        if zip_match: row["Zip"] = zip_match.group(1)
-
-        # HOA
-        hoa_match = re.search(r"(?:HOA|Maint|Maintenance)[^\$]*\$([\d,]+)", text(block), re.I)
-        if hoa_match: row["Monthly Maintenance Fee"] = "$" + hoa_match.group(1)
-
-        # DOM
-        dom_match = re.search(r"(\d+)\s*(?:DOM|Days on Market|days)", text(block), re.I)
-        if dom_match: row["Days On Market"] = dom_match.group(1)
 
         properties.append(row)
 
@@ -303,6 +305,19 @@ def load_seen_ids(output_path: Path) -> set[str]:
             eid = row.get("_email_id", "").strip()
             if eid:
                 seen.add(eid)
+    return seen
+
+
+def load_seen_mls(output_path: Path) -> set[str]:
+    """Return set of MLS # values already written to the output CSV."""
+    if not output_path.exists():
+        return set()
+    seen = set()
+    with open(output_path, encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            mls = row.get("MLS #", "").strip()
+            if mls:
+                seen.add(mls)
     return seen
 
 
@@ -342,20 +357,28 @@ def main() -> None:
         return
 
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    seen_ids = load_seen_ids(OUTPUT_CSV)
+    seen_ids  = load_seen_ids(OUTPUT_CSV)
+    seen_mls  = load_seen_mls(OUTPUT_CSV)
 
     new_rows: list[dict] = []
     for mid in msg_ids:
-        if mid in seen_ids:
-            continue
         subject, html = get_email_body(service, mid)
         if not html:
             continue
         props = parse_paragon_email(subject, html)
+        # Deduplicate by MLS # (not email_id) so multi-listing emails don't get
+        # partially skipped when only some listings were captured in a prior run.
+        fresh = []
         for prop in props:
-            prop["_email_id"] = mid
-        new_rows.extend(props)
-        print(f"  Parsed {len(props)} listing(s) from: {subject[:60]}")
+            mls = prop.get("MLS #", "").strip()
+            if mls and mls not in seen_mls:
+                prop["_email_id"] = mid
+                seen_mls.add(mls)
+                fresh.append(prop)
+        new_rows.extend(fresh)
+        if props:
+            print(f"  Parsed {len(props)} listing(s) from: {subject[:60]}"
+                  + (f" ({len(fresh)} new)" if fresh else " (all already seen)"))
 
     print(f"\nNew rows to append: {len(new_rows)}")
 

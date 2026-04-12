@@ -50,14 +50,15 @@ ACS_VARS = [
 DEFAULT_ACS_YEAR = 2022
 
 
-def fetch_acs(year: int, zctas: list[str]) -> list[dict]:
+def fetch_acs(year: int, zctas: list) -> list:
     """Fetch ACS 5-year estimates for the given ZCTAs. Returns list of dicts."""
-    # Census API allows batching but ZCTA queries work best one page at a time
-    # We'll fetch all ZCTAs for NJ in one call (ZCTA geography under state 34)
+    # Query specific ZCTAs directly — ZCTAs are a national geography, not
+    # nested under states, so &in=state:34 is not valid.
     var_str = ",".join(ACS_VARS)
+    zcta_list = ",".join(zctas)
     url = (
         f"https://api.census.gov/data/{year}/acs/acs5"
-        f"?get={var_str}&for=zip+code+tabulation+area:*&in=state:34"
+        f"?get={var_str}&for=zip+code+tabulation+area:{zcta_list}"
     )
     print(f"Fetching Census ACS {year} for NJ ZCTAs …")
     print(f"  URL: {url}")
@@ -90,7 +91,7 @@ def fetch_acs(year: int, zctas: list[str]) -> list[dict]:
     return results
 
 
-def compute_neighborhood_demand(record: dict) -> float | None:
+def compute_neighborhood_demand(record: dict):
     """
     Composite neighborhood demand score [0, 100].
 
@@ -143,10 +144,11 @@ def main() -> None:
     with open(INPUT_CSV, encoding="utf-8-sig") as f:
         raw = list(csv.DictReader(f))
 
+    # Normalize to 5-digit ZIPs (strip ZIP+4 suffixes like "07307-1234")
     zctas = sorted(set(
-        row.get("Zip", "").strip()
+        row.get("Zip", "").strip()[:5]
         for row in raw
-        if row.get("Zip", "").strip()
+        if len(row.get("Zip", "").strip()) >= 5
     ))
     print(f"ZIPs found in MLS data: {zctas}")
 

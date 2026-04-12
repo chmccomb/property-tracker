@@ -5,7 +5,12 @@
       "Bash(python3 -m py_compile scripts/jc_heights_clean.py)",
       "Bash(python3 -m py_compile scripts/jc_heights_emerging.py)",
       "Bash(python3 -m py_compile scripts/enrich_walkscore.py)",
-      "Bash(python3 -m py_compile scripts/enrich_modiiv.py)"
+      "Bash(python3 -m py_compile scripts/enrich_modiiv.py)",
+      "Bash(python3 refresh.py --csv data/raw/MLS_export.csv --incremental data/raw/mls_incremental.csv --deploy)",
+      "Bash(python3 -c \"import csv,sys; r=list\\(csv.reader\\(sys.stdin\\)\\); print\\('\\\\n'.join\\(r[0]\\)\\)\")",
+      "Bash(python3 -c ':*)",
+      "Bash(python3 ../../../scripts/hoboken_emerging.py)",
+      "Bash(python3 ../../../scripts/hoboken_clean.py)"
     ]
   }
 }

@@ -72,13 +72,33 @@ def fetch_score(address: str, lat: float, lon: float) -> dict:
                 "bike_score": None, "ws_description": "error"}
 
 
+GEOCODE_CSV = "address_geocoded.csv"
+
+
 def main() -> None:
     if not API_KEY:
         print("ERROR: WALKSCORE_API_KEY environment variable not set.")
         print("  Get a free key at https://www.walkscore.com/professional/api.php")
         sys.exit(1)
 
-    # ── Load cache ────────────────────────────────────────────────────────
+    # ── Load geocode cache (produced by geocode.py) ───────────────────────
+    geocode_lu: dict = {}
+    geo_path = Path(GEOCODE_CSV)
+    if geo_path.exists():
+        with open(geo_path, encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                if row.get("lat") and row.get("lon"):
+                    try:
+                        geocode_lu[row["address"]] = (float(row["lat"]), float(row["lon"]))
+                    except (ValueError, TypeError):
+                        pass
+        print(f"Geocode cache loaded: {len(geocode_lu)} addresses with coordinates")
+    else:
+        print("ERROR: address_geocoded.csv not found.")
+        print("  Run geocode.py first to generate coordinates.")
+        sys.exit(1)
+
+    # ── Load Walk Score cache ─────────────────────────────────────────────
     cached: dict = {}
     out_path = Path(OUTPUT_CSV)
     if out_path.exists():
@@ -87,18 +107,8 @@ def main() -> None:
                 cached[row["address"]] = row
         print(f"Cached Walk Scores loaded: {len(cached)} addresses")
 
-    # ── Read unique addresses + coordinates from Testing.csv ─────────────
-    with open(INPUT_CSV, encoding="utf-8-sig") as f:
-        raw = list(csv.DictReader(f))
-
-    addresses: dict = {}
-    for row in raw:
-        addr = row.get("Address", "").strip()
-        lat  = parse_float(row.get("Y Coordinates", ""))
-        lon  = parse_float(row.get("X Coordinates", ""))
-        if addr and addr not in addresses and lat and lon:
-            addresses[addr] = (lat, lon)
-
+    # ── Build address list from geocode cache ─────────────────────────────
+    addresses = geocode_lu  # addr -> (lat, lon)
     new_addresses = [a for a in addresses if a not in cached]
     print(f"Unique addresses: {len(addresses)}  —  new to fetch: {len(new_addresses)}")
 
