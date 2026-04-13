@@ -354,6 +354,7 @@ tbody td{padding:6px 10px;vertical-align:middle;white-space:nowrap;}
             <th onclick="sortActive('psf')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">$/sqft</th>
             <th onclick="sortActive('price_vs_comp')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">vs. Comps</th>
             <th onclick="sortActive('dom')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">DOM</th>
+            <th onclick="sortActive('listing_date')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Listed</th>
             <th onclick="sortActive('hoa')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">HOA/mo</th>
             <th onclick="sortActive('est_score')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Est.</th>
             <th onclick="sortActive('emg_score')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Emg.</th>
@@ -1757,6 +1758,7 @@ function renderActiveListings() {
       <td>${p.psf?'$'+Math.round(p.psf).toLocaleString():'—'}</td>
       <td style="color:${vc};font-weight:600;">${p.price_vs_comp!=null?(p.price_vs_comp>0?'+':'')+p.price_vs_comp.toFixed(1)+'%':'—'}</td>
       <td>${p.dom!=null?p.dom+'d':'—'}</td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--muted);">${p.listing_date||'—'}</td>
       <td>${p.hoa&&p.hoa>0?'$'+Number(p.hoa).toLocaleString():'—'}</td>
       <td>${p.est_score!=null?`<span class="chip" style="background:${ec}22;color:${ec}">${p.est_score.toFixed(0)}</span>`:'—'}</td>
       <td>${p.emg_score!=null?`<span class="chip" style="background:${mc}22;color:${mc}">${p.emg_score.toFixed(0)}</span>`:'—'}</td>

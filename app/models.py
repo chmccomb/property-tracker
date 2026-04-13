@@ -70,6 +70,7 @@ class Property(Base):
     list_price: Mapped[Optional[float]] = mapped_column(Float)
     psf: Mapped[Optional[float]] = mapped_column(Float)
     closing_date: Mapped[Optional[str]] = mapped_column(String(16), index=True)
+    listing_date: Mapped[Optional[str]] = mapped_column(String(16), index=True)
     lat: Mapped[Optional[float]] = mapped_column(Float)
     lon: Mapped[Optional[float]] = mapped_column(Float)
     parking: Mapped[bool] = mapped_column(Boolean, default=False)

@@ -191,6 +191,7 @@ def score_active_listings(session: Session, city_key: str):
             "sqft": data.get("sqft"),
             "psf": data.get("psf"),
             "block": data.get("block"),
+            "listing_date": data.get("listing_date"),
             "score": score,
         })
     return out

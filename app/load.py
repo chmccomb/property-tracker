@@ -71,6 +71,7 @@ def load_city(city_key, session):
             list_price=p.get("list_price"),
             psf=p.get("psf"),
             closing_date=p.get("closing_date") or None,
+            listing_date=p.get("listing_date") or None,
             lat=p.get("lat"),
             lon=p.get("lon"),
             parking=bool(p.get("parking")),

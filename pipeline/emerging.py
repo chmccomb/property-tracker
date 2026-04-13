@@ -507,6 +507,7 @@ def run_emerging(city_key, data_dir=None):
             'dom': to_num(p.get('dom')),
             'closing_date': p.get('closing_date', ''),
             'closing_year': to_num(p.get('closing_year')),
+            'listing_date': p.get('listing_date') or None,
             'hoa': to_num(p.get('hoa_monthly')),
             'taxes': to_num(p.get('taxes')),
             'assessed': to_num(p.get('assessed_value')),
