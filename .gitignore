@@ -16,6 +16,10 @@ client_secret*.json
 data/raw/
 data/processed/*.csv
 data/processed/*.json
+data/processed/hoboken/
+data/processed/weehawken/
+data/app.db
+data/app.db-journal
 
 # Dashboard backup files
 dashboard/*.bak
