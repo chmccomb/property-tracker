@@ -1,0 +1,2920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hudson Waterfront — Property Appreciation Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root {
+  --bg:#0f1117; --surface:#1a1d27; --surface2:#22263a; --border:#2e3350;
+  --accent:#4f8ef7; --green:#34d399; --yellow:#fbbf24; --red:#f87171;
+  --purple:#a78bfa; --orange:#fb923c;
+  --text:#e2e8f0; --muted:#8892a4; --radius:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+/* HEADER */
+header{padding:14px 24px 0;border-bottom:1px solid var(--border);flex-shrink:0;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+header h1{font-size:18px;font-weight:700;}
+header p{color:var(--muted);font-size:11px;margin-top:2px;}
+.stat-row{display:flex;gap:12px;padding-bottom:12px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;flex:1;}
+.stat .lbl{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px;}
+.stat .val{font-size:19px;font-weight:700;margin-top:1px;}
+.stat .sub{color:var(--muted);font-size:10px;margin-top:1px;}
+
+/* TABS */
+.tabs{display:flex;gap:2px;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab{padding:8px 18px;font-size:12px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);transition:all .15s;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* MAIN LAYOUT */
+.tab-panel{display:none;flex:1;overflow:hidden;}
+.tab-panel.active{display:flex;}
+
+/* ANALYSIS PANEL */
+.analysis-layout{display:grid;grid-template-columns:360px 1fr;width:100%;overflow:hidden;}
+.left-col{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.right-col{display:flex;flex-direction:column;overflow:hidden;}
+
+/* Score mode toggle */
+.score-toggle{display:flex;gap:4px;padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0;align-items:center;}
+.score-toggle span{font-size:11px;color:var(--muted);margin-right:4px;}
+.tog-btn{padding:3px 12px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;}
+.tog-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tog-btn.emg.active{background:var(--green);border-color:var(--green);color:#111;}
+.info-tip{margin-left:auto;font-size:10px;color:var(--muted);max-width:160px;line-height:1.3;}
+
+/* Block list */
+.block-list{overflow-y:auto;flex:1;}
+.block-item{padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.block-item:hover{background:var(--surface);}
+.block-item.active{background:var(--surface2);border-left:3px solid var(--accent);}
+.bi-row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.bi-name{font-weight:600;font-size:12px;}
+.bi-score{font-size:17px;font-weight:700;}
+.bi-meta{color:var(--muted);font-size:10px;}
+.bi-stats{display:flex;gap:10px;color:var(--muted);font-size:10px;margin-top:3px;}
+.bi-stats b{color:var(--text);font-weight:600;}
+.score-bar-wrap{height:3px;background:var(--border);border-radius:2px;margin:4px 0;}
+.score-bar{height:3px;border-radius:2px;}
+.dual-badge{display:flex;gap:5px;margin-top:4px;}
+.badge{font-size:10px;padding:1px 7px;border-radius:3px;font-weight:600;}
+
+/* Right top */
+.right-top{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border);flex-shrink:0;height:220px;}
+.chart-pane{padding:12px 14px;border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.chart-pane h3{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;flex-shrink:0;}
+.chart-pane canvas{flex:1;min-height:0;}
+.breakdown-pane{padding:12px 14px;overflow-y:auto;}
+.breakdown-pane h3{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.bd-row{display:flex;align-items:center;gap:6px;margin-bottom:7px;}
+.bd-lbl{width:120px;font-size:10px;color:var(--muted);flex-shrink:0;}
+.bd-bar-w{flex:1;height:5px;background:var(--border);border-radius:3px;}
+.bd-bar{height:5px;border-radius:3px;}
+.bd-val{width:30px;text-align:right;font-size:10px;font-weight:600;}
+.bd-raw{width:55px;font-size:10px;color:var(--muted);}
+
+/* Filters */
+.filters{padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex-shrink:0;}
+.fg{display:flex;align-items:center;gap:5px;}
+.fg label{color:var(--muted);font-size:10px;white-space:nowrap;}
+select,input[type=range]{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:2px 5px;font-size:11px;}
+input[type=range]{width:70px;accent-color:var(--accent);}
+.fv{font-size:10px;color:var(--accent);min-width:45px;}
+.reset-btn{margin-left:auto;background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;}
+.reset-btn:hover{color:var(--text);}
+
+/* Table */
+.prop-count{padding:6px 14px 2px;color:var(--muted);font-size:10px;flex-shrink:0;}
+.table-wrap{overflow:auto;flex:1;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead th{position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;user-select:none;}
+thead th:hover{color:var(--text);}
+thead th.sorted{color:var(--accent);}
+tbody tr{border-bottom:1px solid var(--border);transition:background .08s;}
+tbody tr:hover{background:var(--surface);}
+tbody td{padding:6px 10px;vertical-align:middle;white-space:nowrap;}
+.chip{display:inline-block;padding:1px 6px;border-radius:3px;font-weight:700;font-size:10px;}
+.addr-main{font-weight:500;max-width:170px;overflow:hidden;text-overflow:ellipsis;}
+.addr-sub{color:var(--muted);font-size:10px;}
+
+/* MAP TAB */
+.map-layout{display:grid;grid-template-columns:300px 1fr;width:100%;overflow:hidden;}
+.map-sidebar{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;padding:12px;}
+.map-sidebar h2{font-size:12px;font-weight:600;margin-bottom:10px;}
+#map{flex:1;}
+
+/* Legend */
+.legend{margin-top:12px;}
+.legend h4{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px;}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* Popup */
+.lpop{font-size:12px;line-height:1.6;min-width:180px;}
+.lpop b{font-size:13px;}
+.lpop .s{color:#888;font-size:11px;}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* Placeholder */
+.placeholder{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:11px;flex-direction:column;gap:6px;}
+.placeholder .icon{font-size:24px;opacity:.4;}
+.no-map-msg{padding:12px;font-size:11px;color:var(--muted);background:var(--surface);border-radius:6px;margin-top:8px;line-height:1.5;}
+
+/* SCORER */
+.scorer-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:16px;}
+.scorer-card h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;}
+.score-hero{display:flex;gap:28px;align-items:center;margin-bottom:20px;}
+.big-score{text-align:center;flex-shrink:0;}
+.big-score .num{font-size:52px;font-weight:800;line-height:1;}
+.big-score .lbl{font-size:11px;color:var(--muted);margin-top:3px;}
+.score-verdict{flex:1;}
+.verdict-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+.verdict-sub{color:var(--muted);font-size:12px;line-height:1.5;}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.metric-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.metric-box .m-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.metric-box .m-val{font-size:18px;font-weight:700;margin-top:2px;}
+.metric-box .m-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.proj-row{display:flex;gap:12px;}
+.proj-box{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;text-align:center;}
+.proj-box .p-yr{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.proj-box .p-val{font-size:20px;font-weight:700;margin-top:3px;}
+.proj-box .p-gain{font-size:11px;margin-top:2px;}
+.comp-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+.comp-row:last-child{border-bottom:none;}
+.comp-addr{flex:1;font-size:12px;}
+.comp-date{color:var(--muted);font-size:11px;width:70px;}
+.comp-psf{font-weight:600;font-size:12px;width:80px;text-align:right;}
+.comp-diff{font-size:11px;font-weight:600;width:70px;text-align:right;}
+.dd-item{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border);font-size:12px;transition:background .1s;}
+.dd-item:hover{background:var(--surface2);}
+.dd-item:last-child{border-bottom:none;}
+.dd-addr{font-weight:500;}
+.dd-meta{color:var(--muted);font-size:11px;margin-top:1px;}
+.flag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;margin-right:5px;margin-bottom:5px;}
+#scorer-input:focus{border-color:var(--accent);}
+
+/* Market filter */
+.market-filter{display:flex;gap:6px;padding:8px 24px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;}
+.mkt-btn{padding:4px 14px;font-size:11px;font-weight:600;border-radius:12px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;}
+.mkt-btn.active.jc{background:#1e3a5f;border-color:#4c9be8;color:#4c9be8;}
+.mkt-btn.active.hoboken{background:#1a3d2e;border-color:#48b87e;color:#48b87e;}
+.mkt-btn.active.weehawken{background:#3d2a1a;border-color:#e8844c;color:#e8844c;}
+.mkt-badge{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;margin-left:4px;vertical-align:middle;}
+.mkt-badge.jc{background:#1e3a5f;color:#4c9be8;}
+.mkt-badge.hoboken{background:#1a3d2e;color:#48b87e;}
+.mkt-badge.weehawken{background:#3d2a1a;color:#e8844c;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div>
+      <h1>Hudson Waterfront — Property Appreciation Dashboard</h1>
+      <p>JC Heights · Hoboken · Weehawken · <span id="total-count">—</span> transactions</p>
+    </div>
+    <div style="color:var(--muted);font-size:10px;text-align:right;padding-top:2px">Updated April 2026</div>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><div class="lbl">Median Sale Price</div><div class="val" id="s-price">—</div><div class="sub" id="s-price-sub">—</div></div>
+    <div class="stat"><div class="lbl">Median $/sq ft</div><div class="val" id="s-psf">—</div><div class="sub" id="s-psf-sub">—</div></div>
+    <div class="stat"><div class="lbl">Median Days on Market</div><div class="val" id="s-dom">—</div><div class="sub" id="s-dom-sub">—</div></div>
+    <div class="stat"><div class="lbl">Avg Sale-to-List</div><div class="val" id="s-stl">—</div><div class="sub" id="s-stl-sub">—</div></div>
+    <div class="stat"><div class="lbl">Blocks Scored</div><div class="val" id="s-blocks">—</div><div class="sub">established + emerging</div></div>
+  </div>
+</header>
+
+<!-- MARKET FILTER -->
+<div class="market-filter">
+  <span style="font-size:10px;color:var(--muted);align-self:center;margin-right:4px;">Market:</span>
+  <button class="mkt-btn active jc" onclick="toggleMarket('jc',this)">🏠 JC Heights</button>
+  <button class="mkt-btn active hoboken" onclick="toggleMarket('hoboken',this)">🌊 Hoboken</button>
+  <button class="mkt-btn active weehawken" onclick="toggleMarket('weehawken',this)">⛰ Weehawken</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab" onclick="switchTab('analysis')">📊 Block Analysis</div>
+  <div class="tab active" onclick="switchTab('active')">🔴 Active Listings</div>
+  <div class="tab" onclick="switchTab('map')">🗺 Map View</div>
+  <div class="tab" onclick="switchTab('scorer')">🏠 Deal Scorer</div>
+  <div class="tab" onclick="switchTab('openhouses')">📅 Open Houses</div>
+</div>
+
+<!-- ANALYSIS TAB -->
+<div class="tab-panel" id="tab-analysis">
+  <div class="analysis-layout">
+    <!-- LEFT: Block Leaderboard -->
+    <div class="left-col">
+      <div class="score-toggle">
+        <span>Score:</span>
+        <button class="tog-btn active" id="btn-est" onclick="setMode('est')">Established</button>
+        <button class="tog-btn emg" id="btn-emg" onclick="setMode('emg')">Emerging</button>
+        <div class="info-tip" id="mode-tip">Areas with proven price growth &amp; strong demand signals</div>
+      </div>
+      <div class="block-list" id="block-list"></div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-col">
+      <div class="right-top">
+        <div class="chart-pane">
+          <h3 id="chart-title">Median $/sq ft — Heights Overall</h3>
+          <canvas id="trend-chart"></canvas>
+        </div>
+        <div class="breakdown-pane">
+          <h3>Score Breakdown</h3>
+          <div id="breakdown-content">
+            <div class="placeholder" style="height:160px">
+              <div class="icon">🏆</div>
+              <div>Select a block</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="fg"><label>Min Est.</label>
+          <input type="range" id="f-est" min="0" max="100" value="0" step="5">
+          <span class="fv" id="fv-est">Any</span></div>
+        <div class="fg"><label>Min Emg.</label>
+          <input type="range" id="f-emg" min="0" max="100" value="0" step="5">
+          <span class="fv" id="fv-emg">Any</span></div>
+        <div class="fg"><label>Max Price</label>
+          <input type="range" id="f-price" min="100000" max="1650000" value="1650000" step="50000">
+          <span class="fv" id="fv-price">Any</span></div>
+        <div class="fg"><label>Beds</label>
+          <select id="f-beds">
+            <option value="">Any</option><option value="0">Studio</option>
+            <option value="1">1 BR</option><option value="2">2 BR</option>
+            <option value="3">3 BR</option><option value="4">4+ BR</option>
+          </select></div>
+        <div class="fg"><label>Year</label>
+          <select id="f-year">
+            <option value="">Any</option><option>2021</option><option>2022</option>
+            <option>2023</option><option>2024</option><option>2025</option><option>2026</option>
+          </select></div>
+        <div class="fg"><label>Status</label>
+          <select id="f-status">
+            <option value="">All</option><option value="SOLD">Sold</option><option value="ACTIVE">Active</option>
+          </select></div>
+        <div class="fg"><label>Parking</label>
+          <select id="f-parking">
+            <option value="">Any</option><option value="1">Has parking</option><option value="0">No parking</option>
+          </select></div>
+        <div class="fg"><label>Outdoor</label>
+          <select id="f-outdoor">
+            <option value="">Any</option><option value="1">Has outdoor</option><option value="0">No outdoor</option>
+          </select></div>
+        <button class="reset-btn" onclick="resetFilters()">Reset</button>
+      </div>
+
+      <div class="prop-count" id="prop-count">— listings</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th onclick="sortBy('address')">Address</th>
+            <th onclick="sortBy('beds')">Beds</th>
+            <th onclick="sortBy('baths')">Baths</th>
+            <th onclick="sortBy('sqft')">Sq Ft</th>
+            <th onclick="sortBy('sold_price')" class="sorted">Sold Price</th>
+            <th onclick="sortBy('psf')">$/sqft</th>
+            <th onclick="sortBy('dom')">DOM</th>
+            <th onclick="sortBy('closing_date')">Closed</th>
+            <th onclick="sortBy('hoa')">HOA/mo</th>
+            <th onclick="sortBy('est_score')">Established ↕</th>
+            <th onclick="sortBy('emg_score')">Emerging ↕</th>
+            <th onclick="sortBy('block_cagr')">CAGR</th>
+            <th onclick="sortBy('parking')">🚗</th>
+            <th onclick="sortBy('outdoor')">🌿</th>
+          </tr></thead>
+          <tbody id="prop-tbody"></tbody>
+        </table>
+        <div style="padding:20px;text-align:center;color:var(--muted);display:none" id="empty-state">No listings match your filters.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVE LISTINGS TAB -->
+<div class="tab-panel active" id="tab-active">
+  <div style="display:flex;flex-direction:column;width:100%;overflow:hidden;height:100%;">
+
+    <!-- Filters bar -->
+    <div class="filters" style="flex-shrink:0;">
+      <div class="fg"><label>Max Price</label>
+        <input type="range" id="af-price" min="200000" max="1400000" value="1400000" step="25000">
+        <span class="fv" id="afv-price">Any</span></div>
+      <div class="fg"><label>Beds</label>
+        <select id="af-beds">
+          <option value="">Any</option><option value="0">Studio</option>
+          <option value="1">1 BR</option><option value="2">2 BR</option>
+          <option value="3">3 BR</option><option value="4">4+ BR</option>
+        </select></div>
+      <div class="fg"><label>Min Deal Score</label>
+        <input type="range" id="af-deal" min="0" max="100" value="0" step="5">
+        <span class="fv" id="afv-deal">Any</span></div>
+      <div class="fg"><label>Parking</label>
+        <select id="af-parking">
+          <option value="">Any</option><option value="1">Has parking</option><option value="0">No parking</option>
+        </select></div>
+      <div class="fg"><label>Outdoor</label>
+        <select id="af-outdoor">
+          <option value="">Any</option><option value="1">Has outdoor</option><option value="0">No outdoor</option>
+        </select></div>
+      <button class="reset-btn" onclick="resetActiveFilters()">Reset</button>
+    </div>
+
+    <div class="prop-count" id="active-count" style="flex-shrink:0;"></div>
+
+    <div style="overflow:auto;flex:1;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <thead>
+          <tr>
+            <th onclick="sortActive('deal_score')" id="ath-deal" class="sorted" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Deal Score ↕</th>
+            <th onclick="sortActive('address')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Address</th>
+            <th onclick="sortActive('beds')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Beds</th>
+            <th onclick="sortActive('baths')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Baths</th>
+            <th onclick="sortActive('sqft')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Sq Ft</th>
+            <th onclick="sortActive('list_price')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Ask Price</th>
+            <th onclick="sortActive('psf')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">$/sqft</th>
+            <th onclick="sortActive('price_vs_comp')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">vs. Comps</th>
+            <th onclick="sortActive('dom')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">DOM</th>
+            <th onclick="sortActive('hoa')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">HOA/mo</th>
+            <th onclick="sortActive('est_score')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Est.</th>
+            <th onclick="sortActive('emg_score')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">Emg.</th>
+            <th onclick="sortActive('block_cagr')" style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;">CAGR</th>
+            <th style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);white-space:nowrap;">🚗</th>
+            <th style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);white-space:nowrap;">🌿</th>
+            <th style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);white-space:nowrap;">Score In Scorer</th>
+            <th style="position:sticky;top:0;background:var(--surface);padding:7px 10px;text-align:left;font-size:10px;font-weight:600;color:var(--yellow);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);white-space:nowrap;">Open House</th>
+          </tr>
+        </thead>
+        <tbody id="active-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SCORER TAB -->
+<div class="tab-panel" id="tab-scorer">
+  <div style="width:100%;overflow-y:auto;padding:32px 40px;">
+
+    <!-- Search bar -->
+    <div style="max-width:680px;margin:0 auto 32px;">
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:6px;">Deal Scorer</h2>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">
+        Search any property in the dataset by address. If it's a new listing not yet exported, enter the address and we'll prompt for asking price and sq ft.
+      </p>
+      <div style="display:flex;gap:8px;">
+        <input id="scorer-input" type="text" placeholder="e.g.  142 PALISADE AVE  or  PALISADE"
+          style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;"
+          oninput="scorerSearch(this.value)" onkeydown="if(event.key==='Escape')clearScorer()"/>
+        <button onclick="clearScorer()" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 16px;cursor:pointer;font-size:12px;">Clear</button>
+      </div>
+
+      <!-- Autocomplete dropdown -->
+      <div id="scorer-dropdown" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:4px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);max-height:260px;overflow-y:auto;"></div>
+
+      <!-- New listing form (shown when address not found) -->
+      <div id="scorer-new-form" style="display:none;margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;">
+        <div style="font-size:12px;color:var(--yellow);margin-bottom:12px;">⚠ This address isn't in the dataset — it may be a new listing. Enter the key details to score it.</div>
+        <div style="display:flex;gap:12px;align-items:flex-end;">
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:4px;">ASKING PRICE</label>
+            <input id="nf-price" type="number" placeholder="e.g. 750000" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:13px;width:150px;">
+          </div>
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:4px;">SQ FT</label>
+            <input id="nf-sqft" type="number" placeholder="e.g. 850" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:13px;width:110px;">
+          </div>
+          <button onclick="scoreNewListing()" style="background:var(--accent);border:none;color:#fff;border-radius:6px;padding:8px 18px;cursor:pointer;font-size:12px;font-weight:600;">Score It</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score results -->
+    <div id="scorer-results" style="display:none;max-width:860px;margin:0 auto;"></div>
+
+    <!-- DIVIDER -->
+    <div style="max-width:860px;margin:40px auto 0;border-top:1px solid var(--border);padding-top:32px;">
+      <h2 style="font-size:18px;font-weight:700;margin-bottom:6px;">Fair Price Calculator</h2>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:24px;">
+        Enter property specs to get a data-driven price range based on actual comparable sales — amenity-adjusted for parking and outdoor space.
+      </p>
+
+      <!-- CALCULATOR FORM -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:20px;">
+
+          <!-- Block -->
+          <div style="grid-column:1/-1;position:relative;">
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Block Number</label>
+            <input id="fp-block-input" type="text" placeholder="Type block # (e.g. 2804)"
+              autocomplete="off"
+              oninput="fpBlockSearch(this.value)"
+              onkeydown="fpBlockKey(event)"
+              style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;box-sizing:border-box;outline:none;">
+            <input id="fp-block" type="hidden" value="">
+            <div id="fp-block-status" style="font-size:11px;color:var(--muted);margin-top:4px;height:14px;"></div>
+            <div id="fp-block-dropdown" style="display:none;position:absolute;z-index:200;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:2px;max-height:220px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.5);"></div>
+          </div>
+
+          <!-- Beds -->
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Bedrooms</label>
+            <select id="fp-beds" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;">
+              <option value="">Any</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+
+          <!-- Sq Ft -->
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Sq Ft</label>
+            <input id="fp-sqft" type="number" min="100" max="5000" placeholder="e.g. 1200"
+              style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+          </div>
+
+          <!-- Full Baths -->
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Full Baths</label>
+            <input id="fp-baths" type="number" min="1" max="6" step="0.5" placeholder="e.g. 2"
+              style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+          </div>
+
+          <!-- HOA -->
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">HOA ($/mo)</label>
+            <input id="fp-hoa" type="number" min="0" placeholder="e.g. 400 or 0"
+              style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+          </div>
+
+          <!-- Year Built -->
+          <div>
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Year Built</label>
+            <input id="fp-year" type="number" min="1850" max="2026" placeholder="e.g. 1920"
+              style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:8px 10px;font-size:13px;box-sizing:border-box;">
+          </div>
+
+          <!-- Parking -->
+          <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+            <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Amenities</label>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+                <input id="fp-parking" type="checkbox" style="accent-color:var(--accent);width:15px;height:15px;">
+                🚗 Dedicated Parking
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;">
+                <input id="fp-outdoor" type="checkbox" style="accent-color:var(--green);width:15px;height:15px;">
+                🌿 Private Outdoor Space
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <button onclick="computeFairPrice()"
+          style="background:var(--accent);border:none;color:#fff;border-radius:8px;padding:11px 28px;cursor:pointer;font-size:14px;font-weight:600;">
+          Calculate Fair Price
+        </button>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="fp-results" style="display:none;"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MAP TAB -->
+<div class="tab-panel" id="tab-map">
+  <div class="map-layout">
+    <div class="map-sidebar">
+      <h2>Map Controls</h2>
+
+      <!-- View toggle -->
+      <div style="display:flex;gap:4px;margin-bottom:12px;">
+        <button id="mv-props" onclick="setMapView('properties')"
+          style="flex:1;padding:5px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff;">
+          Properties
+        </button>
+        <button id="mv-blocks" onclick="setMapView('blocks')"
+          style="flex:1;padding:5px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);">
+          Blocks
+        </button>
+      </div>
+
+      <div class="fg" style="margin-bottom:10px;">
+        <label style="font-size:11px;color:var(--muted);">Color by:</label>
+        <select id="map-color-mode" onchange="refreshMapView()" style="margin-left:6px;">
+          <option value="est">Established Score</option>
+          <option value="emg">Emerging Score</option>
+          <option value="psf">Price / sq ft</option>
+          <option value="cagr">Block CAGR</option>
+        </select>
+      </div>
+      <div class="fg" style="margin-bottom:10px;" id="map-status-wrap">
+        <label style="font-size:11px;color:var(--muted);">Show:</label>
+        <select id="map-status-filter" onchange="refreshMapView()" style="margin-left:6px;">
+          <option value="">All</option>
+          <option value="SOLD">Sold only</option>
+          <option value="ACTIVE">Active only</option>
+        </select>
+      </div>
+      <div class="legend">
+        <h4 id="legend-title">Established Score</h4>
+        <div class="leg-row"><div class="leg-dot" style="background:#34d399"></div> High (70+)</div>
+        <div class="leg-row"><div class="leg-dot" style="background:#fbbf24"></div> Medium (40–70)</div>
+        <div class="leg-row"><div class="leg-dot" style="background:#f87171"></div> Low (&lt;40)</div>
+        <div class="leg-row"><div class="leg-dot" style="background:#8892a4"></div> No score data</div>
+      </div>
+      <div id="map-no-coords" class="no-map-msg" style="display:none">
+        ⚠️ Coordinates not yet available — geocoding may still be in progress. Re-run <code>jc_heights_emerging.py</code> once the geocache is ready, then reload this page.
+      </div>
+      <div style="margin-top:12px;font-size:10px;color:var(--muted);line-height:1.5;" id="map-count-msg"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+</div>
+
+<!-- OPEN HOUSES TAB -->
+<div class="tab-panel" id="tab-openhouses" style="flex-direction:column;overflow:hidden;">
+  <div style="display:flex;flex:1;overflow:hidden;gap:0;">
+
+    <!-- LEFT: checklist -->
+    <div id="oh-left" style="width:380px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+      <!-- date picker -->
+      <div id="oh-date-tabs" style="display:flex;gap:0;border-bottom:1px solid var(--border);flex-shrink:0;"></div>
+      <!-- filters row -->
+      <div style="padding:8px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <span style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Min Deal Score:</span>
+        <input id="oh-min-deal" type="number" min="0" max="100" value="0"
+          style="width:48px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:3px 6px;font-size:11px;"
+          oninput="renderOHDay()">
+        <span style="font-size:10px;color:var(--muted);margin-left:auto;" id="oh-count-msg"></span>
+      </div>
+      <!-- listing rows -->
+      <div id="oh-list" style="overflow-y:auto;flex:1;"></div>
+    </div>
+
+    <!-- RIGHT: route + timeline -->
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <!-- action bar -->
+      <div style="padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-shrink:0;">
+        <button onclick="computeOHRoute()" style="background:var(--accent);border:none;color:#fff;border-radius:6px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;">⚡ Optimize Route</button>
+        <button id="oh-addall-btn" onclick="ohAddAllToCalendar()" style="display:none;background:var(--surface);border:1px solid var(--border);color:var(--yellow);border-radius:6px;padding:7px 14px;cursor:pointer;font-size:12px;">📅 Add All to Calendar</button>
+        <span style="font-size:10px;color:var(--muted);" id="oh-route-summary"></span>
+      </div>
+      <!-- route stops -->
+      <div id="oh-route" style="overflow-y:auto;flex:1;padding:16px;"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════
+
+// Data is fetched from the API now; MARKETS is populated after load.
+let MARKETS = {jc:{properties:[],blocks:[],overall_trend:{},trends:{}},
+               hoboken:{properties:[],blocks:[],overall_trend:{},trends:{}},
+               weehawken:{properties:[],blocks:[],overall_trend:{},trends:{}}};
+window.__marketsReady = fetch('/api/all')
+  .then(r => r.json())
+  .then(data => { MARKETS = data; })
+  .catch(err => { console.error('MARKETS fetch failed', err); });
+// ── Market config ──────────────────────────────────────────────────────
+const MARKET_META = {
+  jc:        { label:'JC Heights',  color:'#4c9be8', flagPark:0.40, flagOut:0.55,
+               prems:{ parking_psf_pct:8.3, outdoor_psf_pct:7.9, both_psf_pct:13.7 },
+               SIZE_CURVE:{ 1:{'<600':1.135,'600-800':1.049,'800-1000':0.951,'1000+':0.900},
+                            2:{'<600':0.970,'600-800':1.015,'800-1000':1.090,'1000-1200':1.063,'1200-1500':1.033,'1500+':0.791},
+                            3:{'<1000':1.200,'1000-1200':1.157,'1200-1500':1.110,'1500+':1.075} } },
+  hoboken:   { label:'Hoboken',     color:'#48b87e', flagPark:0.37, flagOut:0.60,
+               prems:{ parking_psf_pct:3.5, outdoor_psf_pct:2.3, both_psf_pct:5.5 },
+               SIZE_CURVE:{ 1:{'<600':1.023,'600-800':0.995,'800-1000':1.003,'1000+':0.961},
+                            2:{'<600':1.036,'600-800':1.022,'800-1000':0.993,'1000-1200':1.004,'1200-1500':0.985,'1500+':1.100},
+                            3:{'<1000':0.761,'1000-1200':0.970,'1200-1500':0.906,'1500+':1.069} } },
+  weehawken: { label:'Weehawken',   color:'#e8844c', flagPark:0.43, flagOut:0.50,
+               prems:{ parking_psf_pct:6.0, outdoor_psf_pct:4.0, both_psf_pct:9.0 },
+               SIZE_CURVE:{ 1:{'<600':1.023,'600-800':0.995,'800-1000':1.003,'1000+':0.961},
+                            2:{'<600':1.010,'600-800':1.015,'800-1000':1.000,'1000-1200':0.995,'1200-1500':0.990,'1500+':1.050},
+                            3:{'<1000':0.820,'1000-1200':0.980,'1200-1500':0.960,'1500+':1.040} } },
+};
+
+function getPrems(p) {
+  return MARKET_META[p?.market || 'jc']?.prems || MARKET_META.jc.prems;
+}
+
+let selectedMarkets = new Set(['jc','hoboken','weehawken']);
+let allProps = [], allBlocks = [], activeListings = [], trends = {}, overallTrend = {};
+let heightsCagr = null;
+
+function rebuildActiveData() {
+  allProps = []; allBlocks = []; activeListings = [];
+  for (const m of ['jc','hoboken','weehawken']) {
+    if (!selectedMarkets.has(m) || !MARKETS[m]) continue;
+    const md = MARKETS[m];
+    const tp = md.properties.map(p => ({...p, market:m, block:m+'/'+p.block}));
+    const tb = md.blocks.map(b => ({...b, market:m, block:m+'/'+b.block}));
+    allProps       = allProps.concat(tp);
+    allBlocks      = allBlocks.concat(tb);
+      const rawActive = tp.filter(p => p.status==='ACTIVE').map(p => {
+      const askPsf = (!p.psf && p.list_price && p.sqft) ? p.list_price / p.sqft : null;
+      const pe = askPsf ? {...p, psf: askPsf} : p;
+      const scored = computeDealScore(pe);
+      return { ...pe, deal_score: scored?.deal ?? null, price_vs_comp: scored?.pricePct ?? null, adj_block_psf: scored?.adjBlockPsf ?? null };
+    });
+    activeListings = activeListings.concat(rawActive);
+  }
+  const allTrend = {};
+  for (const m of selectedMarkets) {
+    if (!MARKETS[m]) continue;
+    for (const [yr, psf] of Object.entries(MARKETS[m].overall_trend || {})) {
+      if (!allTrend[yr]) allTrend[yr] = [];
+      allTrend[yr].push(psf);
+    }
+  }
+  overallTrend = {};
+  for (const yr of Object.keys(allTrend)) {
+    const v = allTrend[yr];
+    overallTrend[parseInt(yr)] = Math.round(v.reduce((a,b)=>a+b,0)/v.length);
+  }
+  trends = selectedMarkets.size === 1 ? (MARKETS[[...selectedMarkets][0]]?.trends || {}) : {};
+  if (typeof recalcHeightsCagr === 'function') recalcHeightsCagr();
+}
+
+// Defer init until MARKETS resolves.
+window.__marketsReady.then(() => {
+  rebuildActiveData();
+  if (typeof renderAllActive === 'function') renderAllActive();
+});
+
+function toggleMarket(m, btn) {
+  if (selectedMarkets.has(m) && selectedMarkets.size > 1) {
+    selectedMarkets.delete(m);
+    btn.classList.remove('active');
+  } else if (!selectedMarkets.has(m)) {
+    selectedMarkets.add(m);
+    btn.classList.add('active');
+  }
+  rebuildActiveData();
+  renderAllActive();
+}
+
+function renderAllActive() {
+  rebuildFpBlocks();
+  initStats();
+  renderBlocks();
+  renderProps();
+  renderActiveListings();
+  if (document.getElementById('tab-openhouses').classList.contains('active')) renderOHDay();
+}
+
+// Area-wide CAGR from overall median PSF trend (fallback for thin blocks)
+// Recalculated whenever market filter changes
+function recalcHeightsCagr() {
+  const yrs = Object.keys(overallTrend || {}).map(Number).sort();
+  if (yrs.length < 2) { heightsCagr = null; return; }
+  const first = overallTrend[yrs[0]], last = overallTrend[yrs[yrs.length - 1]];
+  if (!first || !last) { heightsCagr = null; return; }
+  heightsCagr = Math.pow(last / first, 1 / (yrs[yrs.length - 1] - yrs[0])) - 1;
+}
+recalcHeightsCagr();
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let scoreMode  = 'est';   // 'est' | 'emg'
+let activeBlock = null;
+let sortKey = 'sold_price';
+let sortDir = -1;
+let leafletMap = null;
+let mapMarkers = [];
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
+const fmt = {
+  price: v => v == null ? '—' : '$' + Number(v).toLocaleString(),
+  psf:   v => v == null ? '—' : '$' + Math.round(v).toLocaleString(),
+  pct:   v => v == null ? '—' : (v>=0?'+':'')+Number(v).toFixed(1)+'%',
+  stl:   v => v == null ? '—' : (Number(v)*100).toFixed(1)+'%',
+  dom:   v => v == null ? '—' : Math.round(v)+'d',
+};
+
+function median(arr) {
+  const a = arr.filter(x => x!=null).sort((a,b)=>a-b);
+  if (!a.length) return null;
+  const m = Math.floor(a.length/2);
+  return a.length%2 ? a[m] : (a[m-1]+a[m])/2;
+}
+
+function scoreColor(s, alpha) {
+  if (s == null) return alpha ? 'rgba(136,146,164,0.6)' : 'var(--muted)';
+  if (s >= 70) return alpha ? 'rgba(52,211,153,0.85)' : 'var(--green)';
+  if (s >= 40) return alpha ? 'rgba(251,191,36,0.85)'  : 'var(--yellow)';
+  return alpha ? 'rgba(248,113,113,0.85)' : 'var(--red)';
+}
+
+function getScore(b) {
+  return scoreMode === 'est' ? b.est_score : b.emg_score;
+}
+function getRank(b) {
+  return scoreMode === 'est' ? b.est_rank : b.emg_rank;
+}
+function getPropScore(p) {
+  return scoreMode === 'est' ? p.est_score : p.emg_score;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HEADER STATS
+// ═══════════════════════════════════════════════════════════════════
+function initStats() {
+  const sold = allProps.filter(p => p.status==='SOLD' && !p.distressed);
+  const prices = sold.map(p=>p.sold_price).filter(Boolean);
+  const psfs   = sold.map(p=>p.psf).filter(Boolean);
+  const doms   = sold.map(p=>p.dom).filter(v=>v!=null);
+  const stls   = sold.map(p=>p.stl).filter(Boolean);
+
+  document.getElementById('total-count').textContent = sold.length.toLocaleString();
+  document.getElementById('s-price').textContent = fmt.price(median(prices));
+  document.getElementById('s-psf').textContent   = fmt.psf(median(psfs));
+  document.getElementById('s-dom').textContent   = Math.round(median(doms))+'d';
+  document.getElementById('s-stl').textContent   = (median(stls)*100).toFixed(1)+'%';
+
+  const estB = allBlocks.filter(b=>b.est_score!=null).length;
+  const emgB = allBlocks.filter(b=>b.emg_score!=null).length;
+  document.getElementById('s-blocks').textContent = `${estB} / ${emgB}`;
+
+  const y21 = sold.filter(p=>p.closing_year==2021).map(p=>p.psf).filter(Boolean);
+  const y25 = sold.filter(p=>p.closing_year==2025).map(p=>p.psf).filter(Boolean);
+  if (y21.length && y25.length) {
+    const chg = ((median(y25)/median(y21))-1)*100;
+    document.getElementById('s-psf-sub').textContent = `${chg>0?'+':''}${chg.toFixed(0)}% since 2021`;
+  }
+  const d21 = sold.filter(p=>p.closing_year==2021).map(p=>p.dom).filter(v=>v!=null);
+  const d25 = sold.filter(p=>p.closing_year==2025).map(p=>p.dom).filter(v=>v!=null);
+  if (d21.length && d25.length) {
+    const chg = median(d25)-median(d21);
+    document.getElementById('s-dom-sub').textContent = `${chg<=0?'':'+'}${chg.toFixed(0)}d vs 2021`;
+  }
+  const oa = sold.filter(p=>p.stl>1).length;
+  document.getElementById('s-stl-sub').textContent = `${Math.round(oa/sold.length*100)}% sold over ask`;
+  document.getElementById('s-price-sub').textContent = `${prices.length.toLocaleString()} sold transactions`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['analysis','active','map','scorer','openhouses'][i]===name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name === 'map') initMap();
+  if (name === 'openhouses') initOpenHouses();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SCORE MODE
+// ═══════════════════════════════════════════════════════════════════
+function setMode(mode) {
+  scoreMode = mode;
+  document.getElementById('btn-est').classList.toggle('active', mode==='est');
+  document.getElementById('btn-emg').classList.toggle('active', mode==='emg');
+  document.getElementById('mode-tip').textContent = mode === 'est'
+    ? 'Areas with proven price growth & strong demand signals'
+    : 'Areas undervalued relative to peers with accelerating demand — the emerging bet';
+  renderBlocks();
+  renderProps();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BLOCK LEADERBOARD
+// ═══════════════════════════════════════════════════════════════════
+function renderBlocks() {
+  const container = document.getElementById('block-list');
+  container.innerHTML = '';
+
+  const blocks = [...allBlocks]
+    .filter(b => getScore(b) != null)
+    .sort((a,b) => (getRank(a)||999)-(getRank(b)||999));
+
+  blocks.forEach(b => {
+    const score = getScore(b);
+    const rank  = getRank(b);
+    const col   = scoreColor(score);
+    const div   = document.createElement('div');
+    div.className = 'block-item' + (activeBlock===b.block?' active':'');
+
+    const cagrStr = b.cagr != null ? `${b.cagr>0?'+':''}${Number(b.cagr).toFixed(1)}%` : '—';
+    const accelStr = b.acceleration != null ? `${b.acceleration>0?'+':''}${Number(b.acceleration).toFixed(1)}%` : null;
+    const underStr = b.underval_pct != null ? `${Number(b.underval_pct).toFixed(1)}% below zip` : null;
+
+    div.innerHTML = `
+      <div class="bi-row1">
+        <div><span style="color:var(--muted);font-size:10px;margin-right:3px">#${rank}</span>
+          <span class="bi-name">Block ${b.block_raw}</span>
+          <span class="bi-meta"> · ${b.n_sales|0} sales</span></div>
+        <span class="bi-score" style="color:${col}">${score!=null?score.toFixed(0):'—'}</span>
+      </div>
+      <div class="score-bar-wrap"><div class="score-bar" style="width:${score||0}%;background:${col}"></div></div>
+      <div class="bi-stats">
+        <span>CAGR <b>${cagrStr}</b></span>
+        <span>${fmt.psf(b.med_psf)}/sqft</span>
+        ${b.med_dom!=null?`<span>DOM <b>${Math.round(b.med_dom)}d</b></span>`:''}
+        ${b.med_stl!=null?`<span>S/L <b>${(b.med_stl*100).toFixed(1)}%</b></span>`:''}
+      </div>
+      <div class="dual-badge">
+        ${b.est_score!=null?`<span class="badge" style="background:${scoreColor(b.est_score)}22;color:${scoreColor(b.est_score)}">Est ${b.est_score.toFixed(0)}</span>`:''}
+        ${b.emg_score!=null?`<span class="badge" style="background:${scoreColor(b.emg_score,'alpha')}33;color:${scoreColor(b.emg_score)}">Emg ${b.emg_score.toFixed(0)}</span>`:''}
+        ${accelStr?`<span class="badge" style="background:#4f8ef722;color:var(--accent)">↑ ${accelStr} recent</span>`:''}
+        ${underStr&&b.underval_pct>0?`<span class="badge" style="background:#34d39922;color:var(--green)">↓ ${underStr}</span>`:''}
+      </div>`;
+
+    div.addEventListener('click', () => selectBlock(b.block));
+    container.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TREND CHART
+// ═══════════════════════════════════════════════════════════════════
+let tChart = null;
+
+function renderChart(blockKey) {
+  const b = allBlocks.find(x=>x.block===blockKey);
+  const overall = overallTrend;
+  const bTrend  = trends[blockKey] || {};
+
+  const years = [...new Set([...Object.keys(overall), ...Object.keys(bTrend)])].sort();
+
+  document.getElementById('chart-title').textContent =
+    blockKey ? `Block ${b?.block_raw} vs. Heights Overall — Median $/sqft` : 'Heights Overall — Median $/sqft';
+
+  const datasets = [];
+  if (blockKey && Object.keys(bTrend).length) {
+    datasets.push({
+      label: `Block ${b?.block_raw}`,
+      data: years.map(y => bTrend[y] ?? null),
+      borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,0.1)',
+      pointRadius: 5, tension: 0.3, fill: true, spanGaps: true,
+    });
+  }
+  datasets.push({
+    label: 'Heights Overall',
+    data: years.map(y => overall[y] ?? null),
+    borderColor: '#8892a4', borderDash: [4,3],
+    pointRadius: 3, tension: 0.3, fill: false, spanGaps: true,
+  });
+
+  if (tChart) tChart.destroy();
+  tChart = new Chart(document.getElementById('trend-chart'), {
+    type: 'line',
+    data: { labels: years, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { labels: { color:'#8892a4', font:{size:10}, boxWidth:12 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: $${Math.round(ctx.raw)}/sqft` } }
+      },
+      scales: {
+        x: { ticks: { color:'#8892a4', font:{size:10} }, grid: { color:'#2e3350' } },
+        y: { ticks: { color:'#8892a4', font:{size:10}, callback: v=>'$'+v }, grid: { color:'#2e3350' } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SCORE BREAKDOWN
+// ═══════════════════════════════════════════════════════════════════
+function renderBreakdown(blockKey) {
+  const b = allBlocks.find(x=>x.block===blockKey);
+  if (!b) return;
+
+  const isEst = scoreMode === 'est';
+  const score = isEst ? b.est_score : b.emg_score;
+
+  const dims = isEst ? [
+    {lbl:'Price CAGR (30%)',    val:b.est_s_cagr,  col:'#4f8ef7', raw: b.cagr!=null?`${b.cagr>0?'+':''}${Number(b.cagr).toFixed(1)}%/yr`:'—'},
+    {lbl:'DOM Trend (20%)',     val:b.est_s_dom,   col:'#34d399', raw: b.med_dom!=null?`${Math.round(b.med_dom)}d med`:'—'},
+    {lbl:'Sale/List (20%)',     val:b.est_s_stl,   col:'#fbbf24', raw: b.med_stl!=null?`${(b.med_stl*100).toFixed(1)}%`:'—'},
+    {lbl:'Assess Delta (15%)', val:b.est_s_assess,col:'#a78bfa', raw:'—'},
+    {lbl:'Supply Trend (15%)', val:b.est_s_inv,   col:'#f87171', raw:`${b.n_sales|0} sales`},
+  ] : [
+    {lbl:'Undervaluation (30%)',val:b.emg_s_underval, col:'#34d399', raw: b.underval_pct!=null?`${Number(b.underval_pct).toFixed(1)}% below zip`:'—'},
+    {lbl:'Acceleration (30%)',  val:b.emg_s_accel,    col:'#4f8ef7', raw: b.acceleration!=null?`${b.acceleration>0?'+':''}${Number(b.acceleration).toFixed(1)}%`:'—'},
+    {lbl:'DOM Tightening (20%)',val:b.emg_s_dom_tight,col:'#fbbf24', raw: b.dom_recent!=null?`${b.dom_recent}d recent`:'—'},
+    {lbl:'Demand Signal (20%)', val:b.emg_s_demand,   col:'#fb923c', raw: b.stl_recent!=null?`${(b.stl_recent*100).toFixed(1)}% S/L`:'—'},
+  ];
+
+  document.getElementById('breakdown-content').innerHTML = `
+    <div style="margin-bottom:10px">
+      <span style="font-weight:700;font-size:18px;color:${scoreColor(score)}">${score?.toFixed(0)||'—'}</span>
+      <span style="color:var(--muted);font-size:10px"> /100 · Rank #${(isEst?b.est_rank:b.emg_rank)||'—'} · ${b.n_sales|0} sales</span>
+    </div>
+    ${dims.map(d=>`
+      <div class="bd-row">
+        <div class="bd-lbl">${d.lbl}</div>
+        <div class="bd-bar-w"><div class="bd-bar" style="width:${d.val!=null?d.val:0}%;background:${d.col}"></div></div>
+        <div class="bd-val" style="color:${d.col}">${d.val!=null?Math.round(d.val):'—'}</div>
+        <div class="bd-raw">${d.raw}</div>
+      </div>`).join('')}
+    <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);color:var(--muted);font-size:10px">
+      ${isEst
+        ? 'Established: historical appreciation, DOM tightness, sale-to-list, assessment delta, supply trend'
+        : 'Emerging: relative undervaluation, recent price acceleration, DOM tightening, demand building'}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SELECT BLOCK
+// ═══════════════════════════════════════════════════════════════════
+function selectBlock(bk) {
+  activeBlock = activeBlock === bk ? null : bk;
+  renderBlocks();
+  renderProps();
+  renderChart(activeBlock);
+  if (activeBlock) renderBreakdown(activeBlock);
+  else document.getElementById('breakdown-content').innerHTML = `
+    <div class="placeholder" style="height:160px"><div class="icon">🏆</div><div>Select a block</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FILTERS + TABLE
+// ═══════════════════════════════════════════════════════════════════
+function getFilters() {
+  return {
+    est:     +document.getElementById('f-est').value,
+    emg:     +document.getElementById('f-emg').value,
+    price:   +document.getElementById('f-price').value,
+    beds:    document.getElementById('f-beds').value,
+    year:    document.getElementById('f-year').value,
+    status:  document.getElementById('f-status').value,
+    parking: document.getElementById('f-parking').value,
+    outdoor: document.getElementById('f-outdoor').value,
+  };
+}
+
+function applyFilters(props) {
+  const f = getFilters();
+  return props.filter(p => {
+    if (activeBlock && p.block !== activeBlock) return false;
+    if (f.est > 0 && (p.est_score==null || p.est_score < f.est)) return false;
+    if (f.emg > 0 && (p.emg_score==null || p.emg_score < f.emg)) return false;
+    if (p.sold_price != null && p.sold_price > f.price) return false;
+    if (f.beds !== '') {
+      if (f.beds==='4' && (p.beds==null||p.beds<4)) return false;
+      else if (f.beds!=='4' && p.beds != +f.beds) return false;
+    }
+    if (f.year && p.closing_year != +f.year) return false;
+    if (f.status && p.status !== f.status) return false;
+    if (f.parking === '1' && !p.parking) return false;
+    if (f.parking === '0' && p.parking) return false;
+    if (f.outdoor === '1' && !p.outdoor) return false;
+    if (f.outdoor === '0' && p.outdoor) return false;
+    return true;
+  });
+}
+
+function sortBy(key) {
+  if (sortKey===key) sortDir*=-1; else {sortKey=key; sortDir=-1;}
+  document.querySelectorAll('thead th').forEach(t=>t.classList.remove('sorted'));
+  event.target.classList.add('sorted');
+  renderProps();
+}
+
+function renderProps() {
+  const filtered = applyFilters(allProps);
+  const sorted = [...filtered].sort((a,b) => {
+    let av=a[sortKey], bv=b[sortKey];
+    if (av==null&&bv==null) return 0; if (av==null) return 1; if (bv==null) return -1;
+    return (typeof av==='string' ? av.localeCompare(bv) : av-bv) * sortDir;
+  });
+
+  const label = activeBlock ? ` in Block ${allBlocks.find(b=>b.block===activeBlock)?.block_raw}` : '';
+  document.getElementById('prop-count').textContent = `${sorted.length.toLocaleString()} listing${sorted.length!==1?'s':''}${label}`;
+
+  const tbody = document.getElementById('prop-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('empty-state').style.display = sorted.length ? 'none' : 'block';
+
+  sorted.slice(0,500).forEach(p => {
+    const tr = document.createElement('tr');
+    const ec = scoreColor(p.est_score), mc = scoreColor(p.emg_score);
+    const addrStr = [p.address, p.unit].filter(Boolean).join(' #');
+    tr.innerHTML = `
+      <td><div class="addr-main">${addrStr}</div>${p.complex?`<div class="addr-sub">${p.complex}</div>`:''}</td>
+      <td>${p.beds!=null?p.beds:'—'}</td>
+      <td>${p.baths!=null?p.baths:'—'}</td>
+      <td>${p.sqft&&p.sqft>0?Number(p.sqft).toLocaleString():'—'}</td>
+      <td><b>${fmt.price(p.sold_price)}</b></td>
+      <td>${fmt.psf(p.psf)}</td>
+      <td>${p.dom!=null?p.dom+'d':'—'}</td>
+      <td>${p.closing_date?p.closing_date.slice(0,7):'—'}</td>
+      <td>${p.hoa&&p.hoa>0?fmt.price(p.hoa):'—'}</td>
+      <td>${p.est_score!=null?`<span class="chip" style="background:${ec}22;color:${ec}">${p.est_score.toFixed(0)}</span>`:'—'}</td>
+      <td>${p.emg_score!=null?`<span class="chip" style="background:${mc}22;color:${mc}">${p.emg_score.toFixed(0)}</span>`:'—'}</td>
+      <td>${p.block_cagr!=null?`<span style="color:${p.block_cagr>0?'var(--green)':'var(--red)'}">${p.block_cagr>0?'+':''}${Number(p.block_cagr).toFixed(1)}%</span>`:'—'}</td>
+      <td>${p.parking ? `<span title="${p.parking_conf} confidence" style="opacity:${p.parking_conf==='high'?1:0.5}">🚗</span>` : '<span style="color:var(--border)">—</span>'}</td>
+      <td>${p.outdoor ? `<span title="${p.outdoor_type||'outdoor'} (${p.outdoor_conf})" style="opacity:${p.outdoor_conf==='high'?1:0.5}">🌿</span>` : '<span style="color:var(--border)">—</span>'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  if (sorted.length > 500) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="12" style="text-align:center;color:var(--muted);padding:10px">Showing 500 of ${sorted.length} — use filters to narrow</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+['f-est','f-emg'].forEach(id => {
+  const key = id==='f-est'?'fv-est':'fv-emg';
+  document.getElementById(id).addEventListener('input', function() {
+    document.getElementById(key).textContent = this.value==0?'Any':this.value+'+';
+    renderProps();
+  });
+});
+document.getElementById('f-price').addEventListener('input', function() {
+  const v = +this.value;
+  document.getElementById('fv-price').textContent = v>=1650000?'Any':'$'+(v/1000).toFixed(0)+'k';
+  renderProps();
+});
+['f-beds','f-year','f-status','f-parking','f-outdoor'].forEach(id => document.getElementById(id).addEventListener('change', renderProps));
+
+function resetFilters() {
+  ['f-est','f-emg'].forEach(id => { document.getElementById(id).value=0; });
+  document.getElementById('fv-est').textContent = 'Any';
+  document.getElementById('fv-emg').textContent = 'Any';
+  document.getElementById('f-price').value = 1650000;
+  document.getElementById('fv-price').textContent = 'Any';
+  ['f-beds','f-year','f-status','f-parking','f-outdoor'].forEach(id => document.getElementById(id).value='');
+  renderProps();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAP
+// ═══════════════════════════════════════════════════════════════════
+function initMap() {
+  if (leafletMap) return;
+
+  const withCoords = allProps.filter(p => p.lat && p.lon);
+
+  if (!withCoords.length) {
+    document.getElementById('map-no-coords').style.display = 'block';
+    document.getElementById('map-count-msg').textContent = 'No geocoded properties yet.';
+  }
+
+  leafletMap = L.map('map', {
+    center: [40.745, -74.044],
+    zoom: 14,
+    preferCanvas: true,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19,
+  }).addTo(leafletMap);
+
+  // Style the tile layer to dark mode feel
+  const style = document.createElement('style');
+  style.textContent = '#map .leaflet-tile{filter:brightness(0.7) saturate(0.6) hue-rotate(180deg) invert(1);}';
+  document.head.appendChild(style);
+
+  renderMapMarkers(withCoords);
+}
+
+function markerColor(p) {
+  const mode = document.getElementById('map-color-mode').value;
+  let v, max;
+  if (mode==='est')  { v = p.est_score; return scoreColor(v, true); }
+  if (mode==='emg')  { v = p.emg_score; return scoreColor(v, true); }
+  if (mode==='psf')  {
+    if (!p.psf) return 'rgba(136,146,164,0.5)';
+    if (p.psf < 400) return 'rgba(52,211,153,0.8)';
+    if (p.psf < 600) return 'rgba(251,191,36,0.8)';
+    return 'rgba(248,113,113,0.8)';
+  }
+  if (mode==='cagr') {
+    const c = p.block_cagr;
+    if (c == null) return 'rgba(136,146,164,0.5)';
+    if (c >= 15) return 'rgba(52,211,153,0.8)';
+    if (c >= 5)  return 'rgba(251,191,36,0.8)';
+    return 'rgba(248,113,113,0.8)';
+  }
+  return 'rgba(136,146,164,0.5)';
+}
+
+let mapView = 'properties'; // 'properties' | 'blocks'
+
+function setMapView(view) {
+  mapView = view;
+  document.getElementById('mv-props').style.background  = view==='properties' ? 'var(--accent)' : 'transparent';
+  document.getElementById('mv-props').style.color       = view==='properties' ? '#fff' : 'var(--muted)';
+  document.getElementById('mv-props').style.borderColor = view==='properties' ? 'var(--accent)' : 'var(--border)';
+  document.getElementById('mv-blocks').style.background  = view==='blocks' ? 'var(--green)' : 'transparent';
+  document.getElementById('mv-blocks').style.color       = view==='blocks' ? '#111' : 'var(--muted)';
+  document.getElementById('mv-blocks').style.borderColor = view==='blocks' ? 'var(--green)' : 'var(--border)';
+  // Status filter only makes sense for property view
+  document.getElementById('map-status-wrap').style.opacity = view==='properties' ? '1' : '0.3';
+  refreshMapView();
+}
+
+function refreshMapView() {
+  if (mapView === 'blocks') renderBlockMarkers();
+  else {
+    const withCoords = allProps.filter(p => p.lat && p.lon);
+    renderMapMarkers(withCoords);
+  }
+  // Update legend title
+  const mode = document.getElementById('map-color-mode').value;
+  document.getElementById('legend-title').textContent =
+    {est:'Established Score',emg:'Emerging Score',psf:'Price/sqft',cagr:'Block CAGR'}[mode];
+}
+
+function renderBlockMarkers() {
+  mapMarkers.forEach(m => leafletMap.removeLayer(m));
+  mapMarkers = [];
+
+  const mode = document.getElementById('map-color-mode').value;
+
+  // Compute block centroids from property coordinates
+  const blockCoords = {};
+  allProps.forEach(p => {
+    if (!p.lat || !p.lon || !p.block) return;
+    if (!blockCoords[p.block]) blockCoords[p.block] = { lats:[], lons:[], block:p.block };
+    blockCoords[p.block].lats.push(p.lat);
+    blockCoords[p.block].lons.push(p.lon);
+  });
+
+  // Merge with block score data
+  const blockMap = {};
+  allBlocks.forEach(b => blockMap[b.block] = b);
+
+  let rendered = 0;
+  Object.values(blockCoords).forEach(bc => {
+    const lat = bc.lats.reduce((a,b)=>a+b,0)/bc.lats.length;
+    const lon = bc.lons.reduce((a,b)=>a+b,0)/bc.lons.length;
+    const b   = blockMap[bc.block];
+    if (!b) return;
+
+    // Value to display/color
+    let val;
+    if (mode==='est')  val = b.est_score;
+    if (mode==='emg')  val = b.emg_score;
+    if (mode==='psf')  val = b.med_psf;
+    if (mode==='cagr') val = b.cagr;
+
+    const col = mode==='est' || mode==='emg' ? scoreColor(val, true) :
+      mode==='cagr' ? (val==null?'rgba(136,146,164,0.6)':val>=15?'rgba(52,211,153,0.85)':val>=5?'rgba(251,191,36,0.85)':'rgba(248,113,113,0.85)') :
+      mode==='psf'  ? (val==null?'rgba(136,146,164,0.6)':val<450?'rgba(52,211,153,0.85)':val<600?'rgba(251,191,36,0.85)':'rgba(248,113,113,0.85)') :
+      'rgba(136,146,164,0.6)';
+
+    // Radius scaled by number of sales (min 12, max 30)
+    const n = b.n_sales || 1;
+    const radius = Math.min(30, Math.max(12, 8 + Math.sqrt(n) * 2));
+
+    const score = mode==='est' ? b.est_score : mode==='emg' ? b.emg_score : null;
+
+    const circle = L.circleMarker([lat, lon], {
+      radius,
+      fillColor: col,
+      color: '#0f1117',
+      weight: 1.5,
+      fillOpacity: 0.88,
+    });
+
+    const cagrStr  = b.cagr  != null ? `${b.cagr>0?'+':''}${Number(b.cagr).toFixed(1)}%/yr` : '—';
+    const psf      = b.med_psf ? `$${Math.round(b.med_psf).toLocaleString()}/sqft` : '—';
+    const domStr   = b.med_dom ? `${Math.round(b.med_dom)}d` : '—';
+    const stlStr   = b.med_stl ? `${(b.med_stl*100).toFixed(1)}%` : '—';
+    const scoreCol = scoreColor(b.est_score);
+    const emgCol   = scoreColor(b.emg_score);
+
+    circle.bindPopup(`
+      <div class="lpop">
+        <b>Block ${b.block_raw}</b>
+        <span class="s"> · ${b.n_sales|0} sales · ${b.years||''}</span><br><br>
+        <span style="color:${scoreCol};font-weight:700">Est ${b.est_score!=null?b.est_score.toFixed(0):'—'}</span>
+        &nbsp;·&nbsp;
+        <span style="color:${emgCol};font-weight:700">Emg ${b.emg_score!=null?b.emg_score.toFixed(0):'—'}</span><br>
+        CAGR: <b>${cagrStr}</b><br>
+        Median $/sqft: <b>${psf}</b><br>
+        Median DOM: <b>${domStr}</b>&nbsp;·&nbsp;Sale/List: <b>${stlStr}</b>
+        ${b.acceleration!=null?`<br>Recent acceleration: <b style="color:${b.acceleration>0?'#34d399':'#f87171'}">${b.acceleration>0?'+':''}${Number(b.acceleration).toFixed(1)}%</b>`:''}
+        ${b.underval_pct!=null&&b.underval_pct>0?`<br>Below zip median: <b style="color:#34d399">${Number(b.underval_pct).toFixed(1)}%</b>`:''}
+      </div>`);
+
+    circle.addTo(leafletMap);
+    mapMarkers.push(circle);
+    rendered++;
+  });
+
+  document.getElementById('map-count-msg').textContent =
+    `${rendered} blocks shown · circle size = transaction volume`;
+}
+
+function renderMapMarkers(propsToShow) {
+  mapMarkers.forEach(m => leafletMap.removeLayer(m));
+  mapMarkers = [];
+
+  const statusFilter = document.getElementById('map-status-filter').value;
+  const filtered = propsToShow.filter(p => !statusFilter || p.status===statusFilter);
+  document.getElementById('map-count-msg').textContent = `Showing ${filtered.length} geocoded properties`;
+
+  filtered.forEach(p => {
+    const col = markerColor(p);
+    const circle = L.circleMarker([p.lat, p.lon], {
+      radius: 5,
+      fillColor: col,
+      color: '#1a1d27',
+      weight: 0.5,
+      fillOpacity: 0.85,
+    });
+
+    const addr = [p.address, p.unit].filter(Boolean).join(' #');
+    circle.bindPopup(`
+      <div class="lpop">
+        <b>${addr}</b><br>
+        <span class="s">${p.complex||''}</span><br>
+        ${p.beds!=null?p.beds+' bed':''} ${p.baths!=null?'/ '+p.baths+' bath':''}<br>
+        Sold: <b>${p.sold_price?'$'+Number(p.sold_price).toLocaleString():'—'}</b>
+        ${p.psf?` · $${Math.round(p.psf)}/sqft`:''}<br>
+        ${p.closing_date?'Closed: '+p.closing_date.slice(0,7):''}
+        ${p.dom!=null?' · '+p.dom+'d DOM':''}<br>
+        ${p.hoa&&p.hoa>0?'HOA: $'+Number(p.hoa).toLocaleString()+'/mo<br>':''  }
+        Est score: <b style="color:${scoreColor(p.est_score)}">${p.est_score!=null?p.est_score.toFixed(0):'—'}</b>
+        &nbsp;·&nbsp;
+        Emg score: <b style="color:${scoreColor(p.emg_score)}">${p.emg_score!=null?p.emg_score.toFixed(0):'—'}</b><br>
+        Block CAGR: <b>${p.block_cagr!=null?(p.block_cagr>0?'+':'')+Number(p.block_cagr).toFixed(1)+'%':'—'}</b>
+      </div>`);
+
+    circle.addTo(leafletMap);
+    mapMarkers.push(circle);
+  });
+}
+
+function updateMapColors() {
+  const withCoords = allProps.filter(p => p.lat && p.lon);
+  renderMapMarkers(withCoords);
+  const mode = document.getElementById('map-color-mode').value;
+  document.getElementById('legend-title').textContent =
+    {est:'Established Score',emg:'Emerging Score',psf:'Price/sqft',cagr:'Block CAGR'}[mode];
+}
+
+function updateMapMarkers() {
+  const withCoords = allProps.filter(p => p.lat && p.lon);
+  renderMapMarkers(withCoords);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ACTIVE LISTINGS
+// ═══════════════════════════════════════════════════════════════════
+
+// prems is market-specific — use getPrems(p)
+
+// Look up block metadata from allBlocks for a given block key
+function getBlockMeta(blockKey) {
+  return allBlocks.find(b => b.block === blockKey) || {};
+}
+
+// Forward-biased, null-safe block quality.
+// Missing emg ≠ zero — absence of emerging data doesn't cap appreciation potential.
+function blockQualityScore(est, emg, nSales) {
+  let bq;
+  if (est != null && emg != null) bq = est * 0.35 + emg * 0.65;
+  else if (est != null) bq = est;
+  else if (emg != null) bq = emg;
+  else return null;
+  // Reliability discount for thin blocks: 5 sales → 50%, 10+ sales → 100%
+  // Prevents a 3-sale outlier from inflating block quality to 90+
+  if (nSales != null && nSales < 10) {
+    const confidence = Math.max(0.5, nSales / 10);
+    bq = bq * confidence + 50 * (1 - confidence); // blend toward neutral (50) for thin blocks
+  }
+  return bq;
+}
+
+function computeDealScore(p) {
+  const compPsf = p.block_psf || p.radius_psf;
+  if (!p.psf || !compPsf) return null;
+  // For zip-fallback blocks, est/emg scores are computed from the full zip (e.g. Port Imperial
+  // mixed with inland). Treat them as null so blockQuality isn't distorted.
+  const isZipBlock = p.block && p.block.includes('/zip_');
+  const bq = blockQualityScore(
+    isZipBlock ? null : p.est_score,
+    isZipBlock ? null : p.emg_score,
+    isZipBlock ? null : p.block_n
+  );
+  if (bq === null) return null;
+  const mprems = getPrems(p);
+  const mcfg = MARKET_META[p.market || 'jc'];
+  const bedsKey = String(Math.min(p.beds||2, 3));
+  const parkPct = p.parking ? (mprems.by_beds?.parking?.[bedsKey] ?? mprems.parking_psf_pct ?? 8.3) : 0;
+  const outPct  = p.outdoor ? (mprems.by_beds?.outdoor?.[bedsKey]  ?? mprems.outdoor_psf_pct  ?? 7.9) : 0;
+  const comboPct = (p.parking && p.outdoor) ? Math.min(parkPct+outPct, mprems.both_psf_pct??13.7) : parkPct+outPct;
+  const blockAvgPrem = (mcfg.flagPark||0.40)*(mprems.parking_psf_pct||8.3) + (mcfg.flagOut||0.55)*(mprems.outdoor_psf_pct||7.9);
+  const bmResult = getBedMatchedBlockPsf(p.block, p.beds||null, compPsf, p.lat, p.lon);
+  const refPsf = bmResult.psf || compPsf;
+  const adjBlockPsf = (refPsf / (1 + blockAvgPrem/100)) * (1 + comboPct/100);
+  const hoaAdjPsf = (p.hoa && p.sqft) ? p.psf - (p.hoa * 12 / 0.07) / p.sqft : p.psf;
+  const pricePct = (adjBlockPsf - hoaAdjPsf) / adjBlockPsf * 100;
+  const priceScore = Math.min(100, Math.max(0, 50 + pricePct * 1.5));
+  const deal = Math.round(bq * 0.60 + priceScore * 0.40);
+  const usingRadius = !p.block_psf && !!p.radius_psf;
+  return { deal, pricePct, adjBlockPsf, refPsfSource: bmResult.source, hoaAdjPsf, usingRadius };
+}
+
+// activeListings is built by rebuildActiveData() above (includes deal scores)
+
+let activeSortKey = 'deal_score';
+let activeSortDir = -1;
+
+function getActiveFilters() {
+  return {
+    price:   +document.getElementById('af-price').value,
+    beds:    document.getElementById('af-beds').value,
+    deal:    +document.getElementById('af-deal').value,
+    parking: document.getElementById('af-parking').value,
+    outdoor: document.getElementById('af-outdoor').value,
+  };
+}
+
+// ── Open House helpers ────────────────────────────────────────────────────
+function gcalUrl(title, dateStr, startTime, endTime) {
+  function parseOHDate(dateStr, timeStr) {
+    try {
+      const [m, d, y] = dateStr.split('/');
+      const base = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+      const t = timeStr.replace(/ (EDT|EST|PDT|PST|ET|PT)/i,'').trim();
+      const dt = new Date(`${base} ${t}`);
+      if (isNaN(dt)) return null;
+      return dt.getFullYear().toString()
+        + String(dt.getMonth()+1).padStart(2,'0')
+        + String(dt.getDate()).padStart(2,'0')
+        + 'T'
+        + String(dt.getHours()).padStart(2,'0')
+        + String(dt.getMinutes()).padStart(2,'0')
+        + '00';
+    } catch(e) { return null; }
+  }
+  const start = parseOHDate(dateStr, startTime);
+  const end   = parseOHDate(dateStr, endTime);
+  if (!start || !end) return null;
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE`
+    + `&text=${encodeURIComponent(title)}`
+    + `&dates=${start}/${end}`
+    + `&details=${encodeURIComponent('Open house via JC Heights Dashboard')}`;
+}
+
+function renderOpenHouseCell(p) {
+  const oh = p.open_houses;
+  if (!oh || oh.length === 0) return `<td style="padding:7px 10px;color:var(--border);">—</td>`;
+  const addr = [p.address, p.unit].filter(Boolean).join(' #');
+  const items = oh.map(o => {
+    const url = gcalUrl(`Open House — ${addr}`, o.date, o.start, o.end);
+    const label = `${o.date} ${o.start}–${o.end}`.replace(/ (EDT|EST|ET)/gi,'');
+    return url
+      ? `<a href="${url}" target="_blank" onclick="event.stopPropagation();"
+           style="display:block;color:var(--yellow);font-size:10px;white-space:nowrap;text-decoration:none;"
+           title="Add to Google Calendar">📅 ${label}</a>`
+      : `<span style="font-size:10px;color:var(--muted);">${label}</span>`;
+  }).join('');
+  return `<td style="padding:7px 10px;">${items}</td>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// OPEN HOUSES TAB
+// ═══════════════════════════════════════════════════════════════════
+const OH_HOME_LAT  = 40.7195;
+const OH_HOME_LON  = -74.0377;
+const OH_WALK_MPM  = 3 / 60;   // miles per minute at walking pace
+const OH_VISIT_MIN = 25;        // fixed visit duration
+
+let ohInitialized = false;
+let ohSelectedDate = null;
+let ohRouteStops = [];          // last computed route
+
+function haversineMi(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function walkMinutes(lat1, lon1, lat2, lon2) {
+  return haversineMi(lat1, lon1, lat2, lon2) / OH_WALK_MPM;
+}
+
+function parseOHTime(dateStr, timeStr) {
+  // Returns Date object or null
+  try {
+    const [m, d, y] = dateStr.split('/');
+    const base = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+    const t = (timeStr||'').replace(/ ?(EDT|EST|PDT|PST|ET|PT)/i,'').trim();
+    const dt = new Date(`${base} ${t}`);
+    return isNaN(dt) ? null : dt;
+  } catch(e) { return null; }
+}
+
+function fmtTime(dt) {
+  if (!dt) return '—';
+  return dt.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', hour12:true});
+}
+
+function dealColor(score) {
+  if (score == null) return 'var(--muted)';
+  if (score >= 75) return 'var(--green)';
+  if (score >= 55) return '#f0c040';
+  return '#e06060';
+}
+
+// Collect all open house "slots" (one per OH window) with resolved property
+function getOHSlots(dateStr) {
+  const minDeal = parseFloat(document.getElementById('oh-min-deal').value) || 0;
+  const slots = [];
+  for (const p of allProps) {
+    if (!p.open_houses || !p.open_houses.length) continue;
+    if (!p.lat || !p.lon) continue;
+    const ds = computeDealScore(p);
+    const dealScore = ds ? Math.round(ds.deal) : null;
+    if (minDeal > 0 && (dealScore == null || dealScore < minDeal)) continue;
+    for (const o of p.open_houses) {
+      if (o.date !== dateStr) continue;
+      const openDt  = parseOHTime(o.date, o.start);
+      const closeDt = parseOHTime(o.date, o.end);
+      if (!openDt || !closeDt) continue;
+      slots.push({ p, o, openDt, closeDt, dealScore, checked: true });
+    }
+  }
+  slots.sort((a,b) => a.openDt - b.openDt);
+  return slots;
+}
+
+// EDF route optimizer — greedy, pick the reachable slot with earliest close time
+function edfRoute(slots, startLat, startLon, startTime) {
+  const remaining = slots.map((s,i) => ({...s, idx:i}));
+  const route = [];
+  let curLat = startLat, curLon = startLon, curTime = startTime;
+
+  while (remaining.length) {
+    // Find all slots we can reach and complete a 25-min visit before they close
+    const candidates = remaining.filter(s => {
+      const walkMins = walkMinutes(curLat, curLon, s.p.lat, s.p.lon);
+      const arriveAt = new Date(curTime.getTime() + walkMins * 60000);
+      const leaveAt  = new Date(arriveAt.getTime() + OH_VISIT_MIN * 60000);
+      // Must arrive during the open window and finish within it
+      return arriveAt >= s.openDt && leaveAt <= s.closeDt;
+    });
+    if (!candidates.length) break;
+    // Pick earliest deadline
+    candidates.sort((a,b) => a.closeDt - b.closeDt);
+    const pick = candidates[0];
+    const walkMins = walkMinutes(curLat, curLon, pick.p.lat, pick.p.lon);
+    const arriveAt = new Date(curTime.getTime() + walkMins * 60000);
+    const leaveAt  = new Date(arriveAt.getTime() + OH_VISIT_MIN * 60000);
+    route.push({ ...pick, walkMins, arriveAt, leaveAt });
+    curLat  = pick.p.lat;
+    curLon  = pick.p.lon;
+    curTime = leaveAt;
+    remaining.splice(remaining.findIndex(r => r.idx === pick.idx), 1);
+  }
+  return route;
+}
+
+// --- UI ---
+
+function initOpenHouses() {
+  if (ohInitialized) return;
+  ohInitialized = true;
+
+  // Gather distinct dates
+  const dateSet = new Set();
+  for (const p of allProps) {
+    for (const o of (p.open_houses||[])) dateSet.add(o.date);
+  }
+  const dates = [...dateSet].sort((a,b) => new Date(a)-new Date(b));
+  if (!dates.length) {
+    document.getElementById('oh-list').innerHTML =
+      '<div style="padding:24px;color:var(--muted);font-size:12px;">No open house data found. Export open_houses.csv from Paragon and re-run the pipeline.</div>';
+    return;
+  }
+
+  // Build date tabs
+  const tabBar = document.getElementById('oh-date-tabs');
+  tabBar.innerHTML = dates.map((d,i) => {
+    const label = new Date(d).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+    return `<button onclick="selectOHDate('${d}')" id="ohdt-${d.replace(/\//g,'-')}"
+      style="flex:1;padding:9px 4px;font-size:11px;font-weight:600;border:none;border-bottom:2px solid transparent;
+             background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;"
+      >${label}</button>`;
+  }).join('');
+
+  selectOHDate(dates[0]);
+}
+
+function selectOHDate(dateStr) {
+  ohSelectedDate = dateStr;
+  ohRouteStops = [];
+  // Highlight active date tab
+  document.querySelectorAll('#oh-date-tabs button').forEach(b => {
+    const active = b.id === `ohdt-${dateStr.replace(/\//g,'-')}`;
+    b.style.color = active ? 'var(--accent)' : 'var(--muted)';
+    b.style.borderBottomColor = active ? 'var(--accent)' : 'transparent';
+  });
+  renderOHDay();
+  document.getElementById('oh-route').innerHTML = '<div style="color:var(--muted);font-size:12px;padding:24px;">Click <strong>⚡ Optimize Route</strong> to build a walking schedule.</div>';
+  document.getElementById('oh-route-summary').textContent = '';
+  document.getElementById('oh-addall-btn').style.display = 'none';
+}
+
+function renderOHDay() {
+  const slots = getOHSlots(ohSelectedDate);
+  const list = document.getElementById('oh-list');
+  document.getElementById('oh-count-msg').textContent = `${slots.length} open house${slots.length!==1?'s':''}`;
+
+  if (!slots.length) {
+    list.innerHTML = '<div style="padding:16px;color:var(--muted);font-size:12px;">No open houses match the filter for this date.</div>';
+    return;
+  }
+
+  list.innerHTML = slots.map((s,i) => {
+    const addr = [s.p.address, s.p.unit].filter(Boolean).join(' #');
+    const dsColor = dealColor(s.dealScore);
+    const dsLabel = s.dealScore != null ? s.dealScore : '—';
+    const timeStr = `${fmtTime(s.openDt)} – ${fmtTime(s.closeDt)}`;
+    const url = gcalUrl(`Open House — ${addr}`, s.o.date, s.o.start, s.o.end);
+    return `<div style="display:flex;align-items:flex-start;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:default;"
+                 id="oh-slot-${i}">
+      <input type="checkbox" checked style="margin-top:2px;accent-color:var(--accent);"
+             onchange="ohToggleSlot(this,${i})">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${addr}</div>
+        <div style="font-size:10px;color:var(--muted);">${s.p.beds}BR · ${timeStr}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:13px;font-weight:700;color:${dsColor};">${dsLabel}</div>
+        ${url ? `<a href="${url}" target="_blank" onclick="event.stopPropagation();"
+                    style="font-size:9px;color:var(--yellow);text-decoration:none;" title="Add to Calendar">📅</a>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Store slots on window for checkbox state tracking
+  window._ohSlots = slots;
+}
+
+function ohToggleSlot(cb, idx) {
+  if (window._ohSlots && window._ohSlots[idx]) {
+    window._ohSlots[idx].checked = cb.checked;
+  }
+}
+
+function computeOHRoute() {
+  const slots = (window._ohSlots || []).filter(s => s.checked);
+  if (!slots.length) {
+    document.getElementById('oh-route').innerHTML =
+      '<div style="color:var(--muted);font-size:12px;padding:24px;">No open houses selected.</div>';
+    return;
+  }
+
+  // Start time = earliest open house open time (or now if earlier)
+  const earliest = slots.reduce((mn,s) => s.openDt < mn ? s.openDt : mn, slots[0].openDt);
+  const route = edfRoute(slots, OH_HOME_LAT, OH_HOME_LON, earliest);
+  ohRouteStops = route;
+
+  renderOHRoute(route, slots.length);
+}
+
+function renderOHRoute(route, totalConsidered) {
+  const routeDiv = document.getElementById('oh-route');
+  const btn = document.getElementById('oh-addall-btn');
+
+  if (!route.length) {
+    routeDiv.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:24px;">No properties could be routed — open house windows may be too short to reach and complete a 25-min visit.</div>';
+    document.getElementById('oh-route-summary').textContent = '';
+    btn.style.display = 'none';
+    return;
+  }
+
+  const missedCount = totalConsidered - route.length;
+  document.getElementById('oh-route-summary').textContent =
+    `${route.length} stops · ${missedCount > 0 ? missedCount + ' skipped (no time)' : 'all fit!'}`;
+  btn.style.display = route.length ? '' : 'none';
+
+  // Build visual timeline
+  const allTimes = route.flatMap(r => [r.arriveAt, r.leaveAt]);
+  const tMin = route[0].arriveAt;
+  const tMax = route[route.length-1].leaveAt;
+  const spanMin = (tMax - tMin) / 60000 || 60;
+
+  const pct = (dt) => Math.max(0, Math.min(100, (dt - tMin) / (spanMin * 60000) * 100));
+
+  // Timeline bar
+  const tlHtml = `
+    <div style="position:relative;height:8px;background:var(--surface);border-radius:4px;margin-bottom:20px;overflow:visible;">
+      ${route.map((r,i) => {
+        const l = pct(r.arriveAt);
+        const w = pct(r.leaveAt) - l;
+        const col = dealColor(r.dealScore);
+        return `<div title="${[r.p.address,r.p.unit].filter(Boolean).join(' #')}" style="position:absolute;top:0;left:${l}%;width:${w}%;height:100%;background:${col};border-radius:3px;"></div>`;
+      }).join('')}
+    </div>`;
+
+  // Stop cards
+  const stopsHtml = route.map((r,i) => {
+    const addr = [r.p.address, r.p.unit].filter(Boolean).join(' #');
+    const dsColor = dealColor(r.dealScore);
+    const dsLabel = r.dealScore != null ? r.dealScore : '—';
+    const walkStr = r.walkMins < 1 ? '<1 min walk' : `${Math.round(r.walkMins)} min walk`;
+    const windowStr = `${fmtTime(r.openDt)} – ${fmtTime(r.closeDt)}`;
+    const url = gcalUrl(`Open House — ${addr}`, r.o.date, r.o.start, r.o.end);
+    return `
+      <div style="display:flex;gap:12px;margin-bottom:12px;">
+        <!-- step number + walk line -->
+        <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:28px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;">${i+1}</div>
+          ${i < route.length-1 ? `<div style="flex:1;width:2px;background:var(--border);margin-top:4px;min-height:20px;"></div>` : ''}
+        </div>
+        <!-- content -->
+        <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:4px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;">${addr}</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:2px;">${r.p.beds}BR · ${r.p.baths}BA${r.p.sqft ? ' · '+Math.round(r.p.sqft)+' sqft' : ''}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div style="font-size:16px;font-weight:800;color:${dsColor};">${dsLabel}</div>
+              <div style="font-size:9px;color:var(--muted);">deal score</div>
+            </div>
+          </div>
+          <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+            <span style="font-size:10px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;">
+              🚶 ${i===0 ? 'from home' : 'from prev'} · ${walkStr}
+            </span>
+            <span style="font-size:10px;color:var(--accent);font-weight:600;">
+              Arrive ${fmtTime(r.arriveAt)} · Leave ${fmtTime(r.leaveAt)}
+            </span>
+            <span style="font-size:10px;color:var(--muted);">Window: ${windowStr}</span>
+            ${url ? `<a href="${url}" target="_blank" onclick="event.stopPropagation();"
+                       style="font-size:10px;color:var(--yellow);text-decoration:none;margin-left:auto;">📅 Add to Calendar</a>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  routeDiv.innerHTML = `
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">Timeline</div>
+      <div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span>${fmtTime(tMin)}</span><span>${fmtTime(tMax)}</span>
+      </div>
+      ${tlHtml}
+    </div>
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px;">Route</div>
+    ${stopsHtml}
+    <div style="font-size:10px;color:var(--muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      🏠 Starting from 88 Morgan St, Jersey City · Walking speed 3 mph · 25 min per visit
+    </div>`;
+}
+
+function ohAddAllToCalendar() {
+  ohRouteStops.forEach((r, i) => {
+    const addr = [r.p.address, r.p.unit].filter(Boolean).join(' #');
+    const url = gcalUrl(`Open House — ${addr}`, r.o.date, r.o.start, r.o.end);
+    if (url) setTimeout(() => window.open(url, '_blank'), i * 400);
+  });
+}
+
+function renderActiveListings() {
+  const f = getActiveFilters();
+  let filtered = activeListings.filter(p => {
+    if (p.list_price != null && p.list_price > f.price) return false;
+    if (f.beds !== '') {
+      if (f.beds === '4' && (p.beds==null||p.beds<4)) return false;
+      else if (f.beds !== '4' && p.beds != +f.beds) return false;
+    }
+    if (f.deal > 0 && (p.deal_score==null || p.deal_score < f.deal)) return false;
+    if (f.parking === '1' && !p.parking) return false;
+    if (f.parking === '0' && p.parking) return false;
+    if (f.outdoor === '1' && !p.outdoor) return false;
+    if (f.outdoor === '0' && p.outdoor) return false;
+    return true;
+  });
+
+  filtered.sort((a,b) => {
+    let av = a[activeSortKey], bv = b[activeSortKey];
+    if (av==null && bv==null) return 0;
+    if (av==null) return 1; if (bv==null) return -1;
+    return (typeof av==='string' ? av.localeCompare(bv) : av-bv) * activeSortDir;
+  });
+
+  document.getElementById('active-count').textContent =
+    `${filtered.length} active listing${filtered.length!==1?'s':''} · sorted by deal score · click any row to score in detail`;
+
+  const tbody = document.getElementById('active-tbody');
+  tbody.innerHTML = '';
+
+  _activeListingCache = [...filtered];  // cache so _scoreActive finds exact object
+  filtered.forEach(p => {
+    const dc  = scoreColor(p.deal_score);
+    const ec  = scoreColor(p.est_score);
+    const mc  = scoreColor(p.emg_score);
+    const vc  = p.price_vs_comp == null ? 'var(--muted)' : p.price_vs_comp > 0 ? 'var(--green)' : 'var(--red)';
+    const addr = [p.address, p.unit].filter(Boolean).join(' #');
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.innerHTML = `
+      <td><span class="chip" style="background:${dc}22;color:${dc};font-size:13px;padding:3px 9px">${p.deal_score??'—'}</span></td>
+      <td><div style="font-weight:500;max-width:180px;overflow:hidden;text-overflow:ellipsis;">${addr}</div>
+          ${p.complex?`<div style="color:var(--muted);font-size:10px;">${p.complex}</div>`:''}</td>
+      <td>${p.beds??'—'}</td>
+      <td>${p.baths??'—'}</td>
+      <td>${p.sqft&&p.sqft>0?Number(p.sqft).toLocaleString():'—'}</td>
+      <td><b>$${p.list_price?Number(p.list_price).toLocaleString():'—'}</b></td>
+      <td>${p.psf?'$'+Math.round(p.psf).toLocaleString():'—'}</td>
+      <td style="color:${vc};font-weight:600;">${p.price_vs_comp!=null?(p.price_vs_comp>0?'+':'')+p.price_vs_comp.toFixed(1)+'%':'—'}</td>
+      <td>${p.dom!=null?p.dom+'d':'—'}</td>
+      <td>${p.hoa&&p.hoa>0?'$'+Number(p.hoa).toLocaleString():'—'}</td>
+      <td>${p.est_score!=null?`<span class="chip" style="background:${ec}22;color:${ec}">${p.est_score.toFixed(0)}</span>`:'—'}</td>
+      <td>${p.emg_score!=null?`<span class="chip" style="background:${mc}22;color:${mc}">${p.emg_score.toFixed(0)}</span>`:'—'}</td>
+      <td>${p.block_cagr!=null?`<span style="color:${p.block_cagr>0?'var(--green)':'var(--red)'}">${p.block_cagr>0?'+':''}${Number(p.block_cagr).toFixed(1)}%</span>`:'—'}</td>
+      <td>${p.parking?`<span style="opacity:${p.parking_conf==='high'?1:0.5}" title="${p.parking_conf}">🚗</span>`:'<span style="color:var(--border)">—</span>'}</td>
+      <td>${p.outdoor?`<span style="opacity:${p.outdoor_conf==='high'?1:0.5}" title="${p.outdoor_type}">🌿</span>`:'<span style="color:var(--border)">—</span>'}</td>
+      <td><button onclick="_scoreActive(_activeListingCache.indexOf(p));event.stopPropagation();"
+          style="background:var(--surface2);border:1px solid var(--border);color:var(--accent);border-radius:4px;padding:2px 8px;cursor:pointer;font-size:10px;">Open →</button></td>
+      ${renderOpenHouseCell(p)}`;
+    tr.addEventListener('click', () => _scoreActive(_activeListingCache.indexOf(p)));
+    tbody.appendChild(tr);
+  });
+}
+
+function sortActive(key) {
+  if (activeSortKey===key) activeSortDir*=-1; else { activeSortKey=key; activeSortDir=-1; }
+  renderActiveListings();
+}
+
+function resetActiveFilters() {
+  document.getElementById('af-price').value = 1400000;
+  document.getElementById('afv-price').textContent = 'Any';
+  document.getElementById('af-deal').value = 0;
+  document.getElementById('afv-deal').textContent = 'Any';
+  ['af-beds','af-parking','af-outdoor'].forEach(id => document.getElementById(id).value='');
+  renderActiveListings();
+}
+
+let _activeListingCache = [];
+
+function _scoreActive(idx) {
+  const p = _activeListingCache[idx];
+  if (!p) return;
+  switchTab('scorer');
+  document.getElementById('scorer-input').value = [p.address, p.unit ? '#'+p.unit : ''].filter(Boolean).join(' ');
+  document.getElementById('scorer-dropdown').style.display = 'none';
+  document.getElementById('scorer-new-form').style.display = 'none';
+  renderScorerResults({
+    address:      p.address,
+    unit:         p.unit,
+    complex:      p.complex,
+    block:        p.block,
+    block_raw:    p.block_raw,
+    beds:         p.beds,
+    baths:        p.baths,
+    sqft:         p.sqft,
+    price:        p.list_price,
+    psf:          p.psf,
+    hoa:          p.hoa,
+    taxes:        p.taxes,
+    closing_date: null,
+    dom:          p.dom,
+    est_score:    p.est_score,
+    emg_score:    p.emg_score,
+    est_rank:     p.est_rank,
+    emg_rank:     p.emg_rank,
+    block_cagr:   p.block_cagr,
+    block_psf:    p.block_psf,
+    block_dom:    p.block_dom,
+    block_stl:    p.block_stl,
+    block_n:      p.block_n,
+    parking:      p.parking,
+    parking_conf: p.parking_conf,
+    outdoor:      p.outdoor,
+    outdoor_conf: p.outdoor_conf,
+    outdoor_type: p.outdoor_type,
+    remarks:      p.remarks,
+    status:       'ACTIVE',
+    isNew:        false,
+    allTxns:      [],
+    path_station:    p.path_station,
+    path_dist_mi:    p.path_dist_mi,
+    hblr_station:    p.hblr_station,
+    hblr_dist_mi:    p.hblr_dist_mi,
+    radius_psf:      p.radius_psf,
+    radius_n_comps:  p.radius_n_comps,
+    market:          p.market,
+    lat:             p.lat,
+    lon:             p.lon,
+  });
+}
+
+function jumpToScorer(address) {
+  switchTab('scorer');
+  const input = document.getElementById('scorer-input');
+  input.value = address;
+  scorerSearch(address);
+  // Auto-select if only one match
+  setTimeout(() => {
+    const dd = document.getElementById('scorer-dropdown');
+    const first = dd.querySelector('.dd-item');
+    if (first) first.click();
+  }, 50);
+}
+
+document.getElementById('af-price').addEventListener('input', function() {
+  const v = +this.value;
+  document.getElementById('afv-price').textContent = v>=1400000?'Any':'$'+(v/1000).toFixed(0)+'k';
+  renderActiveListings();
+});
+document.getElementById('af-deal').addEventListener('input', function() {
+  document.getElementById('afv-deal').textContent = this.value==0?'Any':this.value+'+';
+  renderActiveListings();
+});
+['af-beds','af-parking','af-outdoor'].forEach(id =>
+  document.getElementById(id).addEventListener('change', renderActiveListings));
+
+// ═══════════════════════════════════════════════════════════════════
+// DEAL SCORER
+// ═══════════════════════════════════════════════════════════════════
+
+// Normalise an address string for fuzzy matching
+function normAddr(s) {
+  return (s||'').toUpperCase()
+    .replace(/\bAVENUE\b/,'AVE').replace(/\bSTREET\b/,'ST')
+    .replace(/\bBOULEVARD\b/,'BLVD').replace(/\bPLACE\b/,'PL')
+    .replace(/\bROAD\b/,'RD').replace(/\bDRIVE\b/,'DR')
+    .replace(/[^A-Z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+}
+
+// ══════════════════════════════════════════════════════════════
+// FAIR PRICE CALCULATOR
+// ══════════════════════════════════════════════════════════════
+
+// Build sorted real-block list once
+let fpBlocks = [];
+function rebuildFpBlocks() {
+  fpBlocks = allBlocks
+    .filter(b => b.block && !b.block.includes('/zip_') && !b.block.endsWith('/zip_07086') && b.n_sales >= 3)
+    .sort((a, b) => (b.est_score || 0) - (a.est_score || 0));
+}
+rebuildFpBlocks();
+
+// Normalize a raw block input string → try to match a block key
+function normBlock(raw) {
+  const s = String(raw).trim().replace(/^block_/i, '').replace(/[^0-9]/g, '');
+  if (!s) return null;
+  // Exact match
+  let m = fpBlocks.find(b => b.block_raw === s);
+  if (m) return m.block;
+  // Zero-padded match (e.g. "2804" vs "02804")
+  m = fpBlocks.find(b => b.block_raw.replace(/^0+/, '') === s.replace(/^0+/, ''));
+  if (m) return m.block;
+  return null;
+}
+
+let fpSelectedBlock = null;  // currently confirmed block key
+let fpDropdownHighlight = -1;
+
+function fpBlockSearch(query) {
+  const dd     = document.getElementById('fp-block-dropdown');
+  const status = document.getElementById('fp-block-status');
+  const hidden = document.getElementById('fp-block');
+
+  fpSelectedBlock = null;
+  hidden.value = '';
+  status.textContent = '';
+
+  const s = query.trim().replace(/^block_/i, '').replace(/[^0-9]/g, '');
+  if (!s) { dd.style.display = 'none'; return; }
+
+  // Try exact match first
+  const exact = normBlock(s);
+  if (exact && query.length >= 3) {
+    const bk = fpBlocks.find(b => b.block === exact);
+    if (bk) {
+      fpSelectedBlock = exact;
+      hidden.value = exact;
+      status.textContent = `Block ${bk.block_raw} · Est ${bk.est_score != null ? Math.round(bk.est_score) : '—'} · ${bk.n_sales} sales`;
+      dd.style.display = 'none';
+      return;
+    }
+  }
+
+  // Partial match — show dropdown
+  const matches = fpBlocks.filter(b => {
+    const raw = b.block_raw.replace(/^0+/, '');
+    return raw.startsWith(s.replace(/^0+/, '')) || b.block_raw.startsWith(s);
+  }).slice(0, 12);
+
+  if (!matches.length) {
+    dd.style.display = 'none';
+    status.textContent = s.length >= 2 ? 'No matching blocks' : '';
+    return;
+  }
+
+  fpDropdownHighlight = -1;
+  dd.innerHTML = matches.map((b, i) => {
+    const estTag = b.est_score != null ? `<span style="color:${scoreColor(b.est_score)};margin-left:8px;font-size:10px;">Est ${Math.round(b.est_score)}</span>` : '';
+    const emgTag = b.emg_score != null ? `<span style="color:${scoreColor(b.emg_score)};margin-left:6px;font-size:10px;">Emg ${Math.round(b.emg_score)}</span>` : '';
+    return `<div data-idx="${i}" data-block="${b.block}" onclick="fpSelectBlock('${b.block}','${b.block_raw}')"
+      style="padding:9px 14px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);"
+      onmouseenter="fpHover(${i})">
+      <span>Block <strong>${b.block_raw}</strong> <span class="mkt-badge ${b.market||'jc'}">${MARKET_META[b.market||'jc']?.label||''}</span>${estTag}${emgTag}</span>
+      <span style="color:var(--muted);font-size:11px;">${b.n_sales} sales · $${Math.round(b.med_psf||0)}/sf</span>
+    </div>`;
+  }).join('');
+  dd.style.display = 'block';
+}
+
+function fpHover(i) {
+  fpDropdownHighlight = i;
+  document.querySelectorAll('#fp-block-dropdown [data-idx]').forEach((el, j) => {
+    el.style.background = j === i ? 'var(--surface2)' : '';
+  });
+}
+
+function fpBlockKey(e) {
+  const dd = document.getElementById('fp-block-dropdown');
+  const items = dd.querySelectorAll('[data-idx]');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    fpDropdownHighlight = Math.min(fpDropdownHighlight + 1, items.length - 1);
+    items.forEach((el, j) => el.style.background = j === fpDropdownHighlight ? 'var(--surface2)' : '');
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    fpDropdownHighlight = Math.max(fpDropdownHighlight - 1, 0);
+    items.forEach((el, j) => el.style.background = j === fpDropdownHighlight ? 'var(--surface2)' : '');
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (fpDropdownHighlight >= 0 && items[fpDropdownHighlight]) {
+      items[fpDropdownHighlight].click();
+    }
+  } else if (e.key === 'Escape') {
+    dd.style.display = 'none';
+  }
+}
+
+function fpSelectBlock(blockKey, blockRaw) {
+  fpSelectedBlock = blockKey;
+  document.getElementById('fp-block').value = blockKey;
+  document.getElementById('fp-block-input').value = blockRaw;
+  document.getElementById('fp-block-dropdown').style.display = 'none';
+  const bk = fpBlocks.find(b => b.block === blockKey);
+  const status = document.getElementById('fp-block-status');
+  status.textContent = bk
+    ? `Block ${bk.block_raw} · Est ${bk.est_score != null ? Math.round(bk.est_score) : '—'}${bk.emg_score != null ? ' · Emg '+Math.round(bk.emg_score) : ''} · $${Math.round(bk.med_psf||0)}/sf median · ${bk.n_sales} sales`
+    : '';
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('#fp-block-input') && !e.target.closest('#fp-block-dropdown')) {
+    document.getElementById('fp-block-dropdown').style.display = 'none';
+  }
+});
+
+// ── Size adjustment curve (empirical from dataset) ─────────────
+// Returns a multiplier to apply to the block median PSF
+// based on how this property's sqft deviates from typical for that bed count.
+// Derived from actual comp analysis: see bucket medians.
+function getSizeFactor(beds, sqft, market) {
+  const bedsN = Math.min(parseInt(beds) || 2, 3);
+  const sc = MARKET_META[market || 'jc']?.SIZE_CURVE || MARKET_META.jc.SIZE_CURVE;
+  const curve = sc[bedsN];
+  if (!curve || !sqft) return 1.0;
+  // Find bucket
+  const keys = Object.keys(curve);
+  if (bedsN === 1) {
+    if (sqft < 600)  return curve['<600'];
+    if (sqft < 800)  return curve['600-800'];
+    if (sqft < 1000) return curve['800-1000'];
+    return curve['1000+'];
+  }
+  if (bedsN === 2) {
+    if (sqft < 600)  return curve['<600'];
+    if (sqft < 800)  return curve['600-800'];
+    if (sqft < 1000) return curve['800-1000'];
+    if (sqft < 1200) return curve['1000-1200'];
+    if (sqft < 1500) return curve['1200-1500'];
+    return curve['1500+'];
+  }
+  if (bedsN === 3) {
+    if (sqft < 1000) return curve['<1000'];
+    if (sqft < 1200) return curve['1000-1200'];
+    if (sqft < 1500) return curve['1200-1500'];
+    return curve['1500+'];
+  }
+  return 1.0;
+}
+
+// ── Bed-matched block PSF ──────────────────────────────────────
+// Used by both Fair Price Calculator AND Deal Scorer
+// Returns median PSF from recent (24mo) comps on this block matching bed count.
+// Falls back to block_psf if not enough comps.
+function getBedMatchedBlockPsf(blockKey, bedsNum, fallback, lat, lon) {
+  const isZip = blockKey && blockKey.includes('/zip_');
+  function nearbyFilter(p, cutoffStr) {
+    if (!p.psf || p.psf <= 0 || p.status !== 'SOLD' || p.closing_date < cutoffStr) return false;
+    if (bedsNum != null && p.beds !== bedsNum) return false;
+    if (isZip && lat && lon && p.lat && p.lon) {
+      const dlat = (p.lat - lat) * Math.PI/180, dlon = (p.lon - lon) * Math.PI/180;
+      const a = Math.sin(dlat/2)**2 + Math.cos(lat*Math.PI/180)*Math.cos(p.lat*Math.PI/180)*Math.sin(dlon/2)**2;
+      return 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) <= 0.35;
+    }
+    return p.block === blockKey;
+  }
+  const cutoff = new Date(); cutoff.setFullYear(cutoff.getFullYear() - 2);
+  const cutoffStr = cutoff.toISOString().slice(0, 10);
+  const comps = allProps.filter(p => nearbyFilter(p, cutoffStr));
+  if (comps.length >= 4) {
+    const psfs = comps.map(p => p.psf).sort((a, b) => a - b);
+    return { psf: psfs[Math.floor(psfs.length / 2)], n: comps.length, source: 'bed-matched 24mo' };
+  }
+  const cutoff36 = new Date(); cutoff36.setFullYear(cutoff36.getFullYear() - 3);
+  const cutoff36str = cutoff36.toISOString().slice(0, 10);
+  const comps36 = allProps.filter(p => nearbyFilter(p, cutoff36str));
+  if (comps36.length >= 3) {
+    const psfs = comps36.map(p => p.psf).sort((a, b) => a - b);
+    return { psf: psfs[Math.floor(psfs.length / 2)], n: comps36.length, source: 'bed-matched 36mo' };
+  }
+  return { psf: fallback || null, n: null, source: 'block overall median' };
+}
+
+function computeFairPrice() {
+  const blockKey  = document.getElementById('fp-block').value;
+  const sqft      = parseFloat(document.getElementById('fp-sqft').value);
+  const bedsVal   = document.getElementById('fp-beds').value;
+  const baths     = parseFloat(document.getElementById('fp-baths').value) || null;
+  const hoa       = parseFloat(document.getElementById('fp-hoa').value)   || 0;
+  const yearBuilt = parseInt(document.getElementById('fp-year').value)    || null;
+  const hasParking  = document.getElementById('fp-parking').checked;
+  const hasOutdoor  = document.getElementById('fp-outdoor').checked;
+
+  const res = document.getElementById('fp-results');
+
+  if (!blockKey) {
+    res.innerHTML = '<div style="color:var(--yellow);font-size:13px;padding:12px 0;">Please type and select a block number above.</div>';
+    res.style.display = 'block'; return;
+  }
+  if (!sqft || sqft < 100) {
+    res.innerHTML = '<div style="color:var(--yellow);font-size:13px;padding:12px 0;">Please enter a valid square footage.</div>';
+    res.style.display = 'block'; return;
+  }
+
+  const bkData  = allBlocks.find(b => b.block === blockKey);
+  const bedsNum = bedsVal === '' ? null : bedsVal === '4' ? 4 : parseInt(bedsVal);
+
+  // ── Rolling date cutoffs ───────────────────────────────────
+  const now     = new Date();
+  const c24     = new Date(now); c24.setFullYear(c24.getFullYear() - 2);
+  const c36     = new Date(now); c36.setFullYear(c36.getFullYear() - 3);
+  const cut24   = c24.toISOString().slice(0, 10);
+  const cut36   = c36.toISOString().slice(0, 10);
+
+  function matchBeds(p) {
+    if (bedsNum === null) return true;
+    if (bedsVal === '4') return p.beds >= 4;
+    return p.beds === bedsNum;
+  }
+
+  // Also try to size-match (within ±35% of input sqft)
+  function matchSize(p) {
+    if (!sqft || !p.sqft) return true;
+    return Math.abs(p.sqft - sqft) / sqft <= 0.35;
+  }
+
+  const _fpIsZip = blockKey && blockKey.includes('/zip_');
+  const _fpProp  = _fpIsZip ? allProps.find(p => p.block === blockKey && p.lat && p.lon) : null;
+  const blockSold = allProps.filter(p => {
+    if (!(p.status === 'SOLD' && p.psf > 0 && p.closing_date >= cut36)) return false;
+    if (_fpIsZip && _fpProp?.lat && _fpProp?.lon && p.lat && p.lon) {
+      const dlat = (p.lat - _fpProp.lat) * Math.PI/180, dlon = (p.lon - _fpProp.lon) * Math.PI/180;
+      const a = Math.sin(dlat/2)**2 + Math.cos(_fpProp.lat*Math.PI/180)*Math.cos(p.lat*Math.PI/180)*Math.sin(dlon/2)**2;
+      return 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) <= 0.35;
+    }
+    return p.block === blockKey;
+  });
+
+  // Try progressively wider pools
+  let comps, compLabel, usingSize = false;
+
+  const c1 = blockSold.filter(p => p.closing_date >= cut24 && matchBeds(p) && matchSize(p));
+  const c2 = blockSold.filter(p => p.closing_date >= cut24 && matchBeds(p));
+  const c3 = blockSold.filter(p =>                            matchBeds(p));
+  const c4 = blockSold.filter(p => p.closing_date >= cut24);
+  const c5 = blockSold;
+
+  if (c1.length >= 5) {
+    comps = c1; compLabel = `${c1.length} sales · last 24 mo · bed + size matched`; usingSize = true;
+  } else if (c2.length >= 4) {
+    comps = c2; compLabel = `${c2.length} sales · last 24 mo · bed matched`;
+  } else if (c3.length >= 3) {
+    comps = c3; compLabel = `${c3.length} sales · last 36 mo · bed matched`;
+  } else if (c4.length >= 4) {
+    comps = c4; compLabel = `${c4.length} sales · last 24 mo · all beds`;
+  } else {
+    comps = c5; compLabel = `${c5.length} sales · last 36 mo · all beds`;
+  }
+
+  if (!comps.length) {
+    res.innerHTML = '<div style="color:var(--yellow);font-size:13px;padding:12px 0;">Not enough sales data on this block to generate a price range. Try a nearby block.</div>';
+    res.style.display = 'block'; return;
+  }
+
+  const compPsfs = comps.map(p => p.psf).sort((a, b) => a - b);
+
+  function pct(arr, p) {
+    if (!arr.length) return null;
+    const idx = (p / 100) * (arr.length - 1);
+    const lo = Math.floor(idx), hi = Math.ceil(idx);
+    return arr[lo] + (arr[hi] - arr[lo]) * (idx - lo);
+  }
+
+  // ── Base PSF from comps or fallback ───────────────────────
+  let rawP25, rawP50, rawP75, psfSource;
+  if (compPsfs.length >= 3) {
+    rawP25 = pct(compPsfs, 25);
+    rawP50 = pct(compPsfs, 50);
+    rawP75 = pct(compPsfs, 75);
+    psfSource = 'comp_dist';
+  } else {
+    const fb = bkData?.med_psf_recent || bkData?.med_psf || 0;
+    rawP25 = fb * 0.90; rawP50 = fb; rawP75 = fb * 1.10;
+    psfSource = 'block_fallback';
+    compLabel = 'Insufficient comps — using block median PSF ±10%';
+  }
+
+  // ── Size adjustment ────────────────────────────────────────
+  // Correct for how this property's sqft deviates from typical for its bed type.
+  // Only apply if we're NOT already size-matched (to avoid double-counting).
+  const sizeFactor = (!usingSize && bedsVal !== '') ? getSizeFactor(bedsVal, sqft) : 1.0;
+  const sizeAdj    = Math.round((sizeFactor - 1) * 100);
+
+  // ── Amenity adjustment ─────────────────────────────────────
+  const _fpBlock = document.getElementById('fp-block')?.value || '';
+  const _fpMkt   = allBlocks.find(b=>b.block===_fpBlock)?.market || 'jc';
+  const prem     = MARKET_META[_fpMkt]?.prems || MARKET_META.jc.prems;
+  const bKey    = bedsNum != null ? String(Math.min(bedsNum, 3)) : '2';
+  const parkPct = hasParking ? (prem.by_beds?.parking?.[bKey] ?? prem.parking_psf_pct ?? 8.3) : 0;
+  const outPct  = hasOutdoor ? (prem.by_beds?.outdoor?.[bKey]  ?? prem.outdoor_psf_pct  ?? 7.9) : 0;
+  const comboPct = (hasParking && hasOutdoor)
+    ? Math.min(parkPct + outPct, prem.both_psf_pct ?? 13.7)
+    : parkPct + outPct;
+
+  // Strip avg block amenity mix, re-apply this property's premiums
+  const blockAvgPremPct = 0.40 * (prem.parking_psf_pct || 8.3) + 0.55 * (prem.outdoor_psf_pct || 7.9);
+  const netAmenityFactor = (1 / (1 + blockAvgPremPct / 100)) * (1 + comboPct / 100);
+
+  // Apply both adjustments
+  const adjP25 = rawP25 * sizeFactor * netAmenityFactor;
+  const adjP50 = rawP50 * sizeFactor * netAmenityFactor;
+  const adjP75 = rawP75 * sizeFactor * netAmenityFactor;
+
+  // ── Final prices ───────────────────────────────────────────
+  const priceLow  = Math.round(adjP25 * sqft / 1000) * 1000;
+  const priceMid  = Math.round(adjP50 * sqft / 1000) * 1000;
+  const priceHigh = Math.round(adjP75 * sqft / 1000) * 1000;
+
+  // ── HOA capitalization (10yr horizon, 7% discount rate) ───
+  const hoaCapitalized = hoa > 0 ? Math.round(hoa * 12 / 0.07) : 0;
+  const trueValueMid   = priceMid - hoaCapitalized;
+
+  // ── Taxes from comps ──────────────────────────────────────
+  const taxComps = comps.filter(p => p.taxes > 0);
+  const medTax   = taxComps.length >= 3
+    ? taxComps.map(p => p.taxes).sort((a,b)=>a-b)[Math.floor(taxComps.length/2)]
+    : null;
+
+  // ── Block context ──────────────────────────────────────────
+  const estScore = bkData?.est_score;
+  const emgScore = bkData?.emg_score;
+  const cagr     = bkData?.cagr;
+  const proj3    = cagr && priceMid ? Math.round(priceMid * Math.pow(1 + cagr/100, 3) / 1000) * 1000 : null;
+  const proj5    = cagr && priceMid ? Math.round(priceMid * Math.pow(1 + cagr/100, 5) / 1000) * 1000 : null;
+
+  // ── Comparable sales table ─────────────────────────────────
+  const recentComps = [...comps]
+    .sort((a, b) => (b.closing_date||'').localeCompare(a.closing_date||''))
+    .slice(0, 8);
+
+  const compRows = recentComps.map(p => {
+    const amenity = [p.parking ? '🚗' : '', p.outdoor ? '🌿' : ''].filter(Boolean).join(' ') || '—';
+    const psf     = Math.round(p.psf);
+    const psfColor = psf > adjP50 * 1.05 ? 'var(--red)' : psf < adjP50 * 0.95 ? 'var(--green)' : 'var(--text)';
+    const addr    = [p.address, p.unit ? '#'+p.unit : ''].filter(Boolean).join(' ');
+    return `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:7px 10px;font-size:12px;color:var(--muted);">${p.closing_date?.slice(0,7)||'—'}</td>
+      <td style="padding:7px 10px;font-size:12px;">${addr}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:center;">${p.beds||'—'}bd</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:center;">${p.sqft ? Number(p.sqft).toLocaleString() : '—'}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:center;">${amenity}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:right;color:${psfColor};">$${psf.toLocaleString()}/sf</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:right;font-weight:600;">$${Number(p.sold_price||0).toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Adjustment breakdown chips ─────────────────────────────
+  const chipStyle = 'background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-size:11px;';
+  const arrStyle  = 'color:var(--muted);padding:7px 2px;font-size:11px;';
+
+  const amenityLabel = comboPct > 0
+    ? `+${comboPct.toFixed(1)}% (${[hasParking?'parking':'',hasOutdoor?'outdoor':''].filter(Boolean).join('+')})`
+    : 'no amenity adj.';
+
+  const sizeLabel = Math.abs(sizeAdj) >= 1
+    ? (sizeAdj > 0 ? `+${sizeAdj}%` : `${sizeAdj}%`) + ' size adj.'
+    : 'size neutral';
+
+  const hoaNote = hoa > 0
+    ? `<div style="margin-top:10px;font-size:11px;color:var(--yellow);">HOA $${hoa.toLocaleString()}/mo capitalizes to ~$${hoaCapitalized.toLocaleString()} in ownership cost → effective fair value ~<strong>$${trueValueMid.toLocaleString()}</strong></div>`
+    : '';
+
+  const taxNote = medTax
+    ? `<div style="margin-top:6px;font-size:11px;color:var(--muted);">Median annual taxes on comparable sales: ~$${Math.round(medTax).toLocaleString()}/yr ($${Math.round(medTax/12).toLocaleString()}/mo)</div>`
+    : '';
+
+  const projNote = proj5
+    ? `<div style="margin-top:6px;font-size:11px;color:var(--muted);">At block CAGR of ${cagr?.toFixed(1)}%, this property could reach $${proj3?.toLocaleString()} (3yr) → $${proj5?.toLocaleString()} (5yr)</div>`
+    : '';
+
+  // ── Render ─────────────────────────────────────────────────
+  res.style.display = 'block';
+  res.innerHTML = `
+    <div class="scorer-card" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
+        <div>
+          <div style="font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Fair Price Range — Block ${bkData?.block_raw}</div>
+          <div style="font-size:11px;color:var(--muted);">${Number(sqft).toLocaleString()} sqft${bedsVal ? ' · ' + bedsVal + ' bed' : ''}${hasParking?' · 🚗':''}${hasOutdoor?' · 🌿':''}</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:right;max-width:260px;">${compLabel}</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px;">
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Low · 25th %ile</div>
+          <div style="font-size:22px;font-weight:800;color:var(--green);">$${priceLow.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">$${Math.round(adjP25)}/sqft</div>
+        </div>
+        <div style="background:var(--bg);border:2px solid var(--accent);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Fair Value · Median</div>
+          <div style="font-size:26px;font-weight:800;color:var(--accent);">$${priceMid.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">$${Math.round(adjP50)}/sqft</div>
+        </div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">High · 75th %ile</div>
+          <div style="font-size:22px;font-weight:800;color:var(--yellow);">$${priceHigh.toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">$${Math.round(adjP75)}/sqft</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:14px;">
+        <div style="${chipStyle}"><span style="color:var(--muted);">Comp median</span> <strong>$${Math.round(rawP50)}/sf</strong></div>
+        ${Math.abs(sizeAdj) >= 1 ? `<div style="${arrStyle}">→</div><div style="${chipStyle}"><span style="color:var(--muted);">Size adj</span> <strong style="color:${sizeAdj>0?'var(--green)':'var(--red)'};">${sizeAdj>0?'+':''}${sizeAdj}%</strong></div>` : ''}
+        <div style="${arrStyle}">→</div>
+        <div style="${chipStyle}"><span style="color:var(--muted);">Amenity adj</span> <strong style="color:${comboPct>0?'var(--green)':'var(--muted)'};">${amenityLabel}</strong></div>
+        <div style="${arrStyle}">→</div>
+        <div style="${chipStyle};border-color:var(--accent);"><span style="color:var(--accent);">Adjusted</span> <strong>$${Math.round(adjP50)}/sf</strong></div>
+      </div>
+
+      ${hoaNote}${taxNote}${projNote}
+    </div>
+
+    <div class="scorer-card" style="margin-bottom:14px;">
+      <h3>Block Quality</h3>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        ${estScore!=null?`<div><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">Established</div><div style="font-size:20px;font-weight:700;color:${scoreColor(estScore)};">${Math.round(estScore)}</div></div>`:''}
+        ${emgScore!=null?`<div><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">Emerging</div><div style="font-size:20px;font-weight:700;color:${scoreColor(emgScore)};">${Math.round(emgScore)}</div></div>`:''}
+        ${cagr!=null?`<div><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">Hist. CAGR</div><div style="font-size:20px;font-weight:700;color:${cagr>5?'var(--green)':cagr>0?'var(--yellow)':'var(--red)'};">${cagr.toFixed(1)}%</div></div>`:''}
+        ${bkData?.med_dom!=null?`<div><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">Median DOM</div><div style="font-size:20px;font-weight:700;">${Math.round(bkData.med_dom)}</div></div>`:''}
+        ${bkData?.med_stl!=null?`<div><div style="font-size:10px;color:var(--muted);margin-bottom:3px;">Sale/List</div><div style="font-size:20px;font-weight:700;">${(bkData.med_stl*100).toFixed(1)}%</div></div>`:''}
+      </div>
+    </div>
+
+    ${recentComps.length > 0 ? `
+    <div class="scorer-card">
+      <h3>Comparable Sales Used</h3>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:left;">DATE</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:left;">ADDRESS</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:center;">BEDS</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:center;">SQFT</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:center;">AMTY</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:right;">PSF</th>
+            <th style="padding:6px 10px;font-size:10px;color:var(--muted);font-weight:500;text-align:right;">SOLD</th>
+          </tr></thead>
+          <tbody>${compRows}</tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);">PSF green = &gt;5% below adjusted fair value; red = &gt;5% above.</div>
+    </div>` : ''}
+  `;
+}
+// ══════════════════════════════════════════════════════════════
+// Build a deduplicated address index from the full dataset
+const addrIndex = [];
+const seenAddrs = new Set();
+allProps.forEach(p => {
+  const key = normAddr(p.address);
+  if (!seenAddrs.has(key)) {
+    seenAddrs.add(key);
+    addrIndex.push({ raw: p.address, norm: key, p });
+  }
+});
+
+let scorerNewAddr = null;
+
+function scorerSearch(query) {
+  // Strip unit suffix before normalizing so "272 TERRACE AVE #2A" matches "272 TERRACE AVE"
+  const q = normAddr(query.replace(/#\S*/g, '').trim());
+  const dd = document.getElementById('scorer-dropdown');
+  document.getElementById('scorer-new-form').style.display = 'none';
+  document.getElementById('scorer-results').style.display = 'none';
+
+  if (q.length < 2) { dd.style.display = 'none'; return; }
+
+  // Find matches: exact prefix first, then contains
+  const prefix  = addrIndex.filter(a => a.norm.startsWith(q));
+  const contains = addrIndex.filter(a => !a.norm.startsWith(q) && a.norm.includes(q));
+  const matches  = [...prefix, ...contains].slice(0, 8);
+
+  if (!matches.length) {
+    dd.innerHTML = `<div class="dd-item" style="color:var(--muted)">No match — <b style="color:var(--text)">score as new listing?</b></div>`;
+    dd.style.display = 'block';
+    dd.querySelector('.dd-item').onclick = () => {
+      scorerNewAddr = normAddr(query);
+      dd.style.display = 'none';
+      document.getElementById('scorer-new-form').style.display = 'block';
+    };
+    return;
+  }
+
+  dd.innerHTML = '';
+  matches.forEach(m => {
+    // Find all transactions for this address
+    const txns = allProps.filter(p => normAddr(p.address) === m.norm && p.sold_price);
+    const lastTxn = txns.sort((a,b) => (b.closing_date||'').localeCompare(a.closing_date||''))[0];
+    const div = document.createElement('div');
+    div.className = 'dd-item';
+    div.innerHTML = `
+      <div class="dd-addr">${m.raw}</div>
+      <div class="dd-meta">${txns.length} transaction${txns.length!==1?'s':''} in dataset
+        ${lastTxn ? ` · Last sold ${lastTxn.closing_date?.slice(0,7)||''} for ${lastTxn.sold_price?'$'+Number(lastTxn.sold_price).toLocaleString():'—'}` : ''}
+      </div>`;
+    div.onclick = () => { dd.style.display='none'; scoreAddress(m.norm); };
+    dd.appendChild(div);
+  });
+  dd.style.display = 'block';
+}
+
+function clearScorer() {
+  document.getElementById('scorer-input').value = '';
+  document.getElementById('scorer-dropdown').style.display = 'none';
+  document.getElementById('scorer-new-form').style.display = 'none';
+  document.getElementById('scorer-results').style.display = 'none';
+  scorerNewAddr = null;
+}
+
+function scoreAddress(normAddress) {
+  // Get all transactions for this address
+  const txns = allProps.filter(p => normAddr(p.address) === normAddress);
+  const sold = txns.filter(p => p.sold_price && p.status === 'SOLD' && !p.distressed)
+                   .sort((a,b) => (b.closing_date||'').localeCompare(a.closing_date||''));
+  const latest = sold[0] || txns[0];
+  if (!latest) return;
+
+  renderScorerResults({
+    address:    latest.address,
+    unit:       latest.unit,
+    complex:    latest.complex,
+    block:      latest.block,
+    block_raw:  latest.block_raw,
+    beds:       latest.beds,
+    baths:      latest.baths,
+    sqft:       latest.sqft,
+    price:      latest.sold_price || latest.list_price,
+    psf:        latest.psf,
+    hoa:        latest.hoa,
+    taxes:      latest.taxes,
+    closing_date: latest.closing_date,
+    dom:        latest.dom,
+    est_score:  latest.est_score,
+    emg_score:  latest.emg_score,
+    est_rank:   latest.est_rank,
+    emg_rank:   latest.emg_rank,
+    block_cagr: latest.block_cagr,
+    block_psf:  latest.block_psf,
+    block_dom:  latest.block_dom,
+    block_stl:  latest.block_stl,
+    block_n:    latest.block_n,
+    parking:    latest.parking,
+    parking_conf: latest.parking_conf,
+    outdoor:    latest.outdoor,
+    outdoor_conf: latest.outdoor_conf,
+    outdoor_type: latest.outdoor_type,
+    remarks:    latest.remarks,
+    status:     latest.status,
+    isNew:      false,
+    allTxns:    sold,
+    path_station:    latest.path_station,
+    path_dist_mi:    latest.path_dist_mi,
+    hblr_station:    latest.hblr_station,
+    hblr_dist_mi:    latest.hblr_dist_mi,
+    radius_psf:      latest.radius_psf,
+    radius_n_comps:  latest.radius_n_comps,
+    market:          latest.market,
+    lat:             latest.lat,
+    lon:             latest.lon,
+  });
+}
+
+function scoreNewListing() {
+  const price = parseFloat(document.getElementById('nf-price').value);
+  const sqft  = parseFloat(document.getElementById('nf-sqft').value);
+  if (!price || !sqft) { alert('Please enter asking price and sq ft'); return; }
+
+  // Try to find block from address
+  const addr = scorerNewAddr || '';
+  const match = addrIndex.find(a => a.norm.includes(addr.split(' ')[0]) && addr.split(' ').slice(1).some(w => a.norm.includes(w)));
+  const refProp = match?.p;
+
+  renderScorerResults({
+    address:    scorerNewAddr || 'New Listing',
+    block:      refProp?.block || null,
+    block_raw:  refProp?.block_raw || null,
+    price,
+    sqft,
+    psf:        price / sqft,
+    est_score:  refProp?.est_score,
+    emg_score:  refProp?.emg_score,
+    est_rank:   refProp?.est_rank,
+    emg_rank:   refProp?.emg_rank,
+    block_cagr: refProp?.block_cagr,
+    block_psf:  refProp?.block_psf,
+    block_dom:  refProp?.block_dom,
+    block_stl:  refProp?.block_stl,
+    block_n:    refProp?.block_n,
+    status:     'ACTIVE',
+    isNew:      true,
+    allTxns:    [],
+    path_station:    refProp?.path_station,
+    path_dist_mi:    refProp?.path_dist_mi,
+    hblr_station:    refProp?.hblr_station,
+    hblr_dist_mi:    refProp?.hblr_dist_mi,
+    radius_psf:      refProp?.radius_psf,
+    radius_n_comps:  refProp?.radius_n_comps,
+  });
+}
+
+function renderScorerResults(d) {
+  const res = document.getElementById('scorer-results');
+  res.style.display = 'block';
+
+  // ── AMENITY PREMIUMS ────────────────────────────────────────
+  const prems = getPrems(d);
+  const bedsKey = String(Math.min(d.beds||2, 3));
+  const parkPremPct = d.parking
+    ? (prems.by_beds?.parking?.[bedsKey] ?? prems.parking_psf_pct ?? 8.3)
+    : 0;
+  const outPremPct = d.outdoor
+    ? (prems.by_beds?.outdoor?.[bedsKey] ?? prems.outdoor_psf_pct ?? 7.9)
+    : 0;
+  // Use additive but cap at empirical "both" premium
+  const combinedPremPct = (d.parking && d.outdoor)
+    ? Math.min(parkPremPct + outPremPct, prems.both_psf_pct ?? 13.7)
+    : parkPremPct + outPremPct;
+
+  // ── APPRECIATION SINCE SALE ────────────────────────────────
+  // For sold properties, forward-appreciate price + PSF to today using block CAGR.
+  // Active listings are already at current ask — no adjustment needed.
+  // For zip-fallback blocks, block_cagr is polluted by the full zip (e.g. Port Imperial).
+  // Use the area-wide CAGR instead so projections reflect the actual neighborhood trend.
+  const _isZipFallback = d.block && d.block.includes('/zip_');
+  const _cagr = _isZipFallback ? heightsCagr : (d.block_cagr ? d.block_cagr / 100 : null);
+  let yearsSinceSale = 0;
+  let todayPsf  = d.psf   || 0;
+  let todayEst  = d.price || 0;
+  let todayEstNote = '';
+  if (_cagr && d.closing_date && d.status === 'SOLD') {
+    yearsSinceSale = Math.max(0, (Date.now() - new Date(d.closing_date).getTime()) / (365.25*24*60*60*1000));
+    if (yearsSinceSale > 0.1) {
+      const gf = Math.pow(1 + _cagr, yearsSinceSale);
+      todayPsf  = (d.psf   || 0) * gf;
+      todayEst  = Math.round((d.price || 0) * gf / 1000) * 1000;
+      todayEstNote = `${d.closing_date.slice(0,7)} sale price + ${Number(d.block_cagr).toFixed(1)}% CAGR × ${yearsSinceSale.toFixed(1)} yrs`;
+    }
+  }
+  const gainToday = yearsSinceSale > 0.1 ? todayEst - (d.price || 0) : null;
+
+  // ── DEAL SCORE ──────────────────────────────────────────────
+  // Zip-fallback block scores are computed from the full zip (e.g. Port Imperial mixed with
+  // inland). Null them out so block quality isn't distorted by irrelevant properties.
+  const blockQuality = blockQualityScore(
+    _isZipFallback ? null : d.est_score,
+    _isZipFallback ? null : d.emg_score,
+    _isZipFallback ? null : d.block_n
+  );
+
+  // Compare estimated TODAY psf vs current block median — apples-to-apples regardless of sale date.
+  // Use radius_psf as the reference for zip-fallback properties.
+  const _refBlockPsfRaw = (_isZipFallback ? d.radius_psf : null) || d.block_psf;
+  let pricePct = null, priceScore = 50, adjustedBlockPsf = null, bmRef = null;
+  if (todayPsf && _refBlockPsfRaw) {
+    const blockAvgPremPct = 0.40 * (prems.parking_psf_pct||8.3) + 0.55 * (prems.outdoor_psf_pct||7.9);
+    bmRef = getBedMatchedBlockPsf(d.block, d.beds||null, _refBlockPsfRaw, d.lat, d.lon);
+    const refBlockPsf = bmRef.psf || _refBlockPsfRaw;
+    const strippedBlockPsf = refBlockPsf / (1 + blockAvgPremPct/100);
+    adjustedBlockPsf = strippedBlockPsf * (1 + combinedPremPct/100);
+    // HOA-adjusted PSF: capitalize monthly HOA at 7% discount rate to get effective $/sqft.
+    const hoaAdjTodayPsf = (d.hoa && d.sqft) ? todayPsf - (d.hoa * 12 / 0.07) / d.sqft : todayPsf;
+    pricePct = (adjustedBlockPsf - hoaAdjTodayPsf) / adjustedBlockPsf * 100;
+    priceScore = Math.min(100, Math.max(0, 50 + pricePct * 1.5));
+  }
+
+  const dealScore = blockQuality != null
+    ? Math.round(blockQuality * 0.60 + priceScore * 0.40)
+    : null;
+
+  const dc = scoreColor(dealScore);
+
+  // Verdict text
+  let verdict, verdictSub;
+  if (dealScore == null) {
+    verdict = 'Insufficient Block Data';
+    verdictSub = 'Not enough comparable sales on this block to generate a reliable score. The property may be in a newer market area.';
+  } else if (dealScore >= 70) {
+    verdict = pricePct > 5 ? 'Strong Buy Signal' : 'Strong Block, Fair Price';
+    verdictSub = pricePct > 5
+      ? `Priced ${pricePct.toFixed(1)}% below the block median on a top-performing block. Both the neighborhood fundamentals and the price point work in your favor.`
+      : `Excellent block fundamentals. Price is in line with recent comps — no discount, but you're buying quality.`;
+  } else if (dealScore >= 50) {
+    verdict = pricePct > 0 ? 'Solid Value' : 'Good Block, Watch the Price';
+    verdictSub = pricePct > 0
+      ? `Moderate block scores with a favorable price vs. comps. A reasonable entry point with upside if block trends continue.`
+      : `Block fundamentals are decent, but this property is priced at or above the recent comp median. Negotiate if you can.`;
+  } else {
+    verdict = pricePct > 10 ? 'Speculative — Value Only' : 'Caution';
+    verdictSub = pricePct > 10
+      ? `Block scores are low, but the price is meaningfully below comp medians. Could work as a value play if you believe the block will catch up.`
+      : `Weak block appreciation signals and price is not discounted relative to comps. Hard to justify at current ask.`;
+  }
+
+  // ── PROJECTIONS ──────────────────────────────────────────────
+  // todayEst / yearsSinceSale / gainToday / todayEstNote already computed above.
+  const price = d.price || 0;
+  const _blockMeta = getBlockMeta(d.block);
+  const _thinBlock = (_blockMeta.n_sales || 0) < 10;
+  // For thin blocks use Heights-wide CAGR as fallback instead of suppressing projections.
+  // Block CAGR from < 10 sales is too noisy on its own, but the Heights trend is reliable.
+  const _projCagr  = _thinBlock ? (heightsCagr ?? _cagr) : _cagr;
+  const _usingAreaCagr = _thinBlock && heightsCagr != null;
+  const proj3 = _projCagr && todayEst ? Math.round(todayEst * Math.pow(1 + _projCagr, 3) / 1000) * 1000 : null;
+  const proj5 = _projCagr && todayEst ? Math.round(todayEst * Math.pow(1 + _projCagr, 5) / 1000) * 1000 : null;
+  const gain3 = proj3 ? proj3 - todayEst : null;
+  const gain5 = proj5 ? proj5 - todayEst : null;
+
+  // ── RECENT COMPS ─────────────────────────────────────────────
+  // For zip-fallback blocks use radius comps to avoid cross-neighborhood pollution
+  const _cut2yr = (() => { const c = new Date(); c.setFullYear(c.getFullYear()-2); return c.toISOString().slice(0,10); })();
+  const _isZipBlock = d.block && d.block.includes('/zip_');
+  const blockComps = allProps.filter(p => {
+    if (!(p.status==='SOLD' && !p.distressed && p.sold_price && p.psf && p.closing_date >= _cut2yr)) return false;
+    if (_isZipBlock && d.lat && d.lon && p.lat && p.lon) {
+      const dlat = (p.lat - d.lat) * Math.PI/180, dlon = (p.lon - d.lon) * Math.PI/180;
+      const a = Math.sin(dlat/2)**2 + Math.cos(d.lat*Math.PI/180)*Math.cos(p.lat*Math.PI/180)*Math.sin(dlon/2)**2;
+      return 3958.8 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) <= 0.35;
+    }
+    return p.block === d.block;
+  }).sort((a,b) => (b.closing_date||'').localeCompare(a.closing_date||''));
+
+  const matchedComps = blockComps.filter(p =>
+    p.parking === d.parking && p.outdoor === d.outdoor
+  );
+  const comps = (matchedComps.length >= 3 ? matchedComps : blockComps).slice(0, 6);
+  const compsAreMatched = matchedComps.length >= 3;
+
+  // ── FLAGS ────────────────────────────────────────────────────
+  const flags = [];
+  if (d.emg_score >= 55) flags.push({text:'High Emerging Score', col:'var(--green)'});
+  if (d.est_score >= 65) flags.push({text:'Proven Block', col:'var(--accent)'});
+  if (pricePct > 8)  flags.push({text:`${pricePct.toFixed(0)}% Below Comp Median`, col:'var(--green)'});
+  if (pricePct < -8) flags.push({text:`${Math.abs(pricePct).toFixed(0)}% Above Comp Median`, col:'var(--red)'});
+  if (bmRef && bmRef.source === 'block overall median' && d.beds != null)
+    flags.push({text:'⚠ Cross-bed comp fallback — few same-bed sales on this block', col:'var(--yellow)'});
+  if (d.parking) flags.push({text:`🚗 Parking (${d.parking_conf})`, col:'var(--accent)'});
+  if (d.outdoor) flags.push({text:`🌿 ${d.outdoor_type||'Outdoor'} (${d.outdoor_conf})`, col:'var(--green)'});
+  if (!d.parking) flags.push({text:'🚗 No parking', col:'var(--red)'});
+  if (!d.outdoor) flags.push({text:'🌿 No outdoor space', col:'var(--muted)'});
+  if (d.hoa > 800)   flags.push({text:`High HOA ($${Math.round(d.hoa).toLocaleString()}/mo)`, col:'var(--yellow)'});
+  if (d.dom != null && d.dom < 10) flags.push({text:'Fast Mover (DOM < 10)', col:'var(--yellow)'});
+  if (d.isNew) flags.push({text:'New Listing — Limited Data', col:'var(--yellow)'});
+
+  // ── RENDER ───────────────────────────────────────────────────
+  const addrLine = [d.address, d.unit].filter(Boolean).join(' #');
+
+  res.innerHTML = `
+    <!-- Header -->
+    <div class="scorer-card" style="margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+        <div>
+          <div style="font-size:18px;font-weight:700;">${addrLine}</div>
+          ${d.complex ? `<div style="color:var(--muted);font-size:12px;margin-top:2px;">${d.complex}</div>` : ''}
+          <div style="color:var(--muted);font-size:11px;margin-top:4px;">
+            ${d.block_raw ? `Block ${d.block_raw}` : ''}
+            ${d.beds!=null?` · ${d.beds} bed`:''}
+            ${d.baths!=null?` / ${d.baths} bath`:''}
+            ${d.sqft&&d.sqft>0?` · ${Number(d.sqft).toLocaleString()} sqft`:''}
+            ${d.closing_date ? ` · Sold ${d.closing_date.slice(0,7)}` : ''}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          ${yearsSinceSale > 0.1 ? `
+            <div style="font-size:12px;color:var(--muted);text-decoration:line-through;margin-bottom:2px;">$${Number(d.price).toLocaleString()} sold ${d.closing_date.slice(0,7)}</div>
+            <div style="font-size:22px;font-weight:800;color:var(--yellow);">$${Number(todayEst).toLocaleString()}</div>
+            <div style="color:var(--muted);font-size:11px;">~$${Math.round(todayPsf)}/sqft est. today</div>
+          ` : `
+            <div style="font-size:24px;font-weight:800;">${d.price?'$'+Number(d.price).toLocaleString():'—'}</div>
+            <div style="color:var(--muted);font-size:11px;">${d.psf?'$'+Math.round(d.psf)+'/sqft':''}</div>
+          `}
+        </div>
+      </div>
+
+      <!-- Deal Score hero -->
+      <div class="score-hero">
+        <div class="big-score">
+          <div class="num" style="color:${dc}">${dealScore??'—'}</div>
+          <div class="lbl">Deal Score</div>
+        </div>
+        <div class="score-verdict">
+          <div class="verdict-title" style="color:${dc}">${verdict}</div>
+          <div class="verdict-sub">${verdictSub}</div>
+          ${flags.length ? `<div style="margin-top:10px;">${flags.map(f=>`<span class="flag" style="background:${f.col}22;color:${f.col}">${f.text}</span>`).join('')}</div>` : ''}
+        </div>
+      </div>
+
+      <!-- Key metrics -->
+      <div class="metric-grid">
+        <div class="metric-box">
+          <div class="m-lbl">Block — Established</div>
+          <div class="m-val" style="color:${scoreColor(d.est_score)}">${d.est_score!=null?d.est_score.toFixed(0):'—'}</div>
+          <div class="m-sub">${d.est_rank?'Rank #'+d.est_rank+' of scored blocks':'No historical data'}</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-lbl">Block — Emerging</div>
+          <div class="m-val" style="color:${scoreColor(d.emg_score)}">${d.emg_score!=null?d.emg_score.toFixed(0):'—'}</div>
+          <div class="m-sub">${d.emg_rank?'Rank #'+d.emg_rank+' for future potential':'No signal data'}</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-lbl">Price vs. Block Median</div>
+          <div class="m-val" style="color:${pricePct==null?'var(--muted)':pricePct>0?'var(--green)':'var(--red)'}">
+            ${pricePct==null?'—':(pricePct>0?'':'')+pricePct.toFixed(1)+'%'}
+          </div>
+          <div class="m-sub">${yearsSinceSale>0.1?'est. today':'asking'} vs $${adjustedBlockPsf?Math.round(adjustedBlockPsf).toLocaleString():d.block_psf?Math.round(d.block_psf).toLocaleString():'—'}/sqft adj. ${(!d.block_psf && d.radius_psf) ? `0.3mi radius median (${d.radius_n_comps} comps)` : 'block median'}</div>
+        </div>
+        <div class="metric-box" style="${(d.block_cagr||0)<0?'border-color:var(--yellow)44;':''}">
+          <div class="m-lbl">Block CAGR (5yr)</div>
+          <div class="m-val" style="color:${(d.block_cagr||0)>0?'var(--green)':(d.block_cagr||0)<0?'var(--yellow)':'var(--muted)'}">
+            ${d.block_cagr!=null?(d.block_cagr>0?'+':'')+Number(d.block_cagr).toFixed(1)+'%':'—'}
+          </div>
+          <div class="m-sub">${(()=>{const bm=getBlockMeta(d.block);if((d.block_cagr||0)<0&&(bm.n_sales||0)<10)return'⚠ Thin data ('+Math.round(bm.n_sales||0)+' sales)';if((d.block_cagr||0)<0)return'⚠ Check demand signals below';return'annual PSF growth';})()}</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-lbl">Block Median DOM</div>
+          <div class="m-val">${d.block_dom!=null?Math.round(d.block_dom)+'d':'—'}</div>
+          <div class="m-sub">days on market (demand signal)</div>
+        </div>
+        <div class="metric-box">
+          <div class="m-lbl">Block Sale-to-List</div>
+          <div class="m-val" style="color:${d.block_stl>=1?'var(--green)':'var(--muted)'}">
+            ${d.block_stl!=null?(d.block_stl*100).toFixed(1)+'%':'—'}
+          </div>
+          <div class="m-sub">${d.block_n?d.block_n+' comp sales':''}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block signal breakdown -->
+    ${(()=>{
+      const bm=getBlockMeta(d.block);
+      if(!bm.n_sales) return '';
+      const nS=Math.round(bm.n_sales);
+      const negCagr=(d.block_cagr||0)<0;
+      const lowN=nS<10;
+      const bar=(s,c)=>s!=null?`<div style="height:3px;border-radius:2px;background:var(--border);margin-top:3px;"><div style="width:${s}%;height:100%;border-radius:2px;background:${c};"></div></div>`:'';
+      const sig=(s,thresh)=>s>thresh?'var(--green)':s>thresh*0.6?'var(--yellow)':'var(--red)';
+      return `
+    <div class="scorer-card" style="${negCagr?'border-color:var(--yellow)44;':''}">
+      <h3>Block Signal Breakdown <span style="color:var(--muted);font-weight:400;font-size:11px;">${nS} sales${lowN?' · ⚠ thin data':''}</span></h3>
+      ${negCagr?`<div style="background:var(--yellow)11;border:1px solid var(--yellow)33;border-radius:8px;padding:9px 12px;margin-bottom:12px;font-size:11px;color:var(--yellow);">⚠ PSF trend is negative, but demand signals (DOM + sale-to-list) may tell a different story. ${lowN?'Only '+nS+' sales — a single outlier unit can flip CAGR negative.':'May reflect mixed building types on the same tax block.'}</div>`:''}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+        ${[['PRICE CAGR','30%',bm.est_s_cagr,(d.block_cagr||0)>0?'var(--green)':'var(--yellow)',d.block_cagr!=null?(d.block_cagr>0?'+':'')+Number(d.block_cagr).toFixed(1)+'%':'—'],
+           ['DAYS ON MKT','20%',bm.est_s_dom,sig(bm.est_s_dom||0,60),bm.med_dom?Math.round(bm.med_dom)+'d':'—'],
+           ['SALE/LIST','20%',bm.est_s_stl,(bm.med_stl||0)>=1?'var(--green)':'var(--muted)',bm.med_stl?(bm.med_stl*100).toFixed(1)+'%':'—'],
+           ['SUPPLY','15%',bm.est_s_inv,sig(bm.est_s_inv||0,60),bm.est_s_inv?Math.round(bm.est_s_inv)+'/100':'—']
+          ].map(([lbl,wt,score,col,val])=>`
+          <div style="background:var(--bg);border-radius:8px;padding:10px;">
+            <div style="font-size:9px;color:var(--muted);margin-bottom:2px;">${lbl} <span style="opacity:.6;">${wt}</span></div>
+            <div style="font-size:15px;font-weight:700;color:${col};">${val}</div>
+            ${bar(score,col)}
+            <div style="font-size:9px;color:var(--muted);margin-top:3px;">${score!=null?Math.round(score)+'/100':''}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+    })()}
+
+    <!-- Amenity analysis -->
+    <div class="scorer-card">
+      <h3>Amenity Analysis — Parking &amp; Outdoor Space</h3>
+      <div class="metric-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:12px;">
+        <div class="metric-box" style="border-color:${d.parking?'var(--accent)44':'var(--border)'}">
+          <div class="m-lbl">Dedicated Parking</div>
+          <div class="m-val" style="color:${d.parking?'var(--accent)':'var(--muted)'}">
+            ${d.parking ? (d.parking_conf==='high'?'✓ Confirmed':'~ Likely') : '✗ None mentioned'}
+          </div>
+          <div class="m-sub">
+            ${d.parking
+              ? `+${parkPremPct.toFixed(1)}% PSF premium for ${bedsKey==='0'?'studio':bedsKey+'BR'} (≈$${d.price&&d.psf?Math.round(todayEst*parkPremPct/100/1000)+'k':parkPremPct.toFixed(1)+'%'} est. value)`
+              : `Parking adds ~${prems.by_beds?.parking?.[bedsKey]??8}% PSF for ${bedsKey==='0'?'studio':bedsKey+'BR'} in ${MARKET_META[d.market||'jc']?.label||'this area'}`}
+          </div>
+        </div>
+        <div class="metric-box" style="border-color:${d.outdoor?'var(--green)44':'var(--border)'}">
+          <div class="m-lbl">Private Outdoor Space</div>
+          <div class="m-val" style="color:${d.outdoor?'var(--green)':'var(--muted)'}">
+            ${d.outdoor
+              ? (d.outdoor_conf==='high'?`✓ ${d.outdoor_type||'Outdoor'}`:` ~ Likely outdoor`)
+              : '✗ None mentioned'}
+          </div>
+          <div class="m-sub">
+            ${d.outdoor
+              ? `+${outPremPct.toFixed(1)}% PSF premium for ${bedsKey==='0'?'studio':bedsKey+'BR'} (≈$${d.price&&d.psf?Math.round(todayEst*outPremPct/100/1000)+'k':outPremPct.toFixed(1)+'%'} est. value)`
+              : `Outdoor adds ~${prems.by_beds?.outdoor?.[bedsKey]??8}% PSF for ${bedsKey==='0'?'studio':bedsKey+'BR'} in ${MARKET_META[d.market||'jc']?.label||'this area'}`}
+          </div>
+        </div>
+      </div>
+      ${combinedPremPct > 0 ? `
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;">
+        <b>Combined amenity premium: +${combinedPremPct.toFixed(1)}%</b>
+        ${adjustedBlockPsf ? `— Amenity-adjusted comp median: $${Math.round(adjustedBlockPsf).toLocaleString()}/sqft
+          (raw block median $${Math.round(d.block_psf).toLocaleString()}/sqft adjusted for this property's actual amenities)` : ''}
+      </div>` : `
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);">
+        No amenity premium applies. Price comparison is against unadjusted block median.
+      </div>`}
+      ${d.remarks ? `<div style="margin-top:10px;font-size:11px;color:var(--muted);font-style:italic;line-height:1.5;">"${d.remarks.slice(0,300)}${d.remarks.length>300?'…':''}"</div>` : ''}
+    </div>
+
+    <!-- Transit proximity -->
+    ${(d.path_dist_mi != null || d.hblr_dist_mi != null) ? `
+    <div class="scorer-card">
+      <h3>Transit Proximity</h3>
+      <div class="metric-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:0;">
+        ${d.path_dist_mi != null ? `
+        <div class="metric-box">
+          <div class="m-lbl">PATH Station</div>
+          <div class="m-val" style="color:var(--accent);">${(d.path_dist_mi*15).toFixed(1)} min walk</div>
+          <div class="m-sub">${d.path_station} · ${d.path_dist_mi < 0.1 ? 'steps away' : d.path_dist_mi.toFixed(2)+' mi'}</div>
+        </div>` : ''}
+        ${d.hblr_dist_mi != null ? `
+        <div class="metric-box">
+          <div class="m-lbl">Light Rail Station</div>
+          <div class="m-val" style="color:var(--green);">${(d.hblr_dist_mi*15).toFixed(1)} min walk</div>
+          <div class="m-sub">${d.hblr_station} · ${d.hblr_dist_mi < 0.1 ? 'steps away' : d.hblr_dist_mi.toFixed(2)+' mi'}</div>
+        </div>` : ''}
+      </div>
+    </div>` : ''}
+
+    <!-- Value projections -->
+    ${_cagr && price ? `
+    <div class="scorer-card">
+      <h3>Value Projection — ${_usingAreaCagr ? 'Heights-Wide CAGR' : 'If Block CAGR Continues'}</h3>
+      ${_usingAreaCagr ? `<div style="background:var(--yellow)11;border:1px solid var(--yellow)33;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--yellow);">⚠ Only ${Math.round(_blockMeta.n_sales||0)} sales on this block — using Heights-wide CAGR (${heightsCagr!=null?(heightsCagr*100).toFixed(1)+'%':'—'}/yr) instead of block trend. Block-specific trajectory may differ.</div>` : ''}
+      <div class="proj-row">
+        ${yearsSinceSale > 0.1 ? `
+        <div class="proj-box" style="border-color:var(--border);">
+          <div class="p-yr" style="color:var(--muted);">Sold ${d.closing_date.slice(0,7)}</div>
+          <div class="p-val" style="font-size:16px;color:var(--muted);">$${Number(price).toLocaleString()}</div>
+          <div class="p-gain" style="color:var(--muted);">purchase price</div>
+        </div>` : ''}
+        <div class="proj-box" style="border-color:${yearsSinceSale>0.1?'var(--yellow)44':'var(--border)'};">
+          <div class="p-yr" style="color:${yearsSinceSale>0.1?'var(--yellow)':'var(--muted)'};">Est. Value Today</div>
+          <div class="p-val" style="color:${yearsSinceSale>0.1?'var(--yellow)':'inherit'};">$${Number(todayEst).toLocaleString()}</div>
+          <div class="p-gain" style="color:${gainToday>0?'var(--green)':'var(--muted)'};">
+            ${gainToday ? '+$'+Number(gainToday).toLocaleString()+' since sale' : 'current asking'}
+          </div>
+        </div>
+        ${proj3 ? `
+        <div class="proj-box" style="border-color:var(--accent)44;">
+          <div class="p-yr">+3 Years</div>
+          <div class="p-val" style="color:var(--accent)">$${Number(proj3).toLocaleString()}</div>
+          <div class="p-gain" style="color:var(--green)">+$${Number(gain3).toLocaleString()} from today</div>
+        </div>
+        <div class="proj-box" style="border-color:var(--green)44;">
+          <div class="p-yr">+5 Years</div>
+          <div class="p-val" style="color:var(--green)">$${Number(proj5).toLocaleString()}</div>
+          <div class="p-gain" style="color:var(--green)">+$${Number(gain5).toLocaleString()} from today</div>
+        </div>` : ''}
+      </div>
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);">
+        ${todayEstNote?'Est. today: '+todayEstNote+'. ':''}${(()=>{
+          const bm=getBlockMeta(d.block);const nS=Math.round(bm.n_sales||0);
+          if(_usingAreaCagr) return 'Projection uses Heights-wide CAGR ('+( heightsCagr!=null?(heightsCagr*100).toFixed(1):'—')+'%/yr) — block has only '+nS+' sales. Past performance does not guarantee future results.';
+          if((d.block_cagr||0)<0) return '<span style="color:var(--yellow);">⚠ Negative CAGR may reflect mixed building types on this tax block, not genuine price decline.</span>';
+          return 'Projection assumes '+Number(d.block_cagr).toFixed(1)+'% CAGR forward. Past performance does not guarantee future results.';
+        })()}
+      </div>
+    </div>` : ''}
+
+    <!-- Recent comps -->
+    ${comps.length ? `
+    <div class="scorer-card">
+      ${(()=>{const addrs=[...new Set(blockComps.map(c=>c.address))];
+        const multi=addrs.length>1;
+        const note=multi?'<div style="font-size:10px;color:var(--yellow);margin-bottom:8px;">⚠ Block spans '+addrs.length+' addresses ('+addrs.slice(0,3).join(', ')+(addrs.length>3?'…':'')+') — mixed buildings may distort block CAGR</div>':'';
+        const title=compsAreMatched?'Amenity-matched':'All';
+        return '<h3>Recent Comps — Same Block · '+title+'</h3>'+note;
+      })()}
+      ${comps.map(c => {
+        const cAddr = [c.address, c.unit].filter(Boolean).join(' #');
+        const diffPsf = todayPsf && c.psf ? c.psf - todayPsf : null;  // compare comps to est. today PSF
+        return `<div class="comp-row">
+          <div class="comp-addr">
+            <div style="font-weight:500;font-size:12px;">${cAddr}</div>
+            <div style="color:var(--muted);font-size:10px;">${c.beds!=null?c.beds+'bd':''} ${c.baths!=null?c.baths+'ba':''} ${c.sqft&&c.sqft>0?Number(c.sqft).toLocaleString()+'sqft':''}</div>
+          </div>
+          <div class="comp-date">${c.closing_date?.slice(0,7)||'—'}</div>
+          <div style="font-weight:600;font-size:12px;width:100px;text-align:right;">$${Number(c.sold_price).toLocaleString()}</div>
+          <div class="comp-psf">$${Math.round(c.psf)}/sqft</div>
+          <div class="comp-diff" style="color:${diffPsf==null?'var(--muted)':diffPsf>0?'var(--green)':'var(--red)'}">
+            ${diffPsf==null?'—':(diffPsf>0?'+':'')+Math.round(diffPsf)+' vs you'}
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:10px;font-size:10px;color:var(--muted);">"vs you" = comp's $/sqft minus this property's $/sqft. Positive = comp was more expensive.</div>
+    </div>` : ''}
+
+    <!-- Transaction history for this address -->
+    ${d.allTxns?.length > 1 ? `
+    <div class="scorer-card">
+      <h3>Transaction History — This Address</h3>
+      ${d.allTxns.map((t,i) => {
+        const prev = d.allTxns[i+1];
+        const gain = prev?.sold_price && t.sold_price ? ((t.sold_price/prev.sold_price)-1)*100 : null;
+        return `<div class="comp-row">
+          <div class="comp-addr">
+            <div style="font-weight:500;">${t.closing_date?.slice(0,7)||'—'}</div>
+            <div style="color:var(--muted);font-size:10px;">DOM ${t.dom!=null?t.dom+'d':'—'} · ${t.stl?(t.stl*100).toFixed(1)+'% S/L':''}</div>
+          </div>
+          <div style="font-weight:700;">$${Number(t.sold_price).toLocaleString()}</div>
+          <div class="comp-psf">${t.psf?'$'+Math.round(t.psf)+'/sqft':'—'}</div>
+          <div class="comp-diff" style="color:${gain==null?'var(--muted)':gain>0?'var(--green)':'var(--red)'}">
+            ${gain==null?'first sale':(gain>0?'+':'')+gain.toFixed(1)+'% vs prev'}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>` : ''}
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+initStats();
+renderBlocks();
+renderChart(null);
+renderProps();
+renderActiveListings();
+</script>
+</body>
+</html>

@@ -5,10 +5,16 @@ Phase 1 goals: serve per-city dashboard payload from the DB instead of a
 (Phase 1 Day 2).
 """
 
+from pathlib import Path
+
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from typing import Optional
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 from app.db import engine, get_session
 from app.models import Block, City, Property
@@ -34,6 +40,12 @@ class ScoreRequest(BaseModel):
     outdoor: bool = False
 
 app = FastAPI(title="Property Tracker", version="0.1.0")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return FileResponse(STATIC_DIR / "dashboard.html")
 
 
 @app.get("/health")
@@ -66,6 +78,26 @@ def city_dashboard(key: str, session: Session = Depends(get_session)):
         "blocks": [b.data for b in blocks],
         "properties": [p.data for p in props],
     }
+
+
+@app.get("/api/all")
+def api_all(session: Session = Depends(get_session)):
+    """Dashboard-shaped payload: {jc, hoboken, weehawken} each with
+    properties / blocks / overall_trend. Key `jc` maps to city_key
+    `jc_heights` to match the frontend's existing MARKETS structure."""
+    key_to_market = {"jc_heights": "jc", "hoboken": "hoboken", "weehawken": "weehawken"}
+    out = {}
+    for city in session.query(City).all():
+        market_key = key_to_market.get(city.key, city.key)
+        blocks = session.query(Block).filter_by(city_key=city.key).all()
+        props = session.query(Property).filter_by(city_key=city.key).all()
+        out[market_key] = {
+            "properties": [p.data for p in props],
+            "blocks": [b.data for b in blocks],
+            "overall_trend": city.overall_trend,
+            "trends": {b.block: b.trend for b in blocks if b.trend},
+        }
+    return out
 
 
 @app.get("/cities/{key}/actives")
