@@ -98,6 +98,15 @@ def is_residential(row):
 
 blockstreet_counts: Counter = Counter()  # populated in pre-pass below before main loop
 
+def norm_block(b):
+    """Strip leading zeros so '04503' and '4503' are treated as the same block.
+    Paragon exports the same tax block with inconsistent leading-zero formatting,
+    which would otherwise split a single building across multiple block keys."""
+    b = (b or "").strip()
+    if not b:
+        return ""
+    return b.lstrip("0") or "0"
+
 def block_key(row):
     """Use Block+Street as micro-market key when enough data; else Block; else zip.
 
@@ -105,7 +114,7 @@ def block_key(row):
     (block, street) pair has >= BLOCKSTREET_MIN sales we create a finer-grained key
     (e.g. block_2801_PALISADE) so those comps stay in the same building cohort.
     """
-    block = (row.get("Block", "") or "").strip()
+    block = norm_block(row.get("Block", ""))
     if not block:
         return f"zip_{(row.get('Zip','') or '').strip()}"
     addr = (row.get("Address", "") or "").strip()
@@ -134,7 +143,7 @@ print(f"  Raw rows: {len(raw)}")
 for _row in raw:
     if not is_residential(_row):
         continue
-    _block = (_row.get("Block", "") or "").strip()
+    _block = norm_block(_row.get("Block", ""))
     if not _block:
         continue
     _addr = (_row.get("Address", "") or "").strip()
